@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>t.js Demo 2 Exemplo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Canvas para o fundo de Partículas -->
+    <canvas id="particle-canvas"></canvas>
+
+    <div id="demo"></div>
+
+    <!-- Botão Perform na parte superior centralizada -->
+    <div class="top-perform-btn" id="top-perform">⚡</div>
+
+    <!-- === Estrutura da Janela de Chat === -->
+    <div id="chat-window">
+        <div class="minimize-btn" id="minimize-chat">_</div>
+        <div class="fullscreen-btn" id="chat-fullscreen">⛶</div>
+        <div class="perform-btn" id="chat-perform">⚡</div>
+        <div id="chat-history">
+            <!-- Histórico de mensagens será adicionado aqui (estático por enquanto) -->
+            <p class="chat-message bot"><span class="sender">System:</span> Interface ready. Awaiting input.</p>
+            <p class="chat-message user"><span class="sender">You:</span> Initiate diagnostics.</p>
+            <p class="chat-message bot"><span class="sender">System:</span> Running diagnostics... All systems nominal.</p>
+        </div>
+        <div id="chat-input-area">
+            <span class="chat-prompt">></span>
+            <!-- Input real e botão de envio -->
+            <input type="text" id="chat-input" placeholder="Digite aqui...">
+            <button id="chat-send-btn">Enviar</button>
+            <!-- <span class="fake-input">|</span> --> <!-- Fake input removido -->
+        </div>
+    </div>
+    <!-- === Fim da Estrutura do Chat === -->
+
+    <!-- === Novo Frame no Canto Inferior Esquerdo === -->
+    <div id="info-frame">
+        <div class="minimize-btn" id="minimize-bio">_</div>
+        <!-- Container para a biografia com t.js -->
+        <div id="bio-text"></div>
+        <!-- Botões de navegação -->
+        <div class="bio-nav-buttons">
+            <div class="bio-nav-btn" id="bio-scroll-up">▲</div>
+            <div class="bio-nav-btn" id="bio-scroll-down">▼</div>
+            <div class="bio-nav-btn" id="bio-fullscreen">⛶</div>
+        </div>
+    </div>
+    <!-- === Fim do Novo Frame === -->
+    
+    <!-- === Novo Frame Central === -->
+    <div id="middle-frame">
+        <div class="minimize-btn" id="minimize-middle">_</div>
+        <div class="fullscreen-btn" id="middle-fullscreen">⛶</div>
+        <!-- Container para conteúdo -->
+        <div id="middle-content">
+            <div class="middle-header">
+                <span style="color:lime;">EXPERIÊNCIAS</span>
+                <hr/>
+            </div>
+            <!-- Área de conteúdo -->
+            <div id="middle-area">
+                <!-- Conteúdo vazio por enquanto -->
+            </div>
+        </div>
+        <!-- Botões de navegação -->
+        <div class="middle-nav-buttons">
+            <div class="bio-nav-btn" id="middle-scroll-up">▲</div>
+            <div class="bio-nav-btn" id="middle-scroll-down">▼</div>
+        </div>
+    </div>
+    <!-- === Fim do Novo Frame Central === -->
+    
+    <!-- Botões flutuantes para janelas minimizadas -->
+    <div class="floating-icons-container">
+        <div class="floating-icon" id="bio-icon">BIO</div>
+        <div class="floating-icon" id="middle-icon">EXP</div>
+        <div class="floating-icon" id="ai-icon">AI</div>
+    </div>
+    
+    <!-- Modal para visualização em tela cheia -->
+    <div class="bio-modal" id="bio-modal">
+        <div class="bio-modal-content">
+            <div class="bio-modal-header">
+                <div class="bio-modal-title">PERFIL PROFISSIONAL</div>
+                <div class="bio-modal-close" id="bio-modal-close">✕</div>
+            </div>
+            <div id="bio-modal-text"></div>
+        </div>
+    </div>
+
+    <!-- Modal para visualização em tela cheia do chat -->
+    <div class="chat-modal" id="chat-modal">
+        <div class="chat-modal-content">
+            <div class="chat-modal-header">
+                <div class="chat-modal-title">CHAT INTERFACE</div>
+                <div class="chat-modal-close" id="chat-modal-close">✕</div>
+            </div>
+            <div id="chat-modal-content">
+                <div id="chat-modal-history"></div>
+                <div id="chat-modal-input-area">
+                    <span class="chat-prompt">></span>
+                    <input type="text" id="chat-modal-input" placeholder="Digite aqui...">
+                    <button id="chat-modal-send-btn">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para visualização em tela cheia do frame central -->
+    <div class="middle-modal" id="middle-modal">
+        <div class="middle-modal-content">
+            <div class="middle-modal-header">
+                <div class="middle-modal-title">EXPERIÊNCIAS</div>
+                <div class="middle-modal-close" id="middle-modal-close">✕</div>
+            </div>
+            <div id="middle-modal-content"></div>
+        </div>
+    </div>
+
+    <!-- Container do modo Perform -->
+    <div id="perform-container">
+        <div id="perform-messages">
+            <!-- As mensagens serão adicionadas aqui dinamicamente -->
+        </div>
+        <div id="perform-input-area">
+            <span class="chat-prompt">&gt;</span>
+            <input type="text" id="perform-input" placeholder="Digite seu comando aqui...">
+            <button id="perform-send-btn">Enviar</button>
+        </div>
+        <button id="exit-perform-btn">SAIR</button>
+    </div>
+
+    <!-- Modal de Senha para Modo Admin -->
+    <div id="admin-password-modal" class="password-modal" style="display: none;">
+        <div class="password-modal-content">
+            <h4>ACESSO RESTRITO</h4>
+            <label for="admin-password-input" class="password-label">Senha:</label>
+            <input type="password" id="admin-password-input" class="password-input">
+            <p id="admin-password-error" class="password-error-message" style="display: none;">Senha incorreta!</p>
+            <div class="password-modal-buttons">
+                <button id="admin-password-submit" class="password-button">Entrar</button>
+                <button id="admin-password-cancel" class="password-button cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incluir jQuery (necessário para t.js) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Incluir t.js (baixado localmente) -->
+    <script src="t.min.js"></script>
+    <!-- Script para inicializar o t.js -->
+    <script>
+        $(function(){ // Executar quando o documento estiver pronto
+
+            // Variáveis para controle do Modo Admin e Edição de Persona
+            let isInPerformMode = false; // Será atualizada pela lógica existente do Modo Perform
+            let keySequenceBuffer = "";
+            const targetSequence = "admin";
+            let isInPersonaEditMode = false;
+            const adminPassword = "1234"; // Senha para o modo admin
+
+            // Variável para contar os anos
+            let yearCounter = 2000;
+            const startYear = 2000;
+            const endYear = 2025;
+            const totalYears = endYear - startYear;
+
+            const content = '<del>~</del>' + // Limpeza mínima inicial
+                            '<ins><span style="color:lime;">João Victor Nunez ---===--- Digital Twin (C)</span></ins><hr/>' + // Nova linha de copyright
+                            '<ins>0.2</ins>Initializing core systems...<ins>0.4</ins> <span style="color:lime;">OK.</span><br/>' + // Delays reduzidos
+                            '<ins>Connecting neural interface</ins><ins>0.1</ins>.<ins>0.1</ins>.<ins>0.1</ins>.<ins>0.2</ins> <span style="color:lime;">Established.</span><br/>' + // Delays reduzidos
+                            '<ins>0.1</ins>Loading lifetime memories: <span id="year-display" style="color:cyan;">2000</span> [<span id="progress-bar" style="color:cyan;"></span>]' + // Spans estáticos
+                            // 25 caracteres zero-width space como gatilhos invisíveis
+                            '<s>50</s>' + '\u200B'.repeat(25) + '<s>15</s>' + // Velocidade 50 controla a atualização.
+                            ' <span style="color:lime;"> Memories loaded.</span><br/><ins>0.2</ins>' + // Mensagem final
+                            // Adiciona um delay mínimo antes do span gatilho
+                            '<ins>0.01</ins><span id="trigger-chat-reveal"></span>' + 
+                            '<ins>0.5</ins>Updating chat interface...<ins>0.5</ins> <span style="color:lime;">OK.</span><br/>' + 
+                            'Syncing chronometers...<ins>0.2</ins> <span style="color:lime;">Synced.</span><br/>' + // Delay reduzido
+                            '<ins>0.15</ins>Mounting Knowledge Vault <kbd>/dev/memex0</kbd>...<ins>0.2</ins> <span style="color:lime;">OK.</span><br/>' + 
+                            '<ins>0.15</ins>Optimizing cognitive functions...<ins>0.4</ins> <span style="color:lime;">Complete.</span><br/><ins>0.2</ins>' + // Delays reduzidos
+                            'System status: <span style="color:lime;">ONLINE</span> | Core Process <kbd>dt_interface</kbd> [PID: <kbd>4278</kbd>] <span style="color:lime;">STABLE</span><br/><ins>0.4</ins>' + // Delay reduzido
+                            'neznunez:/# <span id="__final_caret"></span>'; // Prompt final
+
+            // Variáveis para controle dinâmico de velocidade (não mais usadas para hashing)
+            let initialSpeed = 15;
+            let currentSpeed = initialSpeed;
+            let accelerate = false;
+            const maxBarLength = 26; // Mantém o tamanho da barra
+
+            $('#demo').t(content, {
+                speed: initialSpeed, // Usar a variável inicial
+                mistype: 50,
+                pause_on_click: true,
+                caret: '<span class="t-caret-blink">_</span>',
+                init: function(elm) {
+                    // Reseta o contador de ano no início (caso seja repetido)
+                    yearCounter = startYear;
+                    $('#year-display').text(startYear);
+                    $('#progress-bar').text('');
+                },
+                typing: function(elm, chr_or_elm, left, total) {
+
+                    // --- Lógica para atualizar ano/barra ao processar os gatilhos invisíveis --- 
+                    if (chr_or_elm === '\u200B') { // Verifica pelo zero-width space
+                        yearCounter++; // Incrementa o ano
+                        if (yearCounter <= endYear) {
+                            $('#year-display').text(yearCounter); // Atualiza o display do ano
+
+                            // Calcula e atualiza a barra de progresso
+                            const progress = (yearCounter - startYear) / totalYears;
+                            const filledChars = Math.round(progress * maxBarLength);
+                            const progressBarText = '█'.repeat(filledChars);
+                            $('#progress-bar').text(progressBarText); // Atualiza a barra
+                        }
+                    }
+                    // --- Fim da lógica ano/barra ---
+
+                    // Lógica de aceleração para o hashing (mantida)
+                    if (typeof chr_or_elm === 'string' && chr_or_elm.includes('class="dynamic-speed"')) {
+                        accelerate = true;
+                        currentSpeed = initialSpeed;
+                    }
+                    if (accelerate) {
+                        currentSpeed = Math.max(10, currentSpeed - 0.5);
+                        elm.s(currentSpeed);
+                    }
+                    if (accelerate && typeof chr_or_elm === 'string' && chr_or_elm.includes('</span>')) {
+                        accelerate = false;
+                        currentSpeed = initialSpeed;
+                        elm.s(currentSpeed);
+                    }
+
+                    // Detectar quando o gatilho de revelação do chat é processado
+                    if (typeof chr_or_elm === 'object' && $(chr_or_elm).attr('id') === 'trigger-chat-reveal') {
+                        // Adiciona a classe .chat-visible ao chat-window
+                        $('#chat-window').addClass('chat-visible');
+                    }
+                },
+                fin: function(elm) {
+                    // Garante que o cursor final esteja visível e piscando
+                    elm.find('.t-caret').show().addClass('t-caret-blink');
+                    
+                    // Faz o terminal desaparecer após um tempo
+                    setTimeout(function() {
+                        // Adiciona a classe que faz o terminal desaparecer com animação
+                        $('#demo').addClass('disappearing');
+                        
+                        // Atribuir índices para o efeito byte por byte
+                        $('#demo span, #demo kbd').each(function(index) {
+                            $(this).css('--char-index', index);
+                        });
+                        
+                        // Efeito visual para destacar a transição
+                        App.triggerPulse();
+                        
+                        // Efeitos adicionais para o desaparecimento
+                        setTimeout(function() {
+                            // Um segundo pulso no meio da animação
+                            App.triggerPulse();
+                            
+                            // Simulação de "desligamento" do terminal
+                            $('#demo').append('<span class="terminal-shutdown-message" style="color:lime; position:absolute; bottom:5px; right:10px; opacity:0; animation:fadeIn 0.3s forwards;">[ TERMINAL SHUTDOWN SEQUENCE INITIATED ]</span>');
+                        }, 1000);
+                    }, 6000); // Espera 6 segundos após a animação terminar
+                }
+            });
+
+            // --- Iniciar Animação do Chat com Atraso --- 
+            // Estimativa de tempo (em ms) para iniciar a animação do chat
+            const chatRevealDelay = 6000; // Ajuste este valor se necessário (aprox. 3.6 segundos)
+            setTimeout(() => {
+                $('#chat-window').addClass('chat-visible');
+            }, chatRevealDelay);
+            // --- Fim do Atraso do Chat ---
+
+            // --- Iniciar Animação do Novo Frame com Atraso --- 
+            // Mostrar o frame vazio logo após o chat
+            const frameRevealDelay = chatRevealDelay + 800; // 800ms após o chat aparecer
+            setTimeout(() => {
+                $('#info-frame').addClass('frame-visible');
+                
+                // Mostrar a janela central após um pequeno atraso
+                setTimeout(() => {
+                    $('#middle-frame').addClass('frame-visible');
+                    // Pulso para destacar a aparição
+                    App.triggerPulse();
+                    
+                    // Revelar o botão de perform após as janelas estarem visíveis
+                    setTimeout(() => {
+                        // Remove qualquer classe anterior que possa afetar a visibilidade
+                        $('#top-perform').removeClass('pulsing');
+                        
+                        // Adiciona a classe para iniciar a animação de revelação
+                        $('#top-perform').addClass('revealed');
+                        
+                        // Efeito sonoro para a revelação (apenas vibração)
+                        if (window.navigator && window.navigator.vibrate) {
+                            window.navigator.vibrate([50, 30, 50]);
+                        }
+                        
+                        // Após a animação de revelação, adiciona o efeito de pulso
+                        setTimeout(() => {
+                            $('#top-perform').addClass('pulsing');
+                            App.triggerPulse(); // Pulso no fundo
+                            
+                            // Forçar a visibilidade do botão após tudo
+                            setTimeout(() => {
+                                // Garantir que o botão continue visível com estilo inline
+                                $('#top-perform').css({
+                                    'opacity': '1',
+                                    'transform': 'translateX(-50%) scale(1)',
+                                    'filter': 'blur(0)'
+                                });
+                            }, 100);
+                        }, 1300); // Aguarda a animação de revelação terminar
+                    }, 1000); // 1 segundo após a janela central aparecer
+                }, 400);
+                
+                // Iniciar a animação do texto da biografia após o frame se tornar visível
+                setTimeout(() => {
+                    // Conteúdo da biografia com efeitos de texto - sem pausas e mais direto (movido para escopo global)
+                    window.bioContent = 
+                        '<span style="color:lime;">PERFIL PROFISSIONAL</span><hr/>' +
+                        'De tudo um pouco. Artista Urbano, Designer Multimídia, procuro sempre utilizar novas ' +
+                        'tecnologias para impulsionar meu processo criativo.<br/>' +
+                        'Do Graffiti ao Design Gráfico, comecei como artista 3D e na criação de ambientes digitais.<br/>' +
+                        'Em minha trajetória acadêmica, busquei projetos que misturassem esses meus dois mundos: arte ' +
+                        'de rua, tecnologia e interatividade.<br/>' +
+                        'Com temas que abordam a preservação da história e da memória das cidades, e estudos sobre ' +
+                        'as futuras relações dos seres humanos com o cenário urbano.<br/>' +
+                        '<span style="color:cyan;">Em 2022</span>, participei do programa de Inovação Tecnológica da Apple Developer Academy, onde ' +
+                        'me tornei desenvolvedor iOS.<br/>' +
+                        'Em desenvolvimento de software, me aprofundei na criação de ferramentas com realidade ' +
+                        'aumentada, realidade virtual, escaneamento 3D e soluções que usam a câmera do celular para ' +
+                        'criar experiências imersivas dentro do ecossistema Apple.<br/>' +
+                        '<span style="color:cyan;">Em 2023</span>, participei da curadoria e desenvolvimento de exposições em realidade aumentada em ' +
+                        'Lisboa e em outros lugares do Brasil, incluindo a Embaixada do México com uma homenagem à ' +
+                        'Frida Kahlo.<br/>' +
+                        '<span style="color:cyan;">Em 2024</span>, trabalhei como Designer de Novas Mídias voltado para o Entretenimento no estúdio ' +
+                        'criativo de inovação tecnológica DELED, onde trouxemos soluções interativas, com instalações e ' +
+                        'projetos no Museu do Amanhã, Rock in Rio e outras grandes marcas.<br/>' +
+                        'Pra mim, cada projeto é uma oportunidade de contar uma história e criar experiências ' +
+                        'impactantes.<br/>' +
+                        'Apaixonado por inovação, estou sempre em busca de novas ferramentas, linguagens e formatos ' +
+                        'para explorar o potencial expressivo da arte e da tecnologia.<br/>' +
+                        '<span style="color:lime;">Acredito que a inovação acontece quando misturamos diferentes áreas e conhecimentos — e é ' +
+                        'através do trabalho em equipe e de trocas genuínas que essas conexões se transformam em ' +
+                        'ideias vivas, com potência real de transformação.</span>';
+                    
+                    // Inicializar t.js para o texto da biografia - mais rápido e sem erros de digitação
+                    $('#bio-text').t(bioContent, {
+                        speed: 5,                // Velocidade muito mais rápida
+                        mistype: false,          // Sem erros de digitação
+                        caret: false,            // Sem cursor durante a digitação para não distrair
+                        fin: function(elm) {
+                            // Não mostra cursor no final
+                        }
+                    });
+
+                    // Inicializar t.js para o texto de experiências - usando abordagem similar
+                    $('#middle-area').t(experienciasContent, {
+                        speed: 5,                // Velocidade rápida igual ao bio
+                        mistype: false,          // Sem erros de digitação
+                        caret: false,            // Sem cursor durante a digitação
+                        fin: function(elm) {
+                            // Não mostra cursor no final
+                        }
+                    });
+
+                    // Funcionalidade dos botões de navegação para o Bio
+                    $('#bio-scroll-up').on('click', function() {
+                        const bioText = document.getElementById('bio-text');
+                        bioText.scrollBy({
+                            top: -100, // Rola 100px para cima
+                            behavior: 'smooth'
+                        });
+                    });
+                    
+                    $('#bio-scroll-down').on('click', function() {
+                        const bioText = document.getElementById('bio-text');
+                        bioText.scrollBy({
+                            top: 100, // Rola 100px para baixo
+                            behavior: 'smooth'
+                        });
+                    });
+
+                    // Funcionalidade dos botões de navegação para as Experiências
+                    $('#middle-scroll-up').on('click', function() {
+                        const middleContent = document.getElementById('middle-content');
+                        middleContent.scrollBy({
+                            top: -100, // Rola 100px para cima
+                            behavior: 'smooth'
+                        });
+                    });
+                    
+                    $('#middle-scroll-down').on('click', function() {
+                        const middleContent = document.getElementById('middle-content');
+                        middleContent.scrollBy({
+                            top: 100, // Rola 100px para baixo
+                            behavior: 'smooth'
+                        });
+                    });
+
+                    // Funcionalidade do botão de tela cheia
+                    $('#bio-fullscreen').on('click', function() {
+                        // Remover completamente o elemento anterior e recriar
+                        $('#bio-modal-text').remove();
+                        $('.bio-modal-content').append('<div id="bio-modal-text"></div>');
+                        
+                        // Mostrar a modal
+                        $('#bio-modal').addClass('active');
+                        
+                        // Prevenir rolagem no body
+                        $('body').css('overflow', 'hidden');
+                        
+                        // Definir o texto para a animação
+                        const bioContentModal = 
+                            '<span style="color:lime;">PERFIL PROFISSIONAL</span><hr/>' +
+                            'De tudo um pouco. Artista Urbano, Designer Multimídia, procuro sempre utilizar novas ' +
+                            'tecnologias para impulsionar meu processo criativo.<br/>' +
+                            'Do Graffiti ao Design Gráfico, comecei como artista 3D e na criação de ambientes digitais.<br/>' +
+                            'Em minha trajetória acadêmica, busquei projetos que misturassem esses meus dois mundos: arte ' +
+                            'de rua, tecnologia e interatividade.<br/>' +
+                            'Com temas que abordam a preservação da história e da memória das cidades, e estudos sobre ' +
+                            'as futuras relações dos seres humanos com o cenário urbano.<br/>' +
+                            '<span style="color:cyan;">Em 2022</span>, participei do programa de Inovação Tecnológica da Apple Developer Academy, onde ' +
+                            'me tornei desenvolvedor iOS.<br/>' +
+                            'Em desenvolvimento de software, me aprofundei na criação de ferramentas com realidade ' +
+                            'aumentada, realidade virtual, escaneamento 3D e soluções que usam a câmera do celular para ' +
+                            'criar experiências imersivas dentro do ecossistema Apple.<br/>' +
+                            '<span style="color:cyan;">Em 2023</span>, participei da curadoria e desenvolvimento de exposições em realidade aumentada em ' +
+                            'Lisboa e em outros lugares do Brasil, incluindo a Embaixada do México com uma homenagem à ' +
+                            'Frida Kahlo.<br/>' +
+                            '<span style="color:cyan;">Em 2024</span>, trabalhei como Designer de Novas Mídias voltado para o Entretenimento no estúdio ' +
+                            'criativo de inovação tecnológica DELED, onde trouxemos soluções interativas, com instalações e ' +
+                            'projetos no Museu do Amanhã, Rock in Rio e outras grandes marcas.<br/>' +
+                            'Pra mim, cada projeto é uma oportunidade de contar uma história e criar experiências ' +
+                            'impactantes.<br/>' +
+                            'Apaixonado por inovação, estou sempre em busca de novas ferramentas, linguagens e formatos ' +
+                            'para explorar o potencial expressivo da arte e da tecnologia.<br/>' +
+                            '<span style="color:lime;">Acredito que a inovação acontece quando misturamos diferentes áreas e conhecimentos — e é ' +
+                            'através do trabalho em equipe e de trocas genuínas que essas conexões se transformam em ' +
+                            'ideias vivas, com potência real de transformação.</span>';
+                        
+                        // Iniciar animação com velocidade extremamente rápida
+                        setTimeout(function() {
+                            $('#bio-modal-text').t(bioContentModal, {
+                                speed: 0.5,            // Velocidade extremamente rápida (era 1, agora 0.5)
+                                mistype: false,        // Sem erros de digitação
+                                caret: false,          // Sem cursor para não distrair
+                                fin: function(elm) {
+                                    // Pulso ao finalizar
+                                    App.triggerPulse();
+                                }
+                            });
+                        }, 10); // Pequeno timeout para garantir que o DOM foi atualizado
+                    });
+                    
+                    // Funcionalidade do botão de fechar a modal
+                    $('#bio-modal-close, #bio-modal').on('click', function(e) {
+                        // Fechar apenas se clicou no X ou na área fora do conteúdo
+                        if (e.target.id === 'bio-modal-close' || e.target.id === 'bio-modal') {
+                            // Esconder a modal
+                            $('#bio-modal').removeClass('active');
+                            
+                            // Restaurar rolagem no body
+                            $('body').css('overflow', 'auto');
+                            
+                            // Destruir o elemento de texto completamente
+                            $('#bio-modal-text').remove();
+                        }
+                    });
+                }, 100); // Pequeno atraso para garantir que o frame já está visível
+            }, frameRevealDelay);
+            // --- Fim do Atraso do Novo Frame ---
+
+            // --- Código do Fundo de Partículas Spipa (Adaptado de https://codepen.io/alexandrix/pen/oQOvYp) ---
+            const App = {};
+            App.setup = function() {
+                const canvas = document.getElementById('particle-canvas'); // Usar nosso canvas existente
+                this.filename = "spipa"; // Nome do arquivo para salvar (não usado aqui)
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                this.canvas = canvas;
+                // Não precisa adicionar ao body, já existe
+                this.ctx = this.canvas.getContext('2d');
+                this.width = this.canvas.width;
+                this.height = this.canvas.height;
+                this.dataToImageRatio = 1;
+                this.ctx.imageSmoothingEnabled = false;
+                // Removido: this.ctx.webkitImageSmoothingEnabled = false;
+                // Removido: this.ctx.msImageSmoothingEnabled = false;
+                this.xC = this.width / 2;
+                this.yC = this.height / 2;
+                
+                this.stepCount = 0;
+                this.particles = [];
+                this.lifespan = 800; // Reduzido um pouco a vida das partículas
+                this.popPerBirth = 2; // Aumentado um pouco o nascimento
+                this.maxPop = 200; // Diminuido um pouco a população máxima
+                this.birthFreq = 3; // Frequência de nascimento
+
+                this.particleHue = 120; // Matiz HSL Padrão (Verde)
+
+                // Build grid
+                this.gridSize = 10; // Aumentado tamanho da grid
+                this.gridSteps = Math.floor(1000 / this.gridSize);
+                this.grid = [];
+                var i = 0;
+                for (var xx = -500; xx < 500; xx += this.gridSize) {
+                    for (var yy = -500; yy < 500; yy += this.gridSize) {
+                    // Radial field, triangular function of r with max around r0
+                    var r = Math.sqrt(xx*xx+yy*yy),
+                        r0 = 150, // Aumentado raio do campo
+                        field;
+                    
+                    if (r < r0) field = 255 / r0 * r;
+                    else if (r > r0) field = 255 - Math.min(255, (r - r0)/1.5); // Ajustado decaimento
+                    
+                    this.grid.push({
+                        x: xx,
+                        y: yy,
+                        busyAge: 0,
+                        spotIndex: i,
+                        isEdge: (xx == -500 || xx == (-500 + this.gridSize * (this.gridSteps-1)) || yy == -500 || yy == (-500 + this.gridSize *(this.gridSteps-1))),
+                        field: field
+                    });
+                    i++;
+                    }
+                }
+                this.gridMaxIndex = i;
+                
+                this.deathCount = 0; // Contador interno (não exibido)
+                
+                // Variáveis para o pulso visual
+                this.isPulsing = false;
+                this.pulseEndTime = 0;
+                this.pulseDuration = 300; // Duração do pulso em ms
+
+                this.initDraw();
+            };
+
+            // Função para acionar o pulso
+            App.triggerPulse = function() {
+                this.isPulsing = true;
+                this.pulseEndTime = performance.now() + this.pulseDuration;
+            };
+
+            App.evolve = function() {
+                // const time1 = performance.now(); // Desnecessário sem UI de FPS
+                
+                this.stepCount++;
+                
+                // Increment all grid ages
+                this.grid.forEach(function(e) {
+                    if (e.busyAge > 0) e.busyAge++;
+                });
+                
+                if (this.stepCount % this.birthFreq == 0 && (this.particles.length + this.popPerBirth) < this.maxPop) {
+                    this.birth();
+                }
+                App.move();
+                App.draw();
+                
+                // const time2 = performance.now(); // Desnecessário
+                // Atualização da UI removida
+            };
+
+            App.birth = function() {
+                var gridSpotIndex = Math.floor(Math.random() * this.gridMaxIndex),
+                    gridSpot = this.grid[gridSpotIndex],
+                    x = gridSpot.x, y = gridSpot.y;
+                
+                for (let i = 0; i < this.popPerBirth; i++) { // Gera popPerBirth partículas
+                    var particle = {
+                        // Cor baseada no App.particleHue atual
+                        hue: App.particleHue, 
+                        sat: 95, 
+                        lum: 50, // Luminosidade fixa em 50%
+                        x: x,
+                        y: y,
+                        xLast: x,
+                        yLast: y,
+                        xSpeed: 0,
+                        ySpeed: 0,
+                        age: 0,
+                        ageSinceStuck: 0,
+                        attractor: {
+                            oldIndex: gridSpotIndex,
+                            gridSpotIndex: gridSpotIndex, // Pop at random position on grid
+                        },
+                        name: 'seed-' + Math.ceil(10000000 * Math.random())
+                    };
+                    this.particles.push(particle);
+                }
+            };
+
+            App.kill = function(particleName) {
+                // Substituição do _.reject e _.cloneDeep
+                this.particles = this.particles.filter(seed => seed.name !== particleName);
+            };
+
+            // Função auxiliar para encontrar o máximo (substitui _.maxBy)
+            function findMaxNeighbor(neighbors, chaos) {
+                let maxField = -Infinity;
+                let chosenSpot = neighbors[0]; // Default
+                for (const spot of neighbors) {
+                    if (spot) { // Verifica se o vizinho existe (não é undefined)
+                        const currentField = spot.field + chaos * Math.random();
+                        if (currentField > maxField) {
+                            maxField = currentField;
+                            chosenSpot = spot;
+                        }
+                    }
+                }
+                return chosenSpot;
+            }
+
+            App.move = function() {
+                for (var i = 0; i < this.particles.length; i++) {
+                    var p = this.particles[i];
+                    
+                    p.xLast = p.x; p.yLast = p.y;
+                    
+                    var index = p.attractor.gridSpotIndex,
+                        gridSpot = this.grid[index];
+                    
+                    if (Math.random() < 0.6) { // Aumentada chance de mover atrator
+                        if (!gridSpot.isEdge) {
+                            var topIndex = index - 1,
+                                bottomIndex = index + 1,
+                                leftIndex = index - this.gridSteps,
+                                rightIndex = index + this.gridSteps;
+                                
+                            // Verifica limites antes de acessar a grid para evitar erros
+                            const neighbors = [
+                                (topIndex >= 0 && index % this.gridSteps !== 0) ? this.grid[topIndex] : undefined,
+                                (bottomIndex < this.gridMaxIndex && (index + 1) % this.gridSteps !== 0) ? this.grid[bottomIndex] : undefined, 
+                                (leftIndex >= 0) ? this.grid[leftIndex] : undefined,
+                                (rightIndex < this.gridMaxIndex) ? this.grid[rightIndex] : undefined
+                            ].filter(spot => spot !== undefined); // Filtra vizinhos inválidos
+
+                            if (neighbors.length > 0) {
+                                var chaos = 40; // Aumentado chaos
+                                // Substituição do _.maxBy
+                                var maxFieldSpot = findMaxNeighbor(neighbors, chaos);
+                                
+                                var potentialNewGridSpot = maxFieldSpot;
+                                if (potentialNewGridSpot && (potentialNewGridSpot.busyAge == 0 || potentialNewGridSpot.busyAge > 10)) { // Ajustado busyAge
+                                    p.ageSinceStuck = 0;
+                                    p.attractor.oldIndex = index;
+                                    p.attractor.gridSpotIndex = potentialNewGridSpot.spotIndex;
+                                    gridSpot = potentialNewGridSpot;
+                                    gridSpot.busyAge = 1;
+                                } else p.ageSinceStuck++;
+                            } else p.ageSinceStuck++;
+                            
+                        } else p.ageSinceStuck++;
+                        
+                        if (p.ageSinceStuck == 15) this.kill(p.name); // Aumentado limite para kill
+                    }
+                    
+                    var k = 8, visc = 0.4;
+                    var dx = p.x - gridSpot.x,
+                        dy = p.y - gridSpot.y;
+                    
+                    var xAcc = -k * dx,
+                        yAcc = -k * dy;
+                    
+                    p.xSpeed += xAcc; p.ySpeed += yAcc;
+                    p.xSpeed *= visc; p.ySpeed *= visc;
+                    
+                    p.x += 0.1 * p.xSpeed;
+                    p.y += 0.1 * p.ySpeed;
+                    
+                    p.age++;
+                    
+                    if (p.age > this.lifespan) {
+                        this.kill(p.name);
+                        this.deathCount++;
+                    }
+                }
+            };
+
+            App.initDraw = function() {
+                this.ctx.fillStyle = 'black';
+                this.ctx.fillRect(0, 0, this.width, this.height);
+            };
+
+            App.draw = function() {
+                let trailOpacity = 0.1; // Opacidade normal do rastro
+
+                // Verifica se está pulsando
+                if (this.isPulsing) {
+                    if (performance.now() < this.pulseEndTime) {
+                        // Calcula a intensidade do pulso (decai com o tempo)
+                        const timeRemaining = this.pulseEndTime - performance.now();
+                        const pulseIntensity = Math.sin((timeRemaining / this.pulseDuration) * Math.PI); // Onda senoidal suave
+                        trailOpacity = 0.1 + pulseIntensity * 0.15; // Aumenta a opacidade máxima do rastro para 0.25 no pico
+                    } else {
+                        this.isPulsing = false; // Termina o pulso
+                    }
+                }
+
+                // Fundo com rastro (usa a opacidade calculada)
+                this.ctx.fillStyle = `rgba(0, 0, 0, ${trailOpacity})`;
+                this.ctx.fillRect(0, 0, this.width, this.height);
+                
+                for (var i = 0; i < this.particles.length; i++) {
+                    var p = this.particles[i];
+                    
+                    // Usar o HUE armazenado na partícula
+                    var h = p.hue; 
+                    var s = p.sat; // Usa saturação da partícula (já era 95)
+                    var l = p.lum; // Usa luminosidade da partícula (já era 50)
+                    var a = Math.min(1, 1 - p.age / this.lifespan) * 0.8 + 0.2; // Opacidade diminui com a idade
+
+                    var last = this.dataXYtoCanvasXY(p.xLast, p.yLast),
+                        now = this.dataXYtoCanvasXY(p.x, p.y);
+                    var attracSpot = this.grid[p.attractor.gridSpotIndex],
+                        attracXY = this.dataXYtoCanvasXY(attracSpot.x, attracSpot.y);
+                    var oldAttracSpot = this.grid[p.attractor.oldIndex],
+                        oldAttracXY = this.dataXYtoCanvasXY(oldAttracSpot.x, oldAttracSpot.y);
+                    
+                    // Trilha da partícula
+                    this.ctx.beginPath();
+                    this.ctx.strokeStyle = `hsla(${h}, ${s}%, ${l}%, ${a * 0.8})`; // Trilha um pouco mais fraca
+                    this.ctx.lineWidth = 1.5 * this.dataToImageRatio;
+                    this.ctx.moveTo(last.x, last.y);
+                    this.ctx.lineTo(now.x, now.y);
+                    this.ctx.stroke();
+                    this.ctx.closePath();
+                    
+                    // Círculo na posição atual da partícula (opcional, para ver melhor)
+                    /*
+                    this.ctx.beginPath();
+                    this.ctx.fillStyle = `hsla(${h}, ${s}%, ${l}%, ${a})`;
+                    this.ctx.arc(now.x, now.y, 1 * this.dataToImageRatio, 0, 2 * Math.PI, false);
+                    this.ctx.fill();
+                    this.ctx.closePath();
+                    */
+
+                    // Linha para o atrator (opcional, debug)
+                    /*
+                    this.ctx.beginPath();
+                    this.ctx.strokeStyle = `hsla(${h}, ${s}%, ${l}%, ${a * 0.2})`;
+                    this.ctx.lineWidth = 1 * this.dataToImageRatio;
+                    this.ctx.moveTo(now.x, now.y);
+                    this.ctx.lineTo(attracXY.x, attracXY.y);
+                    this.ctx.stroke();
+                    this.ctx.closePath();
+                    */
+                }
+            };
+
+            App.dataXYtoCanvasXY = function(x, y) {
+                var zoom = this.zoom || 1.8; // Usar propriedade zoom ou valor padrão
+                var xx = this.xC + x * zoom * this.dataToImageRatio,
+                    yy = this.yC + y * zoom * this.dataToImageRatio;
+                
+                return {x: xx, y: yy};
+            };
+            
+            // Método para definir o zoom
+            App.setZoom = function(zoomValue) {
+                this.zoom = zoomValue;
+            };
+            
+            // Método para obter o zoom atual
+            App.getZoom = function() {
+                return this.zoom || 1.8; // Retorna o zoom atual ou o valor padrão
+            };
+
+            // --- Inicialização e Loop --- 
+            App.setup();
+            App.draw(); // Desenho inicial
+            
+            function frame() {
+                App.evolve();
+                requestAnimationFrame(frame);
+            }
+            frame();
+
+            // Ajustar canvas no redimensionamento (simplificado)
+            window.addEventListener('resize', () => {
+                App.canvas.width = window.innerWidth;
+                App.canvas.height = window.innerHeight;
+                App.width = App.canvas.width;
+                App.height = App.canvas.height;
+                App.xC = App.width / 2;
+                App.yC = App.height / 2;
+                App.initDraw(); // Limpa e redesenha o fundo
+                // Não precisa recriar as partículas, apenas ajustar a área
+            });
+            // --- Fim do Código Spipa ---
+
+            // --- Lógica do Chat Funcional ---
+            const chatHistory = $('#chat-history');
+            const chatInput = $('#chat-input');
+            const chatSendBtn = $('#chat-send-btn');
+
+            function addMessage(sender, message, isUser) {
+                const senderClass = isUser ? 'user' : 'bot';
+                const senderName = isUser ? 'You' : 'System'; // Vamos manter 'System' para a IA por enquanto
+                const messageElement = $(`<p class="chat-message ${senderClass}"><span class="sender">${senderName}:</span> </p>`);
+                messageElement.append(document.createTextNode(message)); // Append text safely
+                chatHistory.append(messageElement);
+                // Scroll to bottom
+                chatHistory.scrollTop(chatHistory[0].scrollHeight);
+            }
+
+            async function handleSend() { // Adicionado async
+                const userMessage = chatInput.val().trim(); 
+                if (userMessage) {
+                    addMessage('You', userMessage, true); 
+                    chatInput.val(''); // Clear input
+
+                    // Aciona o pulso no fundo
+                    App.triggerPulse(); 
+
+                    // --- NOVO INDICADOR DE DIGITANDO ---
+                    const typingIndicatorHTML = `
+                        <p class="chat-message bot typing-indicator" id="chat-typing-indicator">
+                            <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
+                        </p>`;
+                    chatHistory.append(typingIndicatorHTML);
+                    chatHistory.scrollTop(chatHistory[0].scrollHeight);
+                    // --- FIM DO NOVO INDICADOR ---
+
+                    try {
+                        // Chamar nosso backend
+                        const response = await fetch('http://localhost:3000/chat', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ message: userMessage }) // Envia a mensagem do usuário
+                        });
+
+                        $('#chat-typing-indicator').remove(); // Remove o indicador
+
+                        if (!response.ok) {
+                            const errorData = await response.json().catch(() => ({ reply: 'Erro ao contatar o servidor. Tente novamente.' }));
+                            let errorMessageText = `Erro: ${response.status}`;
+                            if (errorData.reply || errorData.error) {
+                                errorMessageText += ` - ${errorData.reply || errorData.error}`;
+                            } else {
+                                errorMessageText += ' - Detalhes não disponíveis';
+                            }
+                            addMessage('System', errorMessageText, false);
+                            return; 
+                        }
+
+                        const data = await response.json(); 
+                        const botReply = data.reply; 
+
+                        // Verifica se é para limpar o chat ANTES de adicionar a resposta
+                        if (userMessage.toLowerCase().includes('clear')) { 
+                            chatHistory.empty(); // Limpa o histórico
+                            addMessage('System', "Histórico do chat limpo.", false); // Adiciona mensagem de confirmação da limpeza
+                        } else {
+                            addMessage('System', botReply, false); // Adiciona a resposta da IA
+                        }
+
+                    } catch (error) {
+                        $('#chat-typing-indicator').remove(); // Remove o indicador em caso de erro de fetch
+                        console.error('Erro ao enviar mensagem para o backend:', error);
+                        addMessage('System', 'Não foi possível conectar ao assistente. Verifique se o servidor está rodando.', false);
+                    }
+                }
+            }
+
+            // Enviar com botão
+            chatSendBtn.on('click', handleSend);
+
+            // Enviar com Enter no input
+            chatInput.on('keypress', function(e) {
+                if (e.which === 13) { // 13 é o código da tecla Enter
+                    handleSend();
+                }
+            });
+
+            // --- Reatividade do Foco no Chat (REMOVIDO) ---
+            /*
+            const chatWindow = $('#chat-window');
+            chatInput.on('focus', function() {
+                chatWindow.addClass('chat-active');
+            });
+            chatInput.on('blur', function() {
+                chatWindow.removeClass('chat-active');
+            });
+            */
+            // --- Fim da Reatividade do Foco ---
+
+            // --- Funcionalidade de Minimização --- 
+            // Função para gerenciar o estado de minimização/restauração de forma consistente
+            function resetMinimizedState(frameId, iconId, shouldMinimize) {
+                // Referências aos elementos
+                const $frame = $(frameId);
+                const $icon = $(iconId);
+                
+                // Aplicar o estado correto
+                if (shouldMinimize) {
+                    // Se deve minimizar
+                    $frame.addClass('minimized');
+                    $icon.fadeIn(300);
+                } else {
+                    // Se deve restaurar
+                    $icon.hide(); // Garantir que o ícone esteja oculto
+                    $frame.removeClass('minimized');
+                }
+            }
+            
+            // Minimizar Chat
+            $('#minimize-chat').on('click', function() {
+                resetMinimizedState('#chat-window', '#ai-icon', true);
+            });
+            
+            // Restaurar Chat
+            $('#ai-icon').on('click', function() {
+                $(this).fadeOut(200, function() {
+                    $('#chat-window').removeClass('minimized');
+                    
+                    // Pulso para destacar a restauração
+                    setTimeout(function() {
+                        App.triggerPulse();
+                    }, 300);
+                });
+            });
+            
+            // Minimizar Bio
+            $('#minimize-bio').on('click', function() {
+                resetMinimizedState('#info-frame', '#bio-icon', true);
+            });
+            
+            // Restaurar Bio
+            $('#bio-icon').on('click', function() {
+                $(this).fadeOut(200, function() {
+                    $('#info-frame').removeClass('minimized');
+                    
+                    // Pulso para destacar a restauração
+                    setTimeout(function() {
+                        App.triggerPulse();
+                    }, 300);
+                });
+            });
+            
+            // Minimizar Frame Central
+            $('#minimize-middle').on('click', function() {
+                resetMinimizedState('#middle-frame', '#middle-icon', true);
+            });
+            
+            // Restaurar Frame Central
+            $('#middle-icon').on('click', function() {
+                $(this).fadeOut(200, function() {
+                    $('#middle-frame').removeClass('minimized');
+                    
+                    // Pulso para destacar a restauração
+                    setTimeout(function() {
+                        App.triggerPulse();
+                    }, 300);
+                });
+            });
+            // --- Fim da Minimização ---
+
+            // --- Funcionalidade Fullscreen para Chat ---
+            // Abrir modal do chat 
+            $('#chat-fullscreen').on('click', function() {
+                // Sincronizar o conteúdo do histórico do chat
+                const chatHistory = $('#chat-history').html();
+                $('#chat-modal-history').html(chatHistory);
+                
+                // Copiar o texto do input, se houver
+                const inputText = $('#chat-input').val();
+                $('#chat-modal-input').val(inputText);
+                
+                // Mostrar a modal
+                $('#chat-modal').addClass('active');
+                
+                // Foco no input da modal
+                setTimeout(function() {
+                    $('#chat-modal-input').focus();
+                }, 300);
+                
+                // Prevenir rolagem no body
+                $('body').css('overflow', 'hidden');
+                
+                // Efeito visual
+                App.triggerPulse();
+            });
+            
+            // Fechar modal do chat
+            $('#chat-modal-close, #chat-modal').on('click', function(e) {
+                // Fechar apenas se clicou no X ou na área fora do conteúdo
+                if (e.target.id === 'chat-modal-close' || e.target.id === 'chat-modal') {
+                    // Sincronizar de volta para o chat original
+                    const modalInputText = $('#chat-modal-input').val();
+                    $('#chat-input').val(modalInputText);
+                    
+                    // Sincronizar de volta o histórico (caso tenha havido mensagens novas)
+                    const modalChatHistory = $('#chat-modal-history').html();
+                    $('#chat-history').html(modalChatHistory);
+                    
+                    // Fechar a modal
+                    $('#chat-modal').removeClass('active');
+                    
+                    // Restaurar rolagem
+                    $('body').css('overflow', 'auto');
+                }
+            });
+            
+            // Botão de enviar na modal
+            $('#chat-modal-send-btn').on('click', function() {
+                const modalInput = $('#chat-modal-input').val();
+                if (modalInput.trim() !== '') {
+                    // Adicionar mensagem ao histórico da modal
+                    $('#chat-modal-history').append('<p class="chat-message user"><span class="sender">You:</span> ' + modalInput + '</p>');
+                    
+                    // Adicionar resposta simulada
+                    setTimeout(function() {
+                        $('#chat-modal-history').append('<p class="chat-message bot"><span class="sender">System:</span> Command processed.</p>');
+                        
+                        // Rolar para o fim
+                        const history = document.getElementById('chat-modal-history');
+                        history.scrollTop = history.scrollHeight;
+                    }, 500);
+                    
+                    // Limpar input
+                    $('#chat-modal-input').val('').focus();
+                }
+            });
+            
+            // Enviar com Enter na modal
+            $('#chat-modal-input').on('keypress', function(e) {
+                if (e.which === 13) { // Enter key
+                    $('#chat-modal-send-btn').click();
+                    return false;
+                }
+            });
+            // --- Fim da Funcionalidade Fullscreen Chat ---
+
+            // --- Funcionalidade Fullscreen para Frame Central ---
+            // Abrir modal do frame central
+            $('#middle-fullscreen').on('click', function() {
+                // Remover completamente o elemento anterior e recriar
+                $('#middle-modal-content').remove();
+                $('.middle-modal-content').append('<div id="middle-modal-content"></div>');
+                
+                // Mostrar a modal
+                $('#middle-modal').addClass('active');
+                
+                // Prevenir rolagem no body
+                $('body').css('overflow', 'hidden');
+                
+                // Definir o texto para a animação
+                const experienciasContentModal = window.experienciasContent;
+                
+                // Iniciar animação com velocidade extremamente rápida
+                setTimeout(function() {
+                    $('#middle-modal-content').t(experienciasContentModal, {
+                        speed: 0.5,            // Velocidade extremamente rápida
+                        mistype: false,        // Sem erros de digitação
+                        caret: false,          // Sem cursor para não distrair
+                        fin: function(elm) {
+                            // Pulso ao finalizar
+                            App.triggerPulse();
+                        }
+                    });
+                }, 10); // Pequeno timeout para garantir que o DOM foi atualizado
+            });
+            
+            // Fechar modal do frame central
+            $('#middle-modal-close, #middle-modal').on('click', function(e) {
+                // Fechar apenas se clicou no X ou na área fora do conteúdo
+                if (e.target.id === 'middle-modal-close' || e.target.id === 'middle-modal') {
+                    // Fechar a modal
+                    $('#middle-modal').removeClass('active');
+                    
+                    // Restaurar rolagem
+                    $('body').css('overflow', 'auto');
+                    
+                    // Destruir o elemento de texto completamente
+                    $('#middle-modal-content').empty();
+                }
+            });
+            // --- Fim da Funcionalidade Fullscreen Frame Central ---
+
+            // --- Funcionalidade do Modo Perform ---
+            // Ativar o modo perform com o botão do chat
+            $('#chat-perform').on('click', function() {
+                activatePerformMode();
+            });
+            
+            // Ativar o modo perform com o botão superior
+            $('#top-perform').on('click', function() {
+                activatePerformMode();
+            });
+            
+            // Função para ativar o modo perform (centralizada para ambos os botões)
+            function activatePerformMode() {
+                isInPerformMode = true; // ATUALIZA O ESTADO
+                keySequenceBuffer = ""; // Limpa o buffer ao entrar no modo perform
+                // Esconder todas as janelas
+                $('#chat-window, #info-frame, #middle-frame').addClass('minimized');
+                
+                // Esconder o container de ícones flutuantes para uma transição suave
+                $('.floating-icons-container').addClass('hidden');
+                
+                // Mostrar o container perform
+                $('#perform-container').css('display', 'flex').hide().fadeIn(300);
+                
+                // Focar no input
+                setTimeout(function() {
+                    $('#perform-input').focus();
+                }, 300);
+                
+                // Efeito visual ao entrar no modo
+                App.triggerPulse();
+                
+                // Aumentar discretamente o zoom das partículas do fundo
+                App.setZoom(2.5); // Aumenta o zoom para destacar o padrão central
+                
+                // Mensagem inicial de boas-vindas
+                setTimeout(function() {
+                    addPerformMessage("Sistema em modo imersivo. O que quer saber sobre mim?", false);
+                }, 800);
+            }
+            
+            // Sair do modo perform
+            $('#exit-perform-btn').on('click', function() {
+                isInPerformMode = false; // ATUALIZA O ESTADO
+                isInPersonaEditMode = false; // Garante que saia do modo de edição também
+                App.particleHue = 120; // Restaura para Verde
+                $('body').removeClass('persona-edit-theme-active'); // DESATIVA TEMA LARANJA
+                keySequenceBuffer = ""; // Limpa o buffer
+                // Esconder o container perform
+                $('#perform-container').fadeOut(400);
+                
+                // Restaurar zoom normal
+                setTimeout(function() {
+                    App.setZoom(1.8); // Volta ao zoom original
+                }, 200);
+                
+                // Mostrar todas as janelas novamente 
+                setTimeout(function() {
+                    // Restaurar todas as janelas sem mostrar ícones flutuantes
+                    resetMinimizedState('#chat-window', '#ai-icon', false);
+                    resetMinimizedState('#info-frame', '#bio-icon', false);
+                    resetMinimizedState('#middle-frame', '#middle-icon', false);
+                    
+                    // Mostrar novamente o container de ícones flutuantes
+                    $('.floating-icons-container').removeClass('hidden');
+                    
+                    // Efeito visual ao sair do modo
+                    App.triggerPulse();
+                }, 500);
+            });
+            
+            // Adicionar mensagem ao modo perform
+            function addPerformMessage(message, isUser) {
+                const messageElement = $('<div class="perform-message ' + (isUser ? 'user' : '') + '"></div>');
+                
+                $('#perform-messages').append(messageElement);
+
+                // NÃO USAR MAIS t.js PARA NENHUMA MENSAGEM NO MODO PERFORM
+                messageElement.text(message); // Adiciona o texto diretamente
+                messageElement.addClass('visible'); // Torna visível imediatamente
+                
+                const container = document.getElementById('perform-messages');
+                container.scrollTop = container.scrollHeight; // Scroll para o fim
+                
+                // Efeito visual ao terminar de digitar (apenas para respostas do sistema/IA)
+                if (!isUser) {
+                    App.triggerPulse();
+                }
+
+                // Limitar número de mensagens (manter apenas as 5 mais recentes)
+                if ($('#perform-messages .perform-message').length > 5) {
+                    $('#perform-messages .perform-message').first().fadeOut(500, function() {
+                        $(this).remove();
+                    });
+                }
+            }
+            
+            // Enviar mensagem no modo perform
+            async function handlePerformSend() { // Tornada async
+                const userInput = $('#perform-input').val().trim();
+                if (userInput) {
+                    // Limpar input
+                    $('#perform-input').val('');
+                    
+                    if (isInPersonaEditMode) {
+                        // Se estiver no modo de edição de persona, verificar comando de SAÍDA primeiro
+                        if (userInput.toLowerCase() === "sair da edição") {
+                            isInPersonaEditMode = false;
+                            App.particleHue = 120; // Restaura para Verde
+                            $('body').removeClass('persona-edit-theme-active'); // DESATIVA TEMA LARANJA
+                            addPerformMessage("Modo de Edição de Persona DESATIVADO. Retornando ao modo normal.", false);
+                            $('#perform-input').attr('placeholder', 'Digite seu comando aqui...'); // Restaura placeholder
+                            App.triggerPulse();
+                            return; // Não processa mais nada
+                        }
+
+                        // Se não for para sair, envia o texto completo para a IA processar e atualizar a persona
+                        addPerformMessage(userInput, true); // Mostra o que o usuário digitou
+                        App.triggerPulse();
+
+                        // Adicionar indicador de "processando com IA" ou "digitando"
+                        const performTypingIndicatorHTML = `
+                            <div class="perform-message typing-indicator" id="perform-typing-indicator-persona">
+                                <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
+                            </div>
+                        `;
+                        $('#perform-messages').append(performTypingIndicatorHTML);
+                        const messagesContainer = document.getElementById('perform-messages');
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                        try {
+                            const response = await fetch('http://localhost:3000/persona-chat-update', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ text: userInput }) // Envia o texto completo do usuário
+                            });
+
+                            $('#perform-typing-indicator-persona').remove(); // Remove o indicador
+
+                            const data = await response.json(); // Espera uma resposta JSON do backend
+
+                            if (response.ok && data.success) {
+                                addPerformMessage(`Sistema: Persona potencialmente atualizada pela IA. (${data.message || 'Detalhes não fornecidos.'})`, false);
+                                // Opcional: Mostrar os dados da persona atualizada para debug
+                                // if(data.persona) {
+                                //     addPerformMessage(`DEBUG - Persona Atual: ${JSON.stringify(data.persona, null, 2)}`, false);
+                                // }
+                            } else {
+                                addPerformMessage(`Sistema: Erro ao tentar atualizar persona com IA. (${data.error || response.statusText || 'Erro desconhecido'})`, false);
+                            }
+                            App.triggerPulse();
+
+                        } catch (error) {
+                            $('#perform-typing-indicator-persona').remove(); // Remove o indicador em caso de erro
+                            console.error('Erro ao chamar /persona-chat-update:', error);
+                            addPerformMessage('Sistema: Falha na comunicação ao tentar atualizar persona com IA.', false);
+                            App.triggerPulse();
+                        }
+
+                    } else { // NÃO está no modo de edição de persona
+                        // Adicionar mensagem do usuário
+                        addPerformMessage(userInput, true);
+                        
+                        // Efeito visual quando o usuário envia
+                        App.triggerPulse();
+                        
+                        const lowerInput = userInput.toLowerCase();
+
+                        // Tratar comandos de UI localmente PRIMEIRO
+                        if (lowerInput === 'clear') {
+                            $('#perform-messages').empty(); // Limpa direto
+                            addPerformMessage("Área de mensagens limpa. Aguardando novos comandos.", false);
+                            App.triggerPulse(); // Pulso para feedback visual
+                        } else if (lowerInput === 'zoom+') {
+                            App.setZoom(App.getZoom() + 0.5);
+                            addPerformMessage("Aumentando visualização do sistema.", false);
+                            App.triggerPulse();
+                        } else if (lowerInput === 'zoom-') {
+                            App.setZoom(Math.max(1.5, App.getZoom() - 0.5));
+                            addPerformMessage("Reduzindo visualização do sistema.", false);
+                            App.triggerPulse();
+                        } else {
+                            // NÃO é um comando de UI local, então prosseguir com a chamada à IA para chat normal
+                            const performTypingIndicatorHTML = `
+                                <div class="perform-message typing-indicator" id="perform-typing-indicator">
+                                    <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
+                                </div>
+                            `;
+                            $('#perform-messages').append(performTypingIndicatorHTML);
+                            const messagesContainer = document.getElementById('perform-messages');
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                            try {
+                                const response = await fetch('http://localhost:3000/chat', {
+                                    method: 'POST',
+                                    headers: { 
+                                        'Content-Type': 'application/json' 
+                                    },
+                                    body: JSON.stringify({ message: userInput }) 
+                                });
+
+                                $('#perform-typing-indicator').remove(); 
+
+                                if (!response.ok) {
+                                    const errorData = await response.json().catch(() => ({ reply: 'Erro do servidor ao processar no modo perform.' }));
+                                    let errorMessageText = `Falha na interface neural: ${response.status}`;
+                                    if (errorData.reply || errorData.error) {
+                                        errorMessageText += ` - ${errorData.reply || errorData.error}`;
+                                    }
+                                    addPerformMessage(errorMessageText, false);
+                                    return;
+                                }
+
+                                const data = await response.json();
+                                addPerformMessage(data.reply, false); 
+
+                            } catch (error) {
+                                $('#perform-typing-indicator').remove(); 
+                                console.error('Erro ao contatar IA no modo perform:', error);
+                                addPerformMessage('Erro de conexão com a unidade central de IA. Verifique os sistemas.', false);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Enviar mensagem com botão no modo perform
+            $('#perform-send-btn').on('click', handlePerformSend);
+            
+            // Enviar mensagem com Enter no modo perform
+            $('#perform-input').on('keypress', function(e) {
+                if (e.which === 13) { // Enter key
+                    handlePerformSend();
+                    return false;
+                }
+            });
+            // --- Fim da Funcionalidade do Modo Perform ---
+
+            // --- Listener para sequência de teclas "admin" ---
+            $(document).on('keydown', function(event) {
+                if (isInPerformMode && document.activeElement !== document.getElementById('perform-input') && !$('#admin-password-modal').is(':visible')) {
+                    const key = event.key.toLowerCase();
+                    
+                    // Adiciona apenas caracteres alfanuméricos simples ao buffer
+                    if (key.length === 1 && key.match(/[a-z0-9]/i)) {
+                        keySequenceBuffer += key;
+                        
+                        // Mantém o buffer do tamanho da sequência alvo
+                        if (keySequenceBuffer.length > targetSequence.length) {
+                            keySequenceBuffer = keySequenceBuffer.substring(keySequenceBuffer.length - targetSequence.length);
+                        }
+                        
+                        if (keySequenceBuffer === targetSequence) {
+                            tryEnterAdminMode();
+                            keySequenceBuffer = ""; // Limpa o buffer após tentativa
+                        }
+                    } else {
+                        // Se não for uma tecla desejada (ex: Shift, Ctrl), limpa o buffer
+                        // Exceto se for backspace e o buffer não estiver vazio, para permitir correção
+                        if (key !== 'backspace' || keySequenceBuffer === "") {
+                            keySequenceBuffer = ""; 
+                        }
+                    }
+                }
+            });
+
+            function tryEnterAdminMode() {
+                if (isInPersonaEditMode) {
+                    return;
+                }
+                // Mostrar o modal e focar no input
+                $('#admin-password-error').hide(); // Esconde mensagem de erro antiga
+                $('#admin-password-modal').fadeIn();
+                $('#admin-password-input').val('').focus(); // Limpa e foca
+                keySequenceBuffer = ""; // Limpa o buffer para não reativar com teclas presas
+            }
+
+            // Listener para o botão "Entrar" do modal de senha
+            $('#admin-password-submit').on('click', function() {
+                const enteredPassword = $('#admin-password-input').val();
+                if (enteredPassword === adminPassword) {
+                    isInPersonaEditMode = true;
+                    App.particleHue = 30; // Muda para Laranja
+                    $('body').addClass('persona-edit-theme-active'); // ATIVA TEMA LARANJA
+                    $('#perform-messages').empty(); 
+                    addPerformMessage("Modo de Edição de Persona ATIVADO. Conte-me sobre você. O que devo saber para te representar? (Digite 'sair da edição' para finalizar)", false);
+                    $('#perform-input').attr('placeholder', 'Descreva-se ou faça perguntas para moldar a persona...');
+                    
+                    $('#admin-password-modal').fadeOut();
+                    $('#admin-password-input').val(''); 
+                    $('#admin-password-error').hide();
+                    App.triggerPulse();
+                } else {
+                    $('#admin-password-error').show();
+                    $('#admin-password-input').val('').focus(); // Limpa e foca novamente
+                }
+            });
+
+            // Listener para o botão "Cancelar" do modal de senha
+            $('#admin-password-cancel').on('click', function() {
+                $('#admin-password-modal').fadeOut();
+                $('#admin-password-input').val('');
+                $('#admin-password-error').hide();
+                keySequenceBuffer = ""; // Importante para não reativar modal
+            });
+
+            // Listener para tecla "Enter" no input de senha do modal
+            $('#admin-password-input').on('keypress', function(e) {
+                if (e.which === 13) { // Enter key
+                    $('#admin-password-submit').click();
+                }
+            });
+
+            // Listener para tecla "Escape" para fechar o modal de senha
+            $(document).on('keydown', function(event) {
+                if (event.key === "Escape" && $('#admin-password-modal').is(':visible')) {
+                    $('#admin-password-cancel').click();
+                }
+            });
+
+            // --- Fim do Listener "admin" ---
+
+            // --- Funcionalidade de Limpeza do Chat Inicial ---
+            // Limpar mensagens iniciais após algum tempo
+            setTimeout(function() {
+                // Verificar se há mensagens no chat
+                if ($('#chat-history .chat-message').length > 0) {
+                    // Adicionar mensagem de limpeza
+                    const cleanupMessage = $('<div class="system-cleanup-message">Sistema inicializado. Limpando mensagens de diagnóstico...</div>');
+                    $('#chat-history').append(cleanupMessage);
+                    
+                    // Mostrar a mensagem de limpeza com delay
+                    setTimeout(function() {
+                        cleanupMessage.addClass('visible');
+                        
+                        // Adicionar classe de retração para mensagens existentes
+                        $('#chat-history .chat-message').addClass('retracting-message');
+                        
+                        // Após a animação, remover as mensagens antigas e mostrar mensagem de boas-vindas
+                        setTimeout(function() {
+                            // Aplicar animação de limpeza
+                            $('#chat-history .chat-message').addClass('clearing');
+                            
+                            // Após a limpeza, remover as mensagens e adicionar nova
+                            setTimeout(function() {
+                                // Remover mensagens retraídas
+                                $('#chat-history .chat-message').remove();
+                                cleanupMessage.remove();
+                                
+                                // Adicionar nova mensagem de boas-vindas
+                                $('#chat-history').append('<p class="chat-message bot"><span class="sender">System:</span> Sessão iniciada. O que quer saber sobre mim?</p>');
+                                
+                                // Efeito visual para destacar a mudança
+                                App.triggerPulse();
+                            }, 1000);
+                        }, 2000);
+                    }, 300);
+                }
+            }, 15000); // 15 segundos após inicialização
+            // --- Fim da Limpeza do Chat Inicial ---
+
+            // --- Conteúdo das Experiências ---
+            window.experienciasContent = 
+                '<span style="color:lime;">EXPERIÊNCIAS</span><hr/>' +
+                '<span style="color:cyan;">Workshop Design Gráfico</span> – IED Rio (Instituto Europeu de Design).<br/>' +
+                '<span style="color:cyan;">Intensivo EBAC</span> (Escola Britânica de Artes Criativas) – Desenvolvimento de Games.<br/>' +
+                '<span style="color:cyan;">Programa de Inovação Tecnológica</span> – Apple Developer Academy (2022/2023).<br/>' +
+                '<span style="color:cyan;">Curso de Programação Visual</span> – cc.espaço.<br/>' +
+                '<span style="color:cyan;">BRIFW</span> – Vencedor do concurso Horizon Latin.x – Brazilian Immersive Fashion Week 2022 e 2023.<br/>' +
+                '<span style="color:cyan;">Workshop</span> – Inovação para Cidades Inteligentes e Sustentáveis –FIRJAN SESI-RJ.<br/>' +
+                '<span style="color:cyan;">Studio Kwo</span> - Desenvolvedor Junior para experiencia em Realidade Virtual.<br/>' +
+                '<span style="color:cyan;">Shell Iniciativa Jovem</span> - Programa de Empreendedorismo e Inovação.<br/>' +
+                '<span style="color:cyan;">Exposições em Realidade Aumentada:</span><br/>' +
+                'Lisboa – Galeria 284<br/>' +
+                'Homenagem à Frida Kahlo – Embaixada do México, Brasília.<br/>' +
+                '<span style="color:cyan;">Monitoria e coordenação</span> de tecnologias do Laboratório de Atividades do Amanhã / Museu do Amanhã<br/>' +
+                '<span style="color:cyan;">Instalação Imersiva</span> - Projeto Artístico na Ativação MOV.DOME, experiência audiovisual Projeção em Domo para o festival Rock The Mountain.<br/>' +
+                '<span style="color:cyan;">Ativação de marca</span> e Instalação no Rock in Rio 2024 para a TIM.<br/>' +
+                '<span style="color:cyan;">Semana de Design PUC-Rio</span> – Criação do primeiro espaço digital no metaverso da universidade<br/>' +
+                '<span style="color:cyan;">ECOA-PUC RIO</span> – Organização de workshops sobre realidade aumentada e novas tecnologias.<br/>' +
+                '<span style="color:cyan;">Workshops</span> sobre Web 3.0 e tecnologias emergentes.<br/>' +
+                '<span style="color:cyan;">ECOA-PUC RIO</span> - Curso de Inteligência Artificial Generativa e Prompt Engineering.<br/>' +
+                '<span style="color:cyan;">Extensão PUC RIO</span> - Desenvolvimento de ChatBot e NLP para Inteligência Artificial.<br/>' +
+                '<span style="color:cyan;">Roda de conversa</span> sobre streaming com José Bonifácio (Boninho).<br/>' +
+                '<span style="color:cyan;">Apresentação de projetos</span> para Apple EUA e Apple Brasil envolvendo escaneamento 3D.';
+
+            // --- Fim da Funcionalidade do Modo Perform ---
+
+            // Verificar o estado inicial de todas as janelas ao carregar a página
+            function checkInitialWindowStates() {
+                // Verificar cada janela e garantir que os ícones flutuantes estejam no estado correto
+                const windowsConfig = [
+                    { frameId: '#chat-window', iconId: '#ai-icon' },
+                    { frameId: '#info-frame', iconId: '#bio-icon' },
+                    { frameId: '#middle-frame', iconId: '#middle-icon' }
+                ];
+                
+                windowsConfig.forEach(config => {
+                    const $frame = $(config.frameId);
+                    const $icon = $(config.iconId);
+                    
+                    // Se a janela estiver minimizada, mostrar ícone, caso contrário, esconder
+                    if ($frame.hasClass('minimized')) {
+                        $icon.show();
+                    } else {
+                        $icon.hide();
+                    }
+                });
+            }
+            
+            // Verificar estados iniciais após um curto delay para garantir que as classes foram aplicadas
+            setTimeout(checkInitialWindowStates, 1000);
+            
+            // Checar os estados também após a animação inicial das janelas
+            setTimeout(checkInitialWindowStates, 8000);
+        });
+    </script>
+</body>
+</html> 

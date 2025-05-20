@@ -1,0 +1,1448 @@
+body {
+    font-family: sans-serif;
+    background-color: #000; /* Fundo preto principal */
+    color: #ccc; 
+    padding: 0; /* Remover padding para canvas ocupar tudo */
+    margin: 0; /* Remover margem padrão */
+    overflow: hidden; /* Esconder barras de rolagem */
+}
+
+h1 {
+    /* Removido */
+}
+
+#particle-canvas {
+    display: block; /* Evita espaço extra abaixo do canvas */
+    position: fixed; /* Ou absolute, dependendo do scroll desejado */
+    top: 0;
+    left: 0;
+    z-index: -1; /* Coloca atrás de outros elementos */
+}
+
+#demo {
+    background-color: transparent; /* Fundo transparente para ver o canvas */
+    color: #ccc; /* Mantém a cor do texto */
+    font-family: 'Courier New', Courier, monospace;
+    padding: 20px;
+    /* border: none; */ /* Já removido */
+    /* border-radius: none; */ /* Já removido */
+    min-height: 150px; 
+    display: inline-block; 
+    width: calc(100% - 40px); 
+    /* Posicionamento para ficar sobre o canvas */
+    position: relative; /* Ou absolute se precisar de controle fino */
+    z-index: 1; /* Garante que fique sobre o canvas */
+    box-sizing: border-box; /* Inclui padding na largura */
+}
+
+/* Estilos recomendados pela documentação t.js para resetar tags HTML */
+ins,
+del {
+    text-decoration: none;
+}
+
+kbd {
+    font-family: inherit;
+    /* background-color: #eee; */ /* Opcional: estilo para kbd */
+    /* padding: 1px 3px; */
+    /* border-radius: 3px; */
+}
+
+/* Estilo para o cursor padrão do t.js (se não for customizado no script) */
+.t-caret {
+    /* Exemplo: cor diferente */
+    /* color: lime; */ 
+}
+
+/* Animação de piscar para o cursor customizado */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.t-caret-blink {
+    animation: blink 1s step-end infinite;
+}
+
+/* Estilo para a linha horizontal (hr) */
+hr {
+    border: none;
+    border-top: 1px solid #555;
+    margin: 5px 0;
+} 
+
+/* === Novo Frame no Canto Inferior Esquerdo === */
+#info-frame {
+    position: fixed;
+    bottom: 40px; 
+    left: calc(16.67%); /* Posicionado a 1/6 da tela para centralizar no primeiro terço */
+    transform: translateX(-50%);
+    height: 370px; /* Altura mantida */
+    width: 32%; /* Aproximadamente 1/3 da largura da tela, com margens */
+    background-color: rgba(10, 10, 10, 0.85); 
+    border: 1px solid lime; 
+    border-radius: 4px;
+    z-index: 10; 
+    font-family: 'Courier New', Courier, monospace; 
+    color: #eee; 
+    box-shadow: 0 0 25px rgba(0, 255, 0, 0.4); 
+    opacity: 0;
+    clip-path: inset(100% 0 0 0);
+    transition: opacity 0.6s ease-out, clip-path 0.6s ease-out, box-shadow 0.3s ease; 
+    overflow: hidden;
+}
+
+/* Estilo para frame visível (após animação) */
+#info-frame.frame-visible {
+    opacity: 1;
+    clip-path: inset(0 0 0 0); 
+}
+
+/* Estilo para o texto da biografia */
+#bio-text {
+    padding: 10px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8em;
+    line-height: 1.4;
+    color: #eee;
+    scroll-behavior: smooth; /* Para rolagem suave */
+}
+
+/* Botões de navegação para o frame de biografia */
+.bio-nav-buttons {
+    position: absolute;
+    right: 10px;
+    bottom: 50%; 
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 15;
+}
+
+.bio-nav-btn {
+    background-color: rgba(10, 10, 10, 0.7);
+    color: lime;
+    border: 1px solid lime;
+    border-radius: 3px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.2s, color 0.2s;
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
+}
+
+.bio-nav-btn:hover {
+    background-color: rgba(0, 255, 0, 0.2);
+}
+
+/* Botão para expandir em tela cheia */
+#bio-fullscreen {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* Modal de tela cheia para a biografia */
+.bio-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.bio-modal.active {
+    display: flex;
+    opacity: 1;
+}
+
+.bio-modal-content {
+    position: relative;
+    width: 80%;
+    height: 80%;
+    background-color: rgba(10, 10, 10, 0.9);
+    border: 2px solid lime;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 40px rgba(0, 255, 0, 0.5);
+    overflow: auto;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1em;
+    line-height: 1.5;
+    color: #eee;
+}
+
+.bio-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+.bio-modal-title {
+    font-size: 1.2em;
+    color: lime;
+    font-weight: bold;
+}
+
+.bio-modal-close {
+    background-color: transparent;
+    color: lime;
+    border: 1px solid lime;
+    border-radius: 4px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.bio-modal-close:hover {
+    background-color: rgba(0, 255, 0, 0.2);
+}
+
+/* === Estilos da Janela de Chat === */
+#chat-window {
+    position: fixed;
+    bottom: 40px; 
+    right: calc(16.67%); /* Posicionado a 1/6 da tela a partir da direita */
+    transform: translateX(50%);
+    height: 370px; /* Ajustado para ser consistente com os outros frames */
+    width: 32%; /* Aproximadamente 1/3 da largura da tela, com margens */
+    background-color: rgba(10, 10, 10, 0.85); 
+    border: 1px solid lime; 
+    border-radius: 4px;
+    z-index: 10; 
+    display: flex;
+    flex-direction: column;
+    font-family: 'Courier New', Courier, monospace; 
+    color: #eee; 
+    box-shadow: 0 0 25px rgba(0, 255, 0, 0.4); 
+    opacity: 0;
+    clip-path: inset(100% 0 0 0);
+    transition: opacity 0.6s ease-out, clip-path 0.6s ease-out, box-shadow 0.3s ease; 
+    overflow: hidden;
+    top: auto; /* Remove o posicionamento superior */
+}
+
+/* Remove regras de pseudo-elementos de borda animada */
+/* #chat-window::before, #chat-window::after { ... } */
+
+/* Remove keyframes das animações de borda */
+/* @keyframes green-steam { ... } */
+/* @keyframes moveGradient { ... } */
+
+/* Estilo para chat visível (após animação) */
+#chat-window.chat-visible {
+    opacity: 1;
+    clip-path: inset(0 0 0 0); 
+}
+
+/* Estilo quando o chat está ativo (input focado) - REMOVIDO */
+/*
+#chat-window.chat-active {
+    border-color: white; 
+    box-shadow: 0 0 40px rgba(0, 255, 0, 0.7); 
+}
+*/
+
+#chat-history {
+    flex-grow: 1; 
+    overflow-y: auto; 
+    padding: 10px;
+    font-size: 0.8em; 
+    border-bottom: 1px dashed lime; /* Separador interno */
+}
+
+.chat-message {
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.chat-message .sender {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.chat-message.user {
+    color: cyan;
+}
+
+.chat-message.user .sender {
+    color: cyan; 
+}
+
+.chat-message.bot {
+    color: lightgreen; /* Verde um pouco mais claro */
+}
+
+.chat-message.bot .sender {
+    color: lightgreen;
+}
+
+/* Estilo para o indicador de "digitando" */
+.typing-indicator {
+    color: gray; /* Cor mais apagada */
+    font-style: italic;
+}
+
+#chat-input-area {
+    height: auto; /* Altura automática para acomodar input e botão */
+    min-height: 30px; /* Manter altura mínima */
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo levemente diferente */
+}
+
+.chat-prompt {
+    color: lime;
+    margin-right: 5px;
+}
+
+#chat-input {
+    flex-grow: 1; /* Ocupa espaço disponível */
+    background-color: transparent;
+    border: none;
+    color: #eee;
+    outline: none; /* Remove borda de foco padrão */
+    margin-right: 5px;
+    font-family: inherit; /* Herda a fonte monoespaçada */
+    font-size: 0.9em;
+}
+
+#chat-send-btn {
+    background-color: lime;
+    color: #000;
+    border: none;
+    padding: 3px 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    border-radius: 3px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+#chat-send-btn:hover {
+    background-color: lightgreen;
+}
+
+.fake-input {
+    /* Estilo não mais necessário, pois foi removido do HTML */
+    /* 
+    color: lime;
+    animation: blink 1s step-end infinite; 
+    */
+}
+
+/* Botão de minimizar para janelas */
+.minimize-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background-color: rgba(10, 10, 10, 0.7);
+    color: lime;
+    border: 1px solid lime;
+    border-radius: 3px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s, color 0.2s;
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
+    z-index: 20;
+}
+
+.minimize-btn:hover {
+    background-color: rgba(0, 255, 0, 0.2);
+}
+
+/* Botões flutuantes para janelas minimizadas */
+.floating-icons-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px; /* Espaçamento entre os ícones */
+    justify-content: center;
+    z-index: 100;
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Transição suave para aparecimento/desaparecimento */
+}
+
+/* Estilo para quando o container deve estar oculto (usado no modo performance) */
+.floating-icons-container.hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px); /* Desliza ligeiramente para baixo ao desaparecer */
+    pointer-events: none; /* Previne interação quando oculto */
+}
+
+/* Estilos dos ícones flutuantes */
+.floating-icon {
+    position: relative; /* Mantém como relative dentro do container */
+    background-color: rgba(10, 10, 10, 0.9);
+    color: lime;
+    border: 1px solid lime;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    transition: background-color 0.3s, transform 0.3s;
+    display: none; /* Inicialmente oculto */
+}
+
+.floating-icon:hover {
+    background-color: rgba(0, 40, 0, 0.9);
+    transform: scale(1.05);
+}
+
+/* Removendo posicionamentos específicos, todos controlados pelo container */
+#ai-icon, #bio-icon, #middle-icon {
+    bottom: auto;
+    right: auto;
+    left: auto;
+    transform: none;
+}
+
+/* Estado minimizado */
+.minimized {
+    display: none !important;
+}
+
+/* Botão de fullscreen para chat */
+.fullscreen-btn {
+    position: absolute;
+    right: 10px;
+    top: 45px; /* Aumentado de 40px para 45px para maior espaçamento */
+    background-color: rgba(10, 10, 10, 0.7);
+    color: lime;
+    border: 1px solid lime;
+    border-radius: 3px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s, color 0.2s;
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
+    z-index: 20;
+}
+
+.fullscreen-btn:hover {
+    background-color: rgba(0, 255, 0, 0.2);
+}
+
+/* Modal de tela cheia para o chat */
+.chat-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.chat-modal.active {
+    display: flex;
+    opacity: 1;
+}
+
+.chat-modal-content {
+    position: relative;
+    width: 80%;
+    height: 80%;
+    background-color: rgba(10, 10, 10, 0.9);
+    border: 2px solid lime;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 40px rgba(0, 255, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1em;
+    line-height: 1.5;
+    color: #eee;
+}
+
+.chat-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+.chat-modal-title {
+    font-size: 1.2em;
+    color: lime;
+    font-weight: bold;
+}
+
+.chat-modal-close {
+    background-color: transparent;
+    color: lime;
+    border: 1px solid lime;
+    border-radius: 4px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.chat-modal-close:hover {
+    background-color: rgba(0, 255, 0, 0.2);
+}
+
+#chat-modal-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+#chat-modal-history {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed lime;
+}
+
+#chat-modal-input-area {
+    height: auto;
+    min-height: 40px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#chat-modal-input {
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    color: #eee;
+    outline: none;
+    margin-right: 10px;
+    font-family: inherit;
+    font-size: 1em;
+}
+
+#chat-modal-send-btn {
+    background-color: lime;
+    color: #000;
+    border: none;
+    padding: 5px 15px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    border-radius: 3px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+#chat-modal-send-btn:hover {
+    background-color: lightgreen;
+}
+
+/* Estado minimizado */
+.minimized {
+    display: none !important;
+}
+
+/* Animação para mensagens iniciais se retraindo */
+@keyframes fadeOutMessages {
+    0% { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+    50% {
+        opacity: 0.5;
+        transform: translateY(-10px);
+    }
+    100% { 
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+}
+
+/* Classe para mensagens que serão recolhidas */
+.retracting-message {
+    animation: fadeOutMessages 1.5s forwards;
+}
+
+/* Mensagem de sistema limpando */
+.system-cleanup-message {
+    color: lime;
+    background-color: rgba(0, 30, 0, 0.7);
+    border: 1px solid lime;
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s, transform 0.5s;
+}
+
+.system-cleanup-message.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Animação de "apagando" */
+@keyframes terminalClear {
+    0% { 
+        height: auto;
+        opacity: 1;
+        margin-bottom: 8px;
+    }
+    70% {
+        height: auto;
+        opacity: 0;
+        margin-bottom: 8px;
+    }
+    100% { 
+        height: 0;
+        opacity: 0;
+        margin-bottom: 0;
+        padding: 0;
+        border: none;
+    }
+}
+
+.clearing {
+    animation: terminalClear 1s forwards;
+    overflow: hidden;
+}
+
+/* Terminal desaparecendo - Animação melhorada */
+@keyframes scanLine {
+    0% {
+        height: 0;
+        top: 0;
+        opacity: 0.8;
+    }
+    50% {
+        height: 30px;
+        opacity: 0.9;
+    }
+    100% {
+        height: 0;
+        top: 100%;
+        opacity: 0.8;
+    }
+}
+
+@keyframes glitchText {
+    0% {
+        text-shadow: none;
+        transform: skewX(0);
+        color: #ccc;
+    }
+    10% {
+        text-shadow: -2px 0 lime, 2px 0 red;
+        transform: skewX(2deg);
+        color: cyan;
+    }
+    20% {
+        text-shadow: 2px 0 lime, -2px 0 red;
+        transform: skewX(-1deg);
+        color: #ccc;
+    }
+    30% {
+        text-shadow: -1px 0 lime, 1px 0 red;
+        transform: skewX(5deg);
+        color: #ccc;
+    }
+    40% {
+        text-shadow: 1px 0 lime, -1px 0 red;
+        transform: skewX(-5deg);
+        color: lime;
+    }
+    50% {
+        text-shadow: -3px 0 lime, 3px 0 red;
+        transform: skewX(0);
+        color: #ccc;
+    }
+    60% {
+        text-shadow: none;
+        transform: skewX(0);
+        color: cyan;
+    }
+    70% {
+        text-shadow: 3px 0 red, -3px 0 lime;
+        transform: skewX(3deg);
+        color: #ccc;
+    }
+    80% {
+        text-shadow: none;
+        transform: skewX(0);
+        color: lime;
+    }
+    90% {
+        text-shadow: -2px 0 lime, 2px 0 red;
+        transform: skewX(-4deg);
+        color: cyan;
+    }
+    100% {
+        text-shadow: none;
+        transform: skewX(0);
+        color: #ccc;
+    }
+}
+
+@keyframes fadeOutTerminal {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+        letter-spacing: normal;
+        filter: blur(0);
+    }
+    20% {
+        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+        transform: scale(1);
+        filter: blur(0);
+    }
+    30% {
+        transform: scale(1.05);
+        letter-spacing: 2px;
+        filter: blur(0.5px);
+    }
+    70% {
+        transform: scale(0.95);
+        filter: blur(1px);
+    }
+    85% {
+        letter-spacing: -1px;
+        filter: blur(2px);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.9);
+        letter-spacing: normal;
+        height: 0;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        filter: blur(5px);
+    }
+}
+
+#demo.disappearing {
+    position: relative;
+    animation: fadeOutTerminal 2.5s forwards;
+    pointer-events: none;
+}
+
+/* Linha de escaneamento */
+#demo.disappearing::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 0;
+    background: linear-gradient(transparent, rgba(0, 255, 0, 0.15), transparent);
+    z-index: 5;
+    animation: scanLine 1.8s linear;
+}
+
+/* Efeito de glitch no texto */
+#demo.disappearing * {
+    animation: glitchText 1.5s linear forwards;
+}
+
+/* Animação de fade in para a mensagem de desligamento */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Efeito de byte por byte desaparecendo */
+@keyframes byteFadeOut {
+    0% {
+        background: rgba(0, 255, 0, 0.2);
+        color: lime;
+    }
+    50% {
+        background: rgba(0, 255, 0, 0);
+        color: cyan;
+    }
+    100% {
+        background: transparent;
+        color: inherit;
+    }
+}
+
+#demo.disappearing span, 
+#demo.disappearing kbd {
+    display: inline-block;
+    animation: byteFadeOut 0.15s linear forwards;
+    animation-delay: calc(var(--char-index, 0) * 0.05s);
+}
+
+/* Botão de perform para chat */
+.perform-btn {
+    position: absolute;
+    right: 10px;
+    top: 80px; /* Posicionado abaixo do botão fullscreen */
+    background-color: rgba(10, 10, 10, 0.7);
+    color: #ff9500; /* Cor laranja para diferenciar */
+    border: 1px solid #ff9500;
+    border-radius: 3px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s, color 0.2s, transform 0.2s;
+    box-shadow: 0 0 8px rgba(255, 149, 0, 0.4);
+    z-index: 20;
+}
+
+.perform-btn:hover {
+    background-color: rgba(255, 149, 0, 0.2);
+    transform: scale(1.1);
+}
+
+/* Estilos para o modo perform */
+#perform-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none; /* Inicialmente oculto */
+    flex-direction: column;
+    justify-content: space-between; /* Separar mensagens do input */
+    align-items: center;
+    z-index: 50;
+    pointer-events: none; /* Permite interação com o fundo */
+}
+
+#perform-messages {
+    width: 100%;
+    max-width: 100%;
+    min-height: 300px;
+    margin-bottom: 0;
+    margin-top: 100px; /* Distância do topo */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    pointer-events: none; /* Permite interação com o fundo */
+}
+
+.perform-message {
+    background-color: rgba(10, 10, 10, 0.6);
+    border: 1px solid lime;
+    border-radius: 5px;
+    padding: 15px 25px;
+    margin: 10px 0;
+    max-width: 90%;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.2em;
+    color: #eee;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform 0.5s, opacity 0.5s, background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease;
+    pointer-events: auto; /* Permite interação com as mensagens */
+}
+
+.perform-message.visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.perform-message.user {
+    align-self: center; /* Centraliza as mensagens do usuário */
+    background-color: rgba(10, 20, 30, 0.6);
+    border-color: cyan;
+    color: cyan;
+    box-shadow: 0 0 20px rgba(0, 200, 255, 0.3);
+}
+
+#perform-input-area {
+    width: 80%;
+    max-width: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(10, 10, 10, 0.8);
+    border: 1px solid lime;
+    border-radius: 5px;
+    padding: 10px 15px;
+    box-shadow: 0 0 25px rgba(0, 255, 0, 0.4);
+    transition: box-shadow 0.3s, background-color 0.5s ease, border-color 0.5s ease;
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: auto; /* Permite interação com o input */
+}
+
+#perform-input-area:focus-within {
+    box-shadow: 0 0 35px rgba(0, 255, 0, 0.6);
+}
+
+#perform-input {
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    color: #eee;
+    outline: none;
+    padding: 8px 0;
+    margin-right: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.1em;
+    transition: color 0.5s ease;
+}
+
+#perform-send-btn {
+    background-color: lime;
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    border-radius: 3px;
+    transition: background-color 0.2s, transform 0.2s, color 0.5s ease;
+}
+
+#perform-send-btn:hover {
+    background-color: lightgreen;
+    transform: scale(1.05);
+}
+
+#exit-perform-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(10, 10, 10, 0.7);
+    color: #ff9500;
+    border: 1px solid #ff9500;
+    border-radius: 5px;
+    padding: 8px 15px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    cursor: pointer;
+    z-index: 51;
+    transition: background-color 0.2s, transform 0.2s, color 0.5s ease, border-color 0.5s ease;
+    pointer-events: auto; /* Permite interação com o botão */
+}
+
+#exit-perform-btn:hover {
+    background-color: rgba(255, 149, 0, 0.2);
+    transform: scale(1.05);
+}
+
+/* Animação para mensagens no modo perform */
+@keyframes typeIn {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+.typing-effect {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typeIn 2s steps(40, end);
+}
+
+/* === Novo Frame Central === */
+#middle-frame {
+    position: fixed;
+    bottom: 40px;
+    left: 50%; /* Centralizado na tela */
+    transform: translateX(-50%);
+    height: 370px;
+    width: 32%; /* Aproximadamente 1/3 da largura da tela, com margens */
+    background-color: rgba(10, 10, 10, 0.85);
+    border: 1px solid lime;
+    border-radius: 4px;
+    z-index: 10;
+    font-family: 'Courier New', Courier, monospace;
+    color: #eee;
+    box-shadow: 0 0 25px rgba(0, 255, 0, 0.4);
+    opacity: 0;
+    clip-path: inset(100% 0 0 0);
+    transition: opacity 0.6s ease-out, clip-path 0.6s ease-out, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+/* Estilo para frame visível (após animação) */
+#middle-frame.frame-visible {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+}
+
+/* Estilo para o conteúdo do frame central */
+#middle-content {
+    padding: 10px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8em;
+    line-height: 1.4;
+    color: #eee;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+#middle-content::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
+.middle-header {
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+}
+
+/* Botões de navegação para o frame central */
+.middle-nav-buttons {
+    position: absolute;
+    right: 10px;
+    bottom: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 15;
+}
+
+/* Modal para visualização em tela cheia do frame central */
+.middle-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.middle-modal.active {
+    display: flex;
+    opacity: 1;
+}
+
+.middle-modal-content {
+    position: relative;
+    width: 80%;
+    height: 80%;
+    background-color: rgba(10, 10, 10, 0.9);
+    border: 2px solid lime;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 40px rgba(0, 255, 0, 0.5);
+    overflow: auto;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1em;
+    line-height: 1.5;
+    color: #eee;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.middle-modal-content::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
+.middle-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+.middle-modal-title {
+    font-size: 1.2em;
+    color: lime;
+    font-weight: bold;
+}
+
+.middle-modal-close {
+    background-color: transparent;
+    color: lime;
+    border: 1px solid lime;
+    border-radius: 4px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.middle-modal-close:hover {
+    background-color: rgba(0, 255, 0, 0.2);
+}
+
+/* Ajusta a posição do ícone flutuante do frame central */
+#middle-icon {
+    /* Removendo regras específicas que causam conflito */
+}
+
+.top-perform-btn {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 35px;
+    height: 35px;
+    background-color: rgba(10, 10, 10, 0.8);
+    color: #ffcc00;
+    border: 1px solid #ffcc00;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 100;
+    box-shadow: 0 0 15px rgba(255, 204, 0, 0.4);
+    transition: all 0.3s ease;
+    
+    /* Inicialmente invisível */
+    opacity: 0;
+    transform: translateX(-50%) scale(0);
+    filter: blur(10px);
+}
+
+/* Classe para manter o botão visível após a animação */
+.top-perform-btn.revealed {
+    animation: performButtonReveal 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    opacity: 1; /* Garante que permanece visível */
+    transform: translateX(-50%) scale(1); /* Mantém o tamanho correto */
+    filter: blur(0); /* Mantém nitidez */
+}
+
+/* Animação de pulso após a revelação */
+.top-perform-btn.pulsing {
+    animation: performButtonPulse 1.5s infinite;
+    opacity: 1 !important; /* Força a visibilidade */
+    transform: translateX(-50%) scale(1) !important; /* Força o tamanho correto */
+    filter: blur(0) !important; /* Força nitidez */
+}
+
+.top-perform-btn:hover {
+    background-color: rgba(30, 30, 10, 0.9);
+    color: #ffcc00;
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.6);
+    transform: translateX(-50%) scale(1.05);
+}
+
+/* Animação de entrada do botão perform */
+@keyframes performButtonReveal {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) scale(0);
+        filter: blur(10px);
+    }
+    50% {
+        opacity: 0.8;
+        transform: translateX(-50%) scale(1.2);
+        filter: blur(2px);
+        box-shadow: 0 0 30px rgba(255, 204, 0, 0.7);
+    }
+    75% {
+        transform: translateX(-50%) scale(0.9);
+        box-shadow: 0 0 20px rgba(255, 204, 0, 0.6);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+        filter: blur(0);
+        box-shadow: 0 0 15px rgba(255, 204, 0, 0.4);
+    }
+}
+
+/* Animação de pulso após a revelação */
+@keyframes performButtonPulse {
+    0% {
+        box-shadow: 0 0 15px rgba(255, 204, 0, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 204, 0, 0.7);
+        color: #ffdd22;
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(255, 204, 0, 0.4);
+    }
+}
+
+/* Indicador de "digitando" com pontinhos animados */
+.typing-dots span {
+    opacity: 0;
+    animation: blink-dot 1.4s infinite;
+}
+
+.typing-dots span:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.typing-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes blink-dot {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+/* Ajuste para o texto do indicador se necessário */
+.bot.typing-indicator .sender {
+    margin-right: 3px; /* Pequeno ajuste para espaçamento com os pontos */
+}
+
+.perform-message.typing-indicator .typing-dots span {
+    color: lightgreen; /* Cor dos pontinhos no modo perform, pode ajustar */
+    transition: color 0.5s ease;
+}
+
+.perform-message.typing-indicator {
+    /* Para garantir que o texto "Sistema:" e os pontos fiquem na mesma linha se o conteúdo for só os pontos */
+    display: flex;
+    align-items: baseline;
+    color: lightgreen; /* Cor do texto "Sistema:" no modo perform */
+
+    /* Novas regras para visibilidade imediata e aparência de status */
+    opacity: 1; /* Garante visibilidade */
+    transform: translateY(0); /* Remove o deslocamento inicial */
+    transition: none, color 0.5s ease; /* Mantém transition:none para as outras props, só cor */
+    background-color: transparent; /* Sem fundo de bolha de mensagem */
+    border: none; /* Sem borda de bolha de mensagem */
+    box-shadow: none; /* Sem sombra de bolha de mensagem */
+    padding: 5px 25px; /* Padding menor, ajustar conforme necessário */
+    margin: 10px 0; /* Manter margem para espaçamento com outras mensagens */
+    max-width: 90%; /* Manter consistência com outras mensagens perform */
+    font-family: 'Courier New', Courier, monospace; /* Manter a fonte */
+    font-size: 1.2em; /* Manter o tamanho da fonte */
+}
+
+.perform-message.typing-indicator .sender-prefix {
+    margin-right: 5px;
+}
+
+/* === Modal de Senha Admin === */
+.password-modal {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 200; /* Alto z-index para ficar sobre tudo */
+    font-family: 'Courier New', Courier, monospace;
+    color: #eee;
+    display: none; /* Controlado por JS */
+}
+
+.password-modal-content {
+    background-color: rgba(10, 10, 10, 0.92); 
+    border: 1px solid lime; 
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+    width: 300px; /* Largura do modal */
+}
+
+.password-modal-content h4 {
+    color: lime;
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.1em;
+}
+
+.password-label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.password-input {
+    width: calc(100% - 12px); /* Considera padding interno */
+    padding: 8px;
+    margin-bottom: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid lime;
+    color: #eee;
+    font-family: inherit;
+    font-size: 1em;
+}
+
+.password-input:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.password-error-message {
+    color: #ff4d4d; /* Vermelho para erro */
+    font-size: 0.8em;
+    text-align: center;
+    margin-bottom: 10px;
+    min-height: 1.2em; /* Para evitar que o layout salte */
+}
+
+.password-modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.password-button {
+    background-color: lime;
+    color: #000;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    border-radius: 3px;
+    transition: background-color 0.2s, color 0.2s;
+    flex-grow: 1; /* Faz os botões ocuparem espaço igual */
+    margin: 0 5px; /* Pequena margem entre eles */
+}
+
+.password-button.cancel {
+    background-color: #555;
+    color: #ccc;
+    border: 1px solid #888;
+}
+
+.password-button:hover {
+    background-color: lightgreen;
+}
+
+.password-button.cancel:hover {
+    background-color: #777;
+    color: #fff;
+}
+/* === Fim do Modal de Senha Admin === */
+
+/* === Tema Laranja para Modo de Edição de Persona === */
+body.persona-edit-theme-active #perform-container {
+    /* Poderia mudar o background do container principal se desejado */
+    /* background-color: rgba(30,20,10,0.95); */
+}
+
+body.persona-edit-theme-active .perform-message {
+    background-color: rgba(40, 25, 10, 0.7); /* Laranja escuro/marrom para fundo */
+    border-color: #ff9500;
+    color: #ffcc66; /* Laranja claro para texto */
+    box-shadow: 0 0 20px rgba(255, 149, 0, 0.4);
+}
+
+body.persona-edit-theme-active .perform-message.user {
+    background-color: rgba(50, 30, 15, 0.7); /* Um pouco diferente para usuário, mas ainda laranja */
+    border-color: #ffad33; /* Laranja um pouco mais claro para borda do usuário */
+    color: #ffe0b3; /* Laranja bem claro para texto do usuário */
+    box-shadow: 0 0 20px rgba(255, 173, 51, 0.5);
+}
+
+body.persona-edit-theme-active #perform-input-area {
+    background-color: rgba(30, 20, 10, 0.85);
+    border-color: #ff9500;
+    box-shadow: 0 0 25px rgba(255, 149, 0, 0.5);
+}
+
+body.persona-edit-theme-active #perform-input-area:focus-within {
+    box-shadow: 0 0 35px rgba(255, 149, 0, 0.7);
+}
+
+body.persona-edit-theme-active #perform-input {
+    color: #ffcc66;
+}
+
+body.persona-edit-theme-active #perform-send-btn {
+    background-color: #ff9500;
+    color: #201508; /* Texto escuro para contraste com laranja */
+}
+
+body.persona-edit-theme-active #perform-send-btn:hover {
+    background-color: #ffad33;
+}
+
+/* O botão de sair já é laranja, podemos mantê-lo ou ajustá-lo levemente se necessário */
+body.persona-edit-theme-active #exit-perform-btn {
+    /* Exemplo: poderia escurecer um pouco para diferenciar do tema ativo */
+    /* background-color: rgba(200, 100, 0, 0.7); */
+    /* border-color: #dd7700; */
+    /* color: #ffdd99; */
+}
+
+body.persona-edit-theme-active .perform-message.typing-indicator {
+    color: #ffcc66; /* Cor do texto (se houvesse) */
+}
+
+body.persona-edit-theme-active .perform-message.typing-indicator .typing-dots span {
+    color: #ffcc66; /* Cor dos pontinhos */
+}
+
+/* === Fim do Tema Laranja === */
+
+/* === Modal de Senha Admin === */
+/* ... existing code ... */
+
+/* ... existing code ... */ 
