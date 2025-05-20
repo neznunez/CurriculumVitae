@@ -1462,4 +1462,9 @@ body.persona-edit-theme-active .perform-message.typing-indicator .typing-dots sp
     /* Se você já tiver um bloco @media (max-width: 768px) ou similar,
        adicione apenas o seletor #top-perform com suas regras DENTRO dele,
        evitando duplicar o @media. */
+}
+
+/* Classe para ocultar elementos quando o modo perform está ativo */
+.hidden-in-perform-mode {
+    display: none !important;
 } 

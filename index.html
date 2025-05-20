@@ -1107,6 +1107,9 @@
                 // Esconder todas as janelas
                 $('#chat-window, #info-frame, #middle-frame').addClass('minimized');
                 
+                // ESCONDER O BOTÃO #top-perform
+                $('#top-perform').addClass('hidden-in-perform-mode');
+                
                 // Esconder o container de ícones flutuantes para uma transição suave
                 $('.floating-icons-container').addClass('hidden');
                 
@@ -1139,6 +1142,9 @@
                 keySequenceBuffer = ""; // Limpa o buffer
                 // Esconder o container perform
                 $('#perform-container').fadeOut(400);
+
+                // MOSTRAR O BOTÃO #top-perform NOVAMENTE
+                $('#top-perform').removeClass('hidden-in-perform-mode');
                 
                 // Restaurar zoom normal
                 setTimeout(function() {
