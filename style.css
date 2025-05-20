@@ -1445,4 +1445,21 @@ body.persona-edit-theme-active .perform-message.typing-indicator .typing-dots sp
 /* === Modal de Senha Admin === */
 /* ... existing code ... */
 
-/* ... existing code ... */ 
+/* ... existing code ... */
+
+/* ========================================== */
+/* === ESTILOS PARA DISPOSITIVOS MÓVEIS === */
+/* ========================================== */
+@media (max-width: 768px) { /* Ajuste este valor se necessário */
+
+    #top-perform {
+        left: auto !important; /* Remove o posicionamento esquerdo */
+        right: 20px !important; /* Posiciona a 20px da direita */
+        top: 20px !important;   /* Mantém ou ajusta a distância do topo */
+        transform: none !important; /* Remove a translação X que centralizava */
+    }
+
+    /* Se você já tiver um bloco @media (max-width: 768px) ou similar,
+       adicione apenas o seletor #top-perform com suas regras DENTRO dele,
+       evitando duplicar o @media. */
+} 
