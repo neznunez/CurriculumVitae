@@ -36,16 +36,46 @@
     </div>
     <!-- === Fim da Estrutura do Chat === -->
 
+    <!-- === Novo Frame de ID === -->
+    <div id="id-frame">
+        <div class="minimize-btn" id="minimize-id">_</div>
+        <div class="fullscreen-btn" id="id-fullscreen">⛶</div>
+        <!-- Container para conteúdo -->
+        <div id="id-content">
+            <div class="id-header">
+                <span style="color:lime;">ID.</span>
+                <hr/>
+            </div>
+            <!-- Área de conteúdo -->
+            <div id="id-area">
+                <!-- Conteúdo de Informações Pessoais aqui -->
+                <p>Nome: João Victor Nunez</p>
+                <p>Profissão: Artista Digital & Desenvolvedor</p>
+                <p>Local: Rio de Janeiro, Brasil</p>
+                <!-- Adicionar mais informações conforme necessário -->
+            </div>
+        </div>
+        <!-- Botões de navegação (se necessários, por enquanto vamos omitir para ID) -->
+        <!-- 
+        <div class="id-nav-buttons">
+            <div class="bio-nav-btn" id="id-scroll-up">▲</div>
+            <div class="bio-nav-btn" id="id-scroll-down">▼</div>
+        </div>
+        -->
+    </div>
+    <!-- === Fim do Novo Frame de ID === -->
+
     <!-- === Novo Frame no Canto Inferior Esquerdo === -->
     <div id="info-frame">
         <div class="minimize-btn" id="minimize-bio">_</div>
+        <div class="fullscreen-btn" id="bio-fullscreen">⛶</div> <!-- Movido e classe alterada -->
         <!-- Container para a biografia com t.js -->
         <div id="bio-text"></div>
         <!-- Botões de navegação -->
         <div class="bio-nav-buttons">
             <div class="bio-nav-btn" id="bio-scroll-up">▲</div>
             <div class="bio-nav-btn" id="bio-scroll-down">▼</div>
-            <div class="bio-nav-btn" id="bio-fullscreen">⛶</div>
+            <!-- Botão de fullscreen removido daqui -->
         </div>
     </div>
     <!-- === Fim do Novo Frame === -->
@@ -73,10 +103,57 @@
     </div>
     <!-- === Fim do Novo Frame Central === -->
     
+    <!-- === Frame de Habilidades === -->
+    <div id="skills-frame">
+        <div class="minimize-btn" id="minimize-skills">_</div>
+        <div class="fullscreen-btn" id="skills-fullscreen">⛶</div>
+        <div id="skills-content">
+            <div class="skills-header">
+                <span style="color:lime;">HABILIDADES</span>
+                <hr/>
+            </div>
+            <div id="skills-area">
+                <!-- Exemplo de Habilidade com Barra de Progresso -->
+                <div class="skill-entry">
+                    <span class="skill-name">Blender</span>
+                    <div class="progress-bar-background">
+                        <div class="progress-bar-foreground" data-percentage="75%" style="width: 0%;"></div>
+                    </div>
+                    <span class="skill-percentage">75%</span>
+                </div>
+                <div class="skill-entry">
+                    <span class="skill-name">HTML & CSS</span>
+                    <div class="progress-bar-background">
+                        <div class="progress-bar-foreground" data-percentage="90%" style="width: 0%;"></div>
+                    </div>
+                    <span class="skill-percentage">90%</span>
+                </div>
+                <div class="skill-entry">
+                    <span class="skill-name">JavaScript</span>
+                    <div class="progress-bar-background">
+                        <div class="progress-bar-foreground" data-percentage="65%" style="width: 0%;"></div>
+                    </div>
+                    <span class="skill-percentage">65%</span>
+                </div>
+                <div class="skill-entry">
+                    <span class="skill-name">Adobe Suite</span>
+                    <div class="progress-bar-background">
+                        <div class="progress-bar-foreground" data-percentage="80%" style="width: 0%;"></div>
+                    </div>
+                    <span class="skill-percentage">80%</span>
+                </div>
+                <!-- Adicionar mais habilidades aqui -->
+            </div>
+        </div>
+    </div>
+    <!-- === Fim do Novo Frame de Habilidades === -->
+
     <!-- Botões flutuantes para janelas minimizadas -->
     <div class="floating-icons-container">
+        <div class="floating-icon" id="id-icon">ID</div>
         <div class="floating-icon" id="bio-icon">BIO</div>
         <div class="floating-icon" id="middle-icon">EXP</div>
+        <div class="floating-icon" id="skills-icon">SKL</div> <!-- Novo ícone SKL -->
         <div class="floating-icon" id="ai-icon">AI</div>
     </div>
     
@@ -117,6 +194,30 @@
                 <div class="middle-modal-close" id="middle-modal-close">✕</div>
             </div>
             <div id="middle-modal-content"></div>
+        </div>
+    </div>
+
+    <!-- Modal para visualização em tela cheia do frame de ID -->
+    <div class="id-modal modal-template" id="id-modal"> <!-- Adicionada classe genérica modal-template -->
+        <div class="modal-content-template"> <!-- Adicionada classe genérica -->
+            <div class="modal-header-template"> <!-- Adicionada classe genérica -->
+                <div class="modal-title-template">INFORMAÇÕES PESSOAIS</div> <!-- Adicionada classe genérica -->
+                <div class="modal-close-template" id="id-modal-close">✕</div> <!-- Adicionada classe genérica -->
+            </div>
+            <div id="id-modal-content-area"></div> <!-- Área de conteúdo específica -->
+        </div>
+    </div>
+
+    <!-- Modal para visualização em tela cheia do frame de Habilidades -->
+    <div class="skills-modal modal-template" id="skills-modal">
+        <div class="modal-content-template">
+            <div class="modal-header-template">
+                <div class="modal-title-template">HABILIDADES TÉCNICAS</div>
+                <div class="modal-close-template" id="skills-modal-close">✕</div>
+            </div>
+            <div id="skills-modal-content-area">
+                <!-- Conteúdo das habilidades será copiado aqui -->
+            </div>
         </div>
     </div>
 
@@ -318,6 +419,66 @@
                             }, 100);
                         }, 1300); // Aguarda a animação de revelação terminar
                     }, 1000); // 1 segundo após a janela central aparecer
+
+                    // Mostrar id-frame e skills-frame após o terminal desaparecer
+                    setTimeout(() => {
+                        // Mostrar ambos os frames juntos
+                        $('#id-frame').addClass('frame-visible');
+                        $('#skills-frame').addClass('frame-visible');
+                        console.log('Revelando frames ID e Skills');
+                        App.triggerPulse();
+
+                        // Função para animar as barras (versão Matrix/Tron)
+                        function animateProgressBars($container) {
+                            return new Promise((resolve) => {
+                                // Primeiro mostra todas as barras vazias com a nova animação Matrix
+                                $container.find('.progress-bar-background').addClass('animate');
+                                
+                                // Adiciona os percentuais com fade
+                                setTimeout(() => {
+                                    $container.find('.skill-percentage').addClass('animate');
+                                }, 300); // Reduzido de 500 para 300
+                                
+                                // Espera a animação Matrix/glitch terminar (1.5s) + pequeno delay (0.5s)
+                                setTimeout(() => {
+                                    // Efeito de pulso antes de começar a carregar
+                                    App.triggerPulse();
+                                    
+                                    // Começa a preencher as barras
+                                    $container.find('.progress-bar-foreground').each(function() {
+                                        const percentage = $(this).data('percentage');
+                                        $(this).css('width', percentage);
+                                    });
+                                    
+                                    // Resolve após o preenchimento
+                                    setTimeout(resolve, 800); // Reduzido de 1000 para 800
+                                }, 1500); // Reduzido de 2000 para 1500
+                            });
+                        }
+
+                        // Função para animar os nomes
+                        function animateSkillNames($container) {
+                            return new Promise((resolve) => {
+                                $container.find('.skill-entry').each(function(index) {
+                                    setTimeout(() => {
+                                        $(this).find('.skill-name').addClass('animate');
+                                        if (index === $container.find('.skill-entry').length - 1) {
+                                            setTimeout(resolve, 200);
+                                        }
+                                    }, index *0); // Reduzido de 300 para 150
+                                });
+                            });
+                        }
+
+                        // Executar a sequência
+                        animateSkillNames($('#skills-frame'))
+                            .then(() => animateProgressBars($('#skills-frame')))
+                            .then(() => {
+                                App.triggerPulse();
+                            });
+
+                    }, 13500); // Diminuído de 15000 para 13500 ms
+
                 }, 400);
                 
                 // Iniciar a animação do texto da biografia após o frame se tornar visível
@@ -965,6 +1126,36 @@
                     }, 300);
                 });
             });
+
+            // Minimizar ID Frame
+            $('#minimize-id').on('click', function() {
+                resetMinimizedState('#id-frame', '#id-icon', true);
+            });
+            
+            $('#id-icon').on('click', function() {
+                $(this).fadeOut(200, function() {
+                    $('#id-frame').removeClass('minimized');
+                    setTimeout(function() { App.triggerPulse(); }, 300);
+                });
+            });
+
+            // Minimizar Skills Frame
+            $('#minimize-skills').on('click', function() {
+                resetMinimizedState('#skills-frame', '#skills-icon', true);
+                resetSkillsAnimation(); // Resetar ao minimizar
+            });
+            
+            $('#skills-icon').on('click', function() {
+                $(this).fadeOut(200, function() {
+                    $('#skills-frame').removeClass('minimized');
+                    // Re-animar ao restaurar
+                    $('#skills-frame .progress-bar-foreground').each(function() {
+                        const percentage = $(this).data('percentage');
+                        $(this).css('width', percentage);
+                    });
+                    setTimeout(function() { App.triggerPulse(); }, 300);
+                });
+            });
             // --- Fim da Minimização ---
 
             // --- Funcionalidade Fullscreen para Chat ---
@@ -1088,6 +1279,154 @@
                 }
             });
             // --- Fim da Funcionalidade Fullscreen Frame Central ---
+
+            // --- Funcionalidade Fullscreen para Frame de ID ---
+            $('#id-fullscreen').on('click', function() {
+                // Conteúdo para a modal de ID (pode ser o mesmo do frame ou customizado)
+                const idContentModal = $('#id-area').html(); 
+
+                // Limpar e preencher a área de conteúdo da modal
+                $('#id-modal-content-area').html(idContentModal);
+                
+                // Mostrar a modal
+                $('#id-modal').addClass('active');
+                
+                // Prevenir rolagem no body
+                $('body').css('overflow', 'hidden');
+                
+                // Efeito visual
+                App.triggerPulse();
+            });
+            
+            // Fechar modal do frame de ID
+            $('#id-modal-close, #id-modal').on('click', function(e) {
+                if (e.target.id === 'id-modal-close' || e.target.id === 'id-modal') {
+                    $('#id-modal').removeClass('active');
+                    $('body').css('overflow', 'auto');
+                    $('#id-modal-content-area').empty(); // Limpa o conteúdo ao fechar
+                }
+            });
+            // --- Fim da Funcionalidade Fullscreen Frame de ID ---
+
+            // --- Funcionalidade Fullscreen para Frame de Habilidades ---
+            $('#skills-fullscreen').on('click', function() {
+                const skillsContentModal = $('#skills-area').html(); 
+                $('#skills-modal-content-area').html(skillsContentModal);
+                $('#skills-modal').addClass('active');
+                $('body').css('overflow', 'hidden');
+                
+                // Animar habilidades na modal após um pequeno delay
+                setTimeout(() => {
+                    const $modal = $('#skills-modal-content-area');
+                    
+                    function animateModalSkillNames() {
+                        return new Promise((resolve) => {
+                            $modal.find('.skill-entry').each(function(index) {
+                                setTimeout(() => {
+                                    $(this).find('.skill-name').addClass('animate');
+                                    if (index === $modal.find('.skill-entry').length - 1) {
+                                        setTimeout(resolve, 500);
+                                    }
+                                }, index * 300);
+                            });
+                        });
+                    }
+
+                    function animateModalProgressBars() {
+                        return new Promise((resolve) => {
+                            $modal.find('.progress-bar-background').addClass('animate');
+                            $modal.find('.skill-percentage').addClass('animate');
+                            
+                            setTimeout(() => {
+                                $modal.find('.progress-bar-foreground').each(function() {
+                                    const percentage = $(this).data('percentage');
+                                    $(this).css('width', percentage);
+                                });
+                                resolve();
+                            }, 800);
+                        });
+                    }
+
+                    animateModalSkillNames()
+                        .then(() => animateModalProgressBars())
+                        .then(() => {
+                            App.triggerPulse();
+                        });
+                }, 300);
+            });
+            
+            // Adicionar lógica para resetar as barras de progresso quando a modal de skills é fechada
+            // e quando o frame de skills é minimizado (opcional, mas bom para re-animação)
+            function resetSkillsAnimation() {
+                const $frame = $('#skills-frame');
+                $frame.find('.skill-name').removeClass('animate');
+                $frame.find('.progress-bar-background').removeClass('animate');
+                $frame.find('.progress-bar-foreground').css('width', '0');
+                $frame.find('.skill-percentage').css('opacity', '0');
+            }
+
+            $('#skills-modal-close, #skills-modal').on('click', function(e) {
+                if (e.target.id === 'skills-modal-close' || e.target.id === 'skills-modal') {
+                    $('#skills-modal').removeClass('active');
+                    $('body').css('overflow', 'auto');
+
+                    // Sincronizar o estado das barras com o frame principal
+                    const $modalBars = $('#skills-modal-content-area .progress-bar-foreground');
+                    const $frameBars = $('#skills-frame .progress-bar-foreground');
+                    
+                    $modalBars.each(function(index) {
+                        const width = $(this).css('width');
+                        $frameBars.eq(index).css('width', width);
+                    });
+
+                    // Garantir que as classes de animação estejam aplicadas no frame principal
+                    $('#skills-frame .skill-name').addClass('animate');
+                    $('#skills-frame .progress-bar-background').addClass('animate');
+                    $('#skills-frame .skill-percentage').addClass('animate');
+
+                    // Limpar a modal
+                    $('#skills-modal-content-area').empty();
+                }
+            });
+
+            // Modificar a função resetSkillsAnimation para manter o estado quando necessário
+            function resetSkillsAnimation(fullReset = false) {
+                const $frame = $('#skills-frame');
+                if (fullReset) {
+                    // Reset completo para minimização
+                    $frame.find('.skill-name').removeClass('animate');
+                    $frame.find('.progress-bar-background').removeClass('animate');
+                    $frame.find('.progress-bar-foreground').css('width', '0');
+                    $frame.find('.skill-percentage').removeClass('animate');
+                } else {
+                    // Reset parcial mantendo o estado das barras
+                    $frame.find('.progress-bar-background').removeClass('animate').addClass('animate');
+                    $frame.find('.skill-percentage').removeClass('animate').addClass('animate');
+                }
+            }
+
+            // Atualizar o handler de minimização para usar o reset completo
+            $('#minimize-skills').on('click', function() {
+                resetMinimizedState('#skills-frame', '#skills-icon', true);
+                resetSkillsAnimation(true); // Reset completo ao minimizar
+            });
+
+            // Atualizar o handler de restauração
+            $('#skills-icon').on('click', function() {
+                $(this).fadeOut(200, function() {
+                    $('#skills-frame').removeClass('minimized');
+                    
+                    // Re-animar ao restaurar
+                    setTimeout(() => {
+                        animateSkillNames($('#skills-frame'))
+                            .then(() => animateProgressBars($('#skills-frame')))
+                            .then(() => {
+                                App.triggerPulse();
+                            });
+                    }, 300);
+                });
+            });
+            // --- Fim da Funcionalidade Fullscreen Frame de Habilidades ---
 
             // --- Funcionalidade do Modo Perform ---
             // Ativar o modo perform com o botão do chat
@@ -1489,9 +1828,11 @@
             function checkInitialWindowStates() {
                 // Verificar cada janela e garantir que os ícones flutuantes estejam no estado correto
                 const windowsConfig = [
+                    { frameId: '#id-frame', iconId: '#id-icon' }, 
                     { frameId: '#chat-window', iconId: '#ai-icon' },
                     { frameId: '#info-frame', iconId: '#bio-icon' },
-                    { frameId: '#middle-frame', iconId: '#middle-icon' }
+                    { frameId: '#middle-frame', iconId: '#middle-icon' },
+                    { frameId: '#skills-frame', iconId: '#skills-icon' } // Adiciona skills
                 ];
                 
                 windowsConfig.forEach(config => {
@@ -1515,4 +1856,5 @@
         });
     </script>
 </body>
+</html> 
 </html> 

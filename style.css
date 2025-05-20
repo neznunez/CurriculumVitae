@@ -74,10 +74,10 @@ hr {
 /* === Novo Frame no Canto Inferior Esquerdo === */
 #info-frame {
     position: fixed;
-    bottom: 40px; 
+    bottom: 20px; /* Reduzido de 40px */
     left: calc(16.67%); /* Posicionado a 1/6 da tela para centralizar no primeiro terço */
     transform: translateX(-50%);
-    height: 370px; /* Altura mantida */
+    height: 340px; /* Reduzido de 370px */
     width: 32%; /* Aproximadamente 1/3 da largura da tela, com margens */
     background-color: rgba(10, 10, 10, 0.85); 
     border: 1px solid lime; 
@@ -143,10 +143,10 @@ hr {
 }
 
 /* Botão para expandir em tela cheia */
-#bio-fullscreen {
+/* #bio-fullscreen { --REMOVIDO--
     margin-top: 10px;
     font-size: 14px;
-}
+} */
 
 /* Modal de tela cheia para a biografia */
 .bio-modal {
@@ -223,10 +223,10 @@ hr {
 /* === Estilos da Janela de Chat === */
 #chat-window {
     position: fixed;
-    bottom: 40px; 
+    bottom: 20px; /* Reduzido de 40px */
     right: calc(16.67%); /* Posicionado a 1/6 da tela a partir da direita */
     transform: translateX(50%);
-    height: 370px; /* Ajustado para ser consistente com os outros frames */
+    height: 340px; /* Reduzido de 370px */
     width: 32%; /* Aproximadamente 1/3 da largura da tela, com margens */
     background-color: rgba(10, 10, 10, 0.85); 
     border: 1px solid lime; 
@@ -431,14 +431,24 @@ hr {
 
 /* Estado minimizado */
 .minimized {
-    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: scale(0.8) !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Garantir que o conteúdo seja preservado */
+.minimized #skills-area {
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 /* Botão de fullscreen para chat */
 .fullscreen-btn {
     position: absolute;
-    right: 10px;
-    top: 45px; /* Aumentado de 40px para 45px para maior espaçamento */
+    right: 42px; /* Padrão: 10px (borda min) + 24px (largura min) + 8px (espaço) */
+    top: 10px;   /* Padrão: Mesmo top do botão de minimizar para alinhamento */
     background-color: rgba(10, 10, 10, 0.7);
     color: lime;
     border: 1px solid lime;
@@ -581,11 +591,6 @@ hr {
 
 #chat-modal-send-btn:hover {
     background-color: lightgreen;
-}
-
-/* Estado minimizado */
-.minimized {
-    display: none !important;
 }
 
 /* Animação para mensagens iniciais se retraindo */
@@ -1000,10 +1005,10 @@ hr {
 /* === Novo Frame Central === */
 #middle-frame {
     position: fixed;
-    bottom: 40px;
+    bottom: 20px; /* Reduzido de 40px */
     left: 50%; /* Centralizado na tela */
     transform: translateX(-50%);
-    height: 370px;
+    height: 340px; /* Reduzido de 370px */
     width: 32%; /* Aproximadamente 1/3 da largura da tela, com margens */
     background-color: rgba(10, 10, 10, 0.85);
     border: 1px solid lime;
@@ -1442,29 +1447,385 @@ body.persona-edit-theme-active .perform-message.typing-indicator .typing-dots sp
 
 /* === Fim do Tema Laranja === */
 
-/* === Modal de Senha Admin === */
-/* ... existing code ... */
-
-/* ... existing code ... */
-
-/* ========================================== */
-/* === ESTILOS PARA DISPOSITIVOS MÓVEIS === */
-/* ========================================== */
-@media (max-width: 768px) { /* Ajuste este valor se necessário */
-
-    #top-perform {
-        left: auto !important; /* Remove o posicionamento esquerdo */
-        right: 20px !important; /* Posiciona a 20px da direita */
-        top: 20px !important;   /* Mantém ou ajusta a distância do topo */
-        transform: none !important; /* Remove a translação X que centralizava */
-    }
-
-    /* Se você já tiver um bloco @media (max-width: 768px) ou similar,
-       adicione apenas o seletor #top-perform com suas regras DENTRO dele,
-       evitando duplicar o @media. */
+/* === Estilos para o Novo Frame de ID === */
+#id-frame {
+    position: fixed;
+    /* Cálculo anterior: 
+       #info-frame bottom: 20px, height: 340px. Topo do #info-frame está a 360px do fundo da viewport.
+       Espaço desejado: 15px.
+       Novo bottom para #id-frame = 360px + 15px = 375px.
+    */
+    bottom: 375px; /* Ajustado de 415px */
+    left: calc(16.67%); /* Mesma posição horizontal do #info-frame */
+    transform: translateX(-50%);
+    height: 160px; /* Reduzido de 200px */
+    width: 32%; /* Mesma largura dos outros frames */
+    background-color: rgba(10, 10, 10, 0.85); 
+    border: 1px solid lime; 
+    border-radius: 4px;
+    z-index: 10; 
+    font-family: 'Courier New', Courier, monospace; 
+    color: #eee; 
+    box-shadow: 0 0 25px rgba(0, 255, 0, 0.4); 
+    opacity: 0;
+    clip-path: inset(100% 0 0 0); /* Animação de entrada igual aos outros */
+    transition: opacity 0.6s ease-out, clip-path 0.6s ease-out, box-shadow 0.3s ease; 
+    overflow: hidden;
 }
 
-/* Classe para ocultar elementos quando o modo perform está ativo */
-.hidden-in-perform-mode {
+#id-frame.frame-visible {
+    opacity: 1;
+    clip-path: inset(0 0 0 0); 
+}
+
+#id-content {
+    padding: 10px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+    font-size: 0.8em;
+    line-height: 1.4;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+#id-content::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
+.id-header {
+    margin-bottom: 10px; /* Menor que o #middle-header */
+    padding-bottom: 5px;
+}
+
+/* (Opcional) Estilos para botões de navegação se forem adicionados depois */
+/* .id-nav-buttons { ... } */
+
+/* === Fim dos Estilos para o Novo Frame de ID === */
+
+/* Adicionando estilos para #id-icon, similar aos outros */
+#id-icon {
+    /* Estilos básicos já cobertos por .floating-icon */
+    /* Se precisar de algo específico para #id-icon, adicionar aqui */
+}
+
+/* === Estilos Genéricos para Modais (para reutilização) === */
+.modal-template {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-template.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content-template {
+    position: relative;
+    width: 80%;
+    height: 80%;
+    background-color: rgba(10, 10, 10, 0.9);
+    border: 2px solid lime;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 40px rgba(0, 255, 0, 0.5);
+    display: flex; /* Para alinhar header e content-area */
+    flex-direction: column; /* Header em cima, content-area em baixo */
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1em;
+    line-height: 1.5;
+    color: #eee;
+    overflow: hidden; /* O scroll será na content-area */
+}
+
+.modal-header-template {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+    flex-shrink: 0; /* Header não encolhe */
+}
+
+.modal-title-template {
+    font-size: 1.2em;
+    color: lime;
+    font-weight: bold;
+}
+
+.modal-close-template {
+    background-color: transparent;
+    color: lime;
+    border: 1px solid lime;
+    border-radius: 4px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.modal-close-template:hover {
+    background-color: rgba(0, 255, 0, 0.2);
+}
+
+/* Área de conteúdo específica para cada modal */
+#id-modal-content-area, 
+#bio-modal-text, /* Reutilizando o ID existente para bio */
+#middle-modal-content, /* Reutilizando o ID existente para middle */
+#chat-modal-history /* Chat já tem sua própria estrutura, mas pode ser adaptado se necessário */
+{
+    overflow-y: auto; /* Permite scroll vertical */
+    flex-grow: 1; /* Ocupa o espaço restante */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: lime rgba(10,10,10,0.8); /* Cor do scroll no Firefox */
+}
+
+#id-modal-content-area::-webkit-scrollbar,
+#bio-modal-text::-webkit-scrollbar,
+#middle-modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+#id-modal-content-area::-webkit-scrollbar-track,
+#bio-modal-text::-webkit-scrollbar-track,
+#middle-modal-content::-webkit-scrollbar-track {
+    background: rgba(10,10,10,0.8);
+}
+
+#id-modal-content-area::-webkit-scrollbar-thumb,
+#bio-modal-text::-webkit-scrollbar-thumb,
+#middle-modal-content::-webkit-scrollbar-thumb {
+    background-color: lime;
+    border-radius: 4px;
+    border: 2px solid rgba(10,10,10,0.8);
+}
+
+/* === Fim dos Estilos Genéricos para Modais === */
+
+
+/* Ajustar as modais existentes para usar as classes genéricas */
+/* Modal da Biografia */
+.bio-modal { /* Mantém ID específico se houver JS atrelado a ele, mas usa classes genéricas */
+    /* Herda de .modal-template */
+}
+.bio-modal .bio-modal-content { /* Renomear ou ajustar para .modal-content-template */
+    /* Herda de .modal-content-template */
+}
+.bio-modal .bio-modal-header { /* Renomear ou ajustar para .modal-header-template */
+    /* Herda de .modal-header-template */
+}
+.bio-modal .bio-modal-title { /* Renomear ou ajustar para .modal-title-template */
+    /* Herda de .modal-title-template */
+}
+.bio-modal .bio-modal-close { /* Renomear ou ajustar para .modal-close-template */
+    /* Herda de .modal-close-template */
+}
+/* #bio-modal-text já está coberto pela regra genérica de content-area */
+
+/* Modal do Chat (estrutura um pouco diferente, pode precisar de ajustes mais cuidadosos) */
+.chat-modal {
+    /* Herda de .modal-template */
+}
+/* Outros seletores do chat-modal (.chat-modal-content, etc.) podem precisar ser 
+   ajustados para usar as classes genéricas ou manter seus estilos específicos 
+   se forem muito diferentes. Por hora, focaremos no novo ID modal e no bio/middle. */
+
+/* Modal do Frame Central */
+.middle-modal {
+    /* Herda de .modal-template */
+}
+.middle-modal .middle-modal-content {
+    /* Herda de .modal-content-template */
+}
+.middle-modal .middle-modal-header {
+    /* Herda de .modal-header-template */
+}
+.middle-modal .middle-modal-title {
+    /* Herda de .modal-title-template */
+}
+.middle-modal .middle-modal-close {
+    /* Herda de .modal-close-template */
+}
+/* #middle-modal-content já está coberto pela regra genérica de content-area */
+
+/* === Estilos para o Novo Frame de Habilidades === */
+#skills-frame {
+    position: fixed;
+    bottom: 375px; 
+    right: calc(16.67%);
+    transform: translateX(50%);
+    height: 160px;
+    width: 32%;
+    background-color: rgba(10, 10, 10, 0.85); 
+    border: 1px solid lime; 
+    border-radius: 4px;
+    z-index: 10; 
+    font-family: 'Courier New', Courier, monospace; 
+    color: #eee; 
+    box-shadow: 0 0 25px rgba(0, 255, 0, 0.4); 
+    opacity: 0;
+    clip-path: inset(100% 0 0 0);
+    transition: opacity 0.6s ease-out, clip-path 0.6s ease-out, box-shadow 0.3s ease; 
+    overflow: hidden;
+}
+
+#skills-frame.frame-visible {
+    opacity: 1;
+    clip-path: inset(0 0 0 0); 
+}
+
+#skills-content {
+    padding: 10px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+    font-size: 0.8em;
+    line-height: 1.4;
+}
+
+.skills-header {
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+
+/* Ajuste para garantir que o conteúdo permaneça visível */
+.skill-entry {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative;
+    height: 20px;
+}
+
+.skill-name {
+    width: 120px;
+    margin-right: 10px;
+    color: cyan;
+    position: relative;
+    display: inline-block;
+    line-height: 20px;
+    text-align: left;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+}
+
+.skill-percentage {
+    width: 50px;
+    text-align: right;
+    color: lime;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+    line-height: 20px;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.progress-bar-background {
+    flex: 1;
+    height: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 255, 0, 0.5);
+    margin-right: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    visibility: visible !important;
+    opacity: 1 !important;
+    align-self: center;
+}
+
+.progress-bar-foreground {
+    height: 100%;
+    background: linear-gradient(90deg, 
+        rgba(0, 255, 0, 0.7) 0%,
+        rgba(0, 255, 0, 1) 50%,
+        rgba(0, 255, 0, 0.7) 100%
+    );
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5),
+                inset 0 0 5px rgba(255, 255, 255, 0.5);
+    transition: width 1s ease;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Remover classes de animação que não são mais necessárias */
+.skill-name.animate {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+}
+
+/* Garantir visibilidade no estado minimizado */
+.minimized .skill-name,
+.minimized .skill-percentage,
+.minimized .progress-bar-background,
+.minimized .progress-bar-foreground {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+}
+
+/* Remover todas as scrollbars */
+#skills-content,
+#middle-content,
+#id-content,
+#chat-history,
+#bio-text,
+#perform-messages,
+.modal-content-template,
+#id-modal-content-area,
+#bio-modal-text,
+#middle-modal-content,
+#chat-modal-history,
+.middle-modal-content,
+.bio-modal-content,
+.chat-modal-content {
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE and Edge */
+}
+
+#skills-content::-webkit-scrollbar,
+#middle-content::-webkit-scrollbar,
+#id-content::-webkit-scrollbar,
+#chat-history::-webkit-scrollbar,
+#bio-text::-webkit-scrollbar,
+#perform-messages::-webkit-scrollbar,
+.modal-content-template::-webkit-scrollbar,
+#id-modal-content-area::-webkit-scrollbar,
+#bio-modal-text::-webkit-scrollbar,
+#middle-modal-content::-webkit-scrollbar,
+#chat-modal-history::-webkit-scrollbar,
+.middle-modal-content::-webkit-scrollbar,
+.bio-modal-content::-webkit-scrollbar,
+.chat-modal-content::-webkit-scrollbar {
+    display: none !important; /* Chrome, Safari and Opera */
+    width: 0 !important;
+    background: transparent !important;
+}
+
+/* Remover estilos específicos de scrollbar que possam existir */
+*::-webkit-scrollbar-track,
+*::-webkit-scrollbar-thumb {
     display: none !important;
+    width: 0 !important;
+    background: transparent !important;
 } 
