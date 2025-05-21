@@ -11,6 +11,22 @@
     <meta http-equiv="Expires" content="0">
 </head>
 <body>
+    <!-- Efeitos de energia digital -->
+    <div class="digital-energy"></div>
+    <div class="floating-hex">
+        <div class="hex"></div>
+        <div class="hex"></div>
+        <div class="hex"></div>
+        <div class="hex"></div>
+        <div class="hex"></div>
+    </div>
+    <div class="energy-lines">
+        <div class="energy-line"></div>
+        <div class="energy-line"></div>
+        <div class="energy-line"></div>
+        <div class="energy-line"></div>
+    </div>
+
     <!-- Canvas para o fundo de Partículas -->
     <canvas id="particle-canvas"></canvas>
 
@@ -84,6 +100,15 @@
     </div>
     <!-- === Fim do Novo Frame === -->
     
+    <!-- === Botão Portfolio === -->
+    <button id="portfolio-btn" class="portfolio-button">
+        <div class="text">
+            <div class="r">PORTFOLIO</div>
+            <div class="g">PORTFOLIO</div>
+            <div class="b">PORTFOLIO</div>
+        </div>
+    </button>
+
     <!-- === Novo Frame Central === -->
     <div id="middle-frame">
         <div class="minimize-btn" id="minimize-middle">_</div>
@@ -1421,6 +1446,9 @@
                 // ESCONDER O BOTÃO #top-perform
                 $('#top-perform').addClass('hidden-in-perform-mode');
                 
+                // Esconder o botão Portfolio com animação
+                $('#portfolio-btn').addClass('hide-portfolio');
+                
                 // Esconder o container de ícones flutuantes para uma transição suave
                 $('.floating-icons-container').addClass('hidden');
                 
@@ -1457,6 +1485,11 @@
 
                 // MOSTRAR O BOTÃO #top-perform NOVAMENTE
                 $('#top-perform').removeClass('hidden-in-perform-mode');
+                
+                // Mostrar o botão Portfolio novamente
+                setTimeout(() => {
+                    $('#portfolio-btn').removeClass('hide-portfolio').fadeIn(1000);
+                }, 500);
                 
                 // Restaurar zoom normal
                 setTimeout(function() {
@@ -1750,6 +1783,38 @@
             
             // Checar os estados também após a animação inicial das janelas
             setTimeout(checkInitialWindowStates, 8000);
+
+            // --- Configuração do Botão Portfolio ---
+            $('#portfolio-btn').hide(); // Inicialmente oculto
+            setTimeout(() => {
+                $('#portfolio-btn').fadeIn(1000); // Aparece após 1 segundo
+                console.log('Portfolio button should be visible now'); // Debug
+            }, 2000); // Reduzido para 2 segundos
+
+            $('#portfolio-btn').on('click', function() {
+                // Aqui você pode adicionar a funcionalidade do botão
+                App.triggerPulse(); // Efeito visual ao clicar
+            });
+
+            $(document).ready(function() {
+                // --- Configuração do Botão Portfolio ---
+                            setTimeout(() => {                $('#portfolio-btn').addClass('button-visible');            }, 20000); // Aparece após 20 segundos, similar aos frames
+
+                // ... existing code ...
+            });
+
+            // --- Configuração do Botão Portfolio ---
+            setTimeout(() => {
+                $('#portfolio-btn').addClass('button-visible');
+            }, 20000); // Aparece após 20 segundos
+
+            // Adiciona o evento de clique para o botão Portfolio
+            $('#portfolio-btn').on('click', function() {
+                window.open('https://neznunez.github.io/PortFolio2024/index.html', '_blank');
+                App.triggerPulse(); // Efeito visual ao clicar
+            });
+
+            // ... existing code ...
         });
     </script>
 </body>

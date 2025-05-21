@@ -89,4 +89,17 @@ $('#skills-modal-close, #skills-modal').on('click', function(e) {
         $('body').css('overflow', 'auto');
         $('#skills-modal-content-area').empty();
     }
+});
+
+// Controle do efeito de energia digital
+document.addEventListener('DOMContentLoaded', () => {
+    const digitalEnergy = document.querySelector('.digital-energy');
+    
+    // Atualiza a posição do gradiente radial baseado no movimento do mouse
+    document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        digitalEnergy.style.setProperty('--x', `${x}%`);
+        digitalEnergy.style.setProperty('--y', `${y}%`);
+    });
 }); 
