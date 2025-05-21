@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>t.js Demo 2 Exemplo</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
+    <!-- Meta tags para evitar cache -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 </head>
 <body>
     <!-- Canvas para o fundo de Partículas -->
@@ -251,7 +255,7 @@
     <!-- Incluir jQuery (necessário para t.js) -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- Incluir t.js (baixado localmente) -->
-    <script src="t.min.js"></script>
+    <script src="./t.min.js"></script>
     <!-- Script para inicializar o t.js -->
     <script>
         $(function(){ // Executar quando o documento estiver pronto
@@ -974,64 +978,31 @@
                 chatHistory.scrollTop(chatHistory[0].scrollHeight);
             }
 
-            async function handleSend() { // Adicionado async
+            async function handleSend() {
                 const userMessage = chatInput.val().trim(); 
                 if (userMessage) {
                     addMessage('You', userMessage, true); 
-                    chatInput.val(''); // Clear input
+                    chatInput.val(''); 
 
-                    // Aciona o pulso no fundo
                     App.triggerPulse(); 
 
-                    // --- NOVO INDICADOR DE DIGITANDO ---
                     const typingIndicatorHTML = `
                         <p class="chat-message bot typing-indicator" id="chat-typing-indicator">
                             <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
                         </p>`;
                     chatHistory.append(typingIndicatorHTML);
                     chatHistory.scrollTop(chatHistory[0].scrollHeight);
-                    // --- FIM DO NOVO INDICADOR ---
 
-                    try {
-                        // Chamar nosso backend
-                        const response = await fetch('http://localhost:3000/chat', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ message: userMessage }) // Envia a mensagem do usuário
-                        });
-
-                        $('#chat-typing-indicator').remove(); // Remove o indicador
-
-                        if (!response.ok) {
-                            const errorData = await response.json().catch(() => ({ reply: 'Erro ao contatar o servidor. Tente novamente.' }));
-                            let errorMessageText = `Erro: ${response.status}`;
-                            if (errorData.reply || errorData.error) {
-                                errorMessageText += ` - ${errorData.reply || errorData.error}`;
-                            } else {
-                                errorMessageText += ' - Detalhes não disponíveis';
-                            }
-                            addMessage('System', errorMessageText, false);
-                            return; 
-                        }
-
-                        const data = await response.json(); 
-                        const botReply = data.reply; 
-
-                        // Verifica se é para limpar o chat ANTES de adicionar a resposta
-                        if (userMessage.toLowerCase().includes('clear')) { 
-                            chatHistory.empty(); // Limpa o histórico
-                            addMessage('System', "Histórico do chat limpo.", false); // Adiciona mensagem de confirmação da limpeza
+                    // Simular resposta sem backend
+                    setTimeout(() => {
+                        $('#chat-typing-indicator').remove();
+                        if (userMessage.toLowerCase().includes('clear')) {
+                            chatHistory.empty();
+                            addMessage('System', "Histórico do chat limpo.", false);
                         } else {
-                            addMessage('System', botReply, false); // Adiciona a resposta da IA
+                            addMessage('System', "Entendi sua mensagem. Como estamos no GitHub Pages, as respostas da IA não estão disponíveis.", false);
                         }
-
-                    } catch (error) {
-                        $('#chat-typing-indicator').remove(); // Remove o indicador em caso de erro de fetch
-                        console.error('Erro ao enviar mensagem para o backend:', error);
-                        addMessage('System', 'Não foi possível conectar ao assistente. Verifique se o servidor está rodando.', false);
-                    }
+                    }, 1500);
                 }
             }
 
@@ -1532,83 +1503,40 @@
             }
             
             // Enviar mensagem no modo perform
-            async function handlePerformSend() { // Tornada async
+            async function handlePerformSend() {
                 const userInput = $('#perform-input').val().trim();
                 if (userInput) {
-                    // Limpar input
                     $('#perform-input').val('');
                     
                     if (isInPersonaEditMode) {
-                        // Se estiver no modo de edição de persona, verificar comando de SAÍDA primeiro
-                        if (userInput.toLowerCase() === "sair da edição") {
-                            isInPersonaEditMode = false;
-                            App.particleHue = 120; // Restaura para Verde
-                            $('body').removeClass('persona-edit-theme-active'); // DESATIVA TEMA LARANJA
-                            addPerformMessage("Modo de Edição de Persona DESATIVADO. Retornando ao modo normal.", false);
-                            $('#perform-input').attr('placeholder', 'Digite seu comando aqui...'); // Restaura placeholder
-                            App.triggerPulse();
-                            return; // Não processa mais nada
-                        }
-
-                        // Se não for para sair, envia o texto completo para a IA processar e atualizar a persona
-                        addPerformMessage(userInput, true); // Mostra o que o usuário digitou
+                        addPerformMessage(userInput, true);
                         App.triggerPulse();
 
-                        // Adicionar indicador de "processando com IA" ou "digitando"
-                        const performTypingIndicatorHTML = `
-                            <div class="perform-message typing-indicator" id="perform-typing-indicator-persona">
-                                <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
-                            </div>
-                        `;
-                        $('#perform-messages').append(performTypingIndicatorHTML);
-                        const messagesContainer = document.getElementById('perform-messages');
-                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-                        try {
-                            const response = await fetch('http://localhost:3000/persona-chat-update', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({ text: userInput }) // Envia o texto completo do usuário
-                            });
-
-                            $('#perform-typing-indicator-persona').remove(); // Remove o indicador
-
-                            const data = await response.json(); // Espera uma resposta JSON do backend
-
-                            if (response.ok && data.success) {
-                                addPerformMessage(`Sistema: Persona potencialmente atualizada pela IA. (${data.message || 'Detalhes não fornecidos.'})`, false);
-                                // Opcional: Mostrar os dados da persona atualizada para debug
-                                // if(data.persona) {
-                                //     addPerformMessage(`DEBUG - Persona Atual: ${JSON.stringify(data.persona, null, 2)}`, false);
-                                // }
-                            } else {
-                                addPerformMessage(`Sistema: Erro ao tentar atualizar persona com IA. (${data.error || response.statusText || 'Erro desconhecido'})`, false);
-                            }
+                        if (userInput.toLowerCase() === "sair da edição") {
+                            isInPersonaEditMode = false;
+                            App.particleHue = 120;
+                            $('body').removeClass('persona-edit-theme-active');
+                            addPerformMessage("Modo de Edição de Persona DESATIVADO. Retornando ao modo normal.", false);
+                            $('#perform-input').attr('placeholder', 'Digite seu comando aqui...');
                             App.triggerPulse();
-
-                        } catch (error) {
-                            $('#perform-typing-indicator-persona').remove(); // Remove o indicador em caso de erro
-                            console.error('Erro ao chamar /persona-chat-update:', error);
-                            addPerformMessage('Sistema: Falha na comunicação ao tentar atualizar persona com IA.', false);
-                            App.triggerPulse();
+                            return;
                         }
 
-                    } else { // NÃO está no modo de edição de persona
-                        // Adicionar mensagem do usuário
+                        setTimeout(() => {
+                            addPerformMessage("Modo de edição de persona ativo. Note que no GitHub Pages as atualizações não são salvas.", false);
+                            App.triggerPulse();
+                        }, 1000);
+
+                    } else {
                         addPerformMessage(userInput, true);
-                        
-                        // Efeito visual quando o usuário envia
                         App.triggerPulse();
                         
                         const lowerInput = userInput.toLowerCase();
 
-                        // Tratar comandos de UI localmente PRIMEIRO
                         if (lowerInput === 'clear') {
-                            $('#perform-messages').empty(); // Limpa direto
+                            $('#perform-messages').empty();
                             addPerformMessage("Área de mensagens limpa. Aguardando novos comandos.", false);
-                            App.triggerPulse(); // Pulso para feedback visual
+                            App.triggerPulse();
                         } else if (lowerInput === 'zoom+') {
                             App.setZoom(App.getZoom() + 0.5);
                             addPerformMessage("Aumentando visualização do sistema.", false);
@@ -1618,45 +1546,10 @@
                             addPerformMessage("Reduzindo visualização do sistema.", false);
                             App.triggerPulse();
                         } else {
-                            // NÃO é um comando de UI local, então prosseguir com a chamada à IA para chat normal
-                            const performTypingIndicatorHTML = `
-                                <div class="perform-message typing-indicator" id="perform-typing-indicator">
-                                    <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
-                                </div>
-                            `;
-                            $('#perform-messages').append(performTypingIndicatorHTML);
-                            const messagesContainer = document.getElementById('perform-messages');
-                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-                            try {
-                                const response = await fetch('http://localhost:3000/chat', {
-                                    method: 'POST',
-                                    headers: { 
-                                        'Content-Type': 'application/json' 
-                                    },
-                                    body: JSON.stringify({ message: userInput }) 
-                                });
-
-                                $('#perform-typing-indicator').remove(); 
-
-                                if (!response.ok) {
-                                    const errorData = await response.json().catch(() => ({ reply: 'Erro do servidor ao processar no modo perform.' }));
-                                    let errorMessageText = `Falha na interface neural: ${response.status}`;
-                                    if (errorData.reply || errorData.error) {
-                                        errorMessageText += ` - ${errorData.reply || errorData.error}`;
-                                    }
-                                    addPerformMessage(errorMessageText, false);
-                                    return;
-                                }
-
-                                const data = await response.json();
-                                addPerformMessage(data.reply, false); 
-
-                            } catch (error) {
-                                $('#perform-typing-indicator').remove(); 
-                                console.error('Erro ao contatar IA no modo perform:', error);
-                                addPerformMessage('Erro de conexão com a unidade central de IA. Verifique os sistemas.', false);
-                            }
+                            setTimeout(() => {
+                                addPerformMessage("Comando recebido. Note que no GitHub Pages as respostas da IA não estão disponíveis.", false);
+                                App.triggerPulse();
+                            }, 1000);
                         }
                     }
                 }
