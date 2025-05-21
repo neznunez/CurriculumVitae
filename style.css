@@ -1450,16 +1450,11 @@ body.persona-edit-theme-active .perform-message.typing-indicator .typing-dots sp
 /* === Estilos para o Novo Frame de ID === */
 #id-frame {
     position: fixed;
-    /* Cálculo anterior: 
-       #info-frame bottom: 20px, height: 340px. Topo do #info-frame está a 360px do fundo da viewport.
-       Espaço desejado: 15px.
-       Novo bottom para #id-frame = 360px + 15px = 375px.
-    */
-    bottom: 375px; /* Ajustado de 415px */
-    left: calc(16.67%); /* Mesma posição horizontal do #info-frame */
+    bottom: 375px;
+    left: calc(16.67%);
     transform: translateX(-50%);
-    height: 160px; /* Reduzido de 200px */
-    width: 32%; /* Mesma largura dos outros frames */
+    height: 280px; /* Aumentado de 200px */
+    width: 32%;
     background-color: rgba(10, 10, 10, 0.85); 
     border: 1px solid lime; 
     border-radius: 4px;
@@ -1468,7 +1463,7 @@ body.persona-edit-theme-active .perform-message.typing-indicator .typing-dots sp
     color: #eee; 
     box-shadow: 0 0 25px rgba(0, 255, 0, 0.4); 
     opacity: 0;
-    clip-path: inset(100% 0 0 0); /* Animação de entrada igual aos outros */
+    clip-path: inset(100% 0 0 0);
     transition: opacity 0.6s ease-out, clip-path 0.6s ease-out, box-shadow 0.3s ease; 
     overflow: hidden;
 }
@@ -1671,7 +1666,7 @@ body.persona-edit-theme-active .perform-message.typing-indicator .typing-dots sp
     bottom: 375px; 
     right: calc(16.67%);
     transform: translateX(50%);
-    height: 160px;
+    height: 280px; /* Aumentado de 200px */
     width: 32%;
     background-color: rgba(10, 10, 10, 0.85); 
     border: 1px solid lime; 

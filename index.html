@@ -1414,8 +1414,9 @@
             function activatePerformMode() {
                 isInPerformMode = true; // ATUALIZA O ESTADO
                 keySequenceBuffer = ""; // Limpa o buffer ao entrar no modo perform
+                
                 // Esconder todas as janelas
-                $('#chat-window, #info-frame, #middle-frame').addClass('minimized');
+                $('#chat-window, #info-frame, #middle-frame, #id-frame, #skills-frame').addClass('minimized');
                 
                 // ESCONDER O BOTÃO #top-perform
                 $('#top-perform').addClass('hidden-in-perform-mode');
@@ -1440,7 +1441,7 @@
                 // Mensagem inicial de boas-vindas
                 setTimeout(function() {
                     addPerformMessage("Sistema em modo imersivo. O que quer saber sobre mim?", false);
-                }, 800);
+                }, 500);
             }
             
             // Sair do modo perform
@@ -1450,6 +1451,7 @@
                 App.particleHue = 120; // Restaura para Verde
                 $('body').removeClass('persona-edit-theme-active'); // DESATIVA TEMA LARANJA
                 keySequenceBuffer = ""; // Limpa o buffer
+                
                 // Esconder o container perform
                 $('#perform-container').fadeOut(400);
 
@@ -1467,6 +1469,8 @@
                     resetMinimizedState('#chat-window', '#ai-icon', false);
                     resetMinimizedState('#info-frame', '#bio-icon', false);
                     resetMinimizedState('#middle-frame', '#middle-icon', false);
+                    resetMinimizedState('#id-frame', '#id-icon', false);
+                    resetMinimizedState('#skills-frame', '#skills-icon', false);
                     
                     // Mostrar novamente o container de ícones flutuantes
                     $('.floating-icons-container').removeClass('hidden');
