@@ -1794,30 +1794,119 @@ body.persona-edit-theme-active .perform-message.typing-indicator .typing-dots sp
 /* === Estilos para o Novo Frame de Habilidades === */
 #skills-frame {
     position: fixed;
-    bottom: 375px; 
+    bottom: 375px;
     right: calc(16.67%);
     transform: translateX(50%);
-    height: 280px; /* Aumentado de 200px */
+    height: 280px;
     width: 32%;
-    background-color: rgba(10, 10, 10, 0.85); 
-    border: 1px solid lime; 
+    background-color: rgba(10, 10, 10, 0.85);
+    border: 1px solid #00ccff;
     border-radius: 4px;
-    z-index: 10; 
-    font-family: 'Courier New', Courier, monospace; 
-    color: #eee; 
-    box-shadow: 0 0 25px rgba(0, 255, 0, 0.4),
-                inset 0 0 15px rgba(0, 255, 0, 0.1);
+    z-index: 10;
+    font-family: 'Courier New', Courier, monospace;
+    color: #eee;
+    box-shadow: 0 0 25px rgba(0, 204, 255, 0.4),
+                inset 0 0 15px rgba(0, 204, 255, 0.1);
     opacity: 0;
     clip-path: inset(100% 0 0 0);
     transition: opacity 0.6s ease-out, clip-path 0.6s ease-out;
     overflow: hidden;
-    animation: frameBorderPulse 4s ease-in-out infinite;
+    animation: frameBorderPulseTron 4s ease-in-out infinite;
+}
+
+#skills-frame::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 204, 255, 0.15) 3px,
+        rgba(0, 204, 255, 0.15) 3px
+    );
+    animation: scanline 6s linear infinite;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.7;
+    mix-blend-mode: overlay;
+}
+
+#skills-frame::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        circle at 50% 50%,
+        rgba(0, 204, 255, 0.2),
+        transparent 70%
+    );
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.7;
+    mix-blend-mode: overlay;
+    animation: framePulse 3s ease-in-out infinite;
+}
+
+@keyframes frameBorderPulseTron {
+    0%, 100% {
+        border-color: rgba(0, 204, 255, 0.8);
+        box-shadow: 0 0 25px rgba(0, 204, 255, 0.4),
+                    inset 0 0 15px rgba(0, 204, 255, 0.2);
+    }
+    50% {
+        border-color: #00ccff;
+        box-shadow: 0 0 40px rgba(0, 204, 255, 0.7),
+                    inset 0 0 30px rgba(0, 204, 255, 0.4);
+    }
+}
+
+#skills-frame:hover {
+    border-color: #00ccff;
+    box-shadow: 0 0 50px rgba(0, 204, 255, 0.8),
+                inset 0 0 40px rgba(0, 204, 255, 0.4);
+    transition: all 0.3s ease;
+}
+
+/* Ajustando elementos internos para combinar com o tema */
+.progress-bar-background {
+    flex: 1;
+    height: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 204, 255, 0.5);
+    margin-right: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 5px rgba(0, 204, 255, 0.3);
+}
+
+.progress-bar-foreground {
+    height: 100%;
+    background: linear-gradient(90deg, 
+        rgba(0, 204, 255, 0.7) 0%,
+        rgba(0, 204, 255, 1) 50%,
+        rgba(0, 204, 255, 0.7) 100%
+    );
+    box-shadow: 0 0 10px rgba(0, 204, 255, 0.5),
+                inset 0 0 5px rgba(255, 255, 255, 0.5);
+    transition: width 1s ease;
+}
+
+.skill-percentage {
+    color: #00ccff;
+    text-shadow: 0 0 5px rgba(0, 204, 255, 0.7);
 }
 
 #skills-frame.frame-visible {
     opacity: 1;
     clip-path: inset(0 0 0 0); 
-    animation: frameBorderPulse 4s ease-in-out infinite;
+    animation: frameBorderPulseTron 4s ease-in-out infinite;
 }
 
 #skills-content {
@@ -1838,24 +1927,35 @@ body.persona-edit-theme-active .perform-message.typing-indicator .typing-dots sp
 .skill-entry {
     display: flex;
     align-items: center;
-    margin: 10px 0;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: relative;
-    height: 20px;
+    margin: 8px 0;
+    padding-left: 10px;
 }
 
 .skill-name {
-    width: 120px;
-    margin-right: 10px;
-    color: cyan;
+    width: 150px;
+    margin-right: 15px;
+    color: #eee;
+    white-space: nowrap;
+    font-size: 0.9em;
+}
+
+.progress-bar-background {
+    flex: 1;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid;
     position: relative;
-    display: inline-block;
-    line-height: 20px;
-    text-align: left;
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: none !important;
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.progress-bar-foreground {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: width 1s ease;
+    position: relative;
 }
 
 .skill-percentage {
@@ -1872,11 +1972,11 @@ body.persona-edit-theme-active .perform-message.typing-indicator .typing-dots sp
     flex: 1;
     height: 15px;
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(0, 255, 0, 0.5);
+    border: 1px solid rgba(0, 204, 255, 0.5);
     margin-right: 10px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    box-shadow: 0 0 5px rgba(0, 204, 255, 0.3);
     visibility: visible !important;
     opacity: 1 !important;
     align-self: center;
@@ -1885,11 +1985,11 @@ body.persona-edit-theme-active .perform-message.typing-indicator .typing-dots sp
 .progress-bar-foreground {
     height: 100%;
     background: linear-gradient(90deg, 
-        rgba(0, 255, 0, 0.7) 0%,
-        rgba(0, 255, 0, 1) 50%,
-        rgba(0, 255, 0, 0.7) 100%
+        rgba(0, 204, 255, 0.7) 0%,
+        rgba(0, 204, 255, 1) 50%,
+        rgba(0, 204, 255, 0.7) 100%
     );
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5),
+    box-shadow: 0 0 10px rgba(0, 204, 255, 0.5),
                 inset 0 0 5px rgba(255, 255, 255, 0.5);
     transition: width 1s ease;
     visibility: visible !important;
@@ -2730,4 +2830,189 @@ body.persona-edit-theme-active .perform-message.typing-indicator .typing-dots sp
     margin-bottom: 8px;
     text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
     white-space: nowrap;
+}
+
+.skill-category {
+    font-size: 1.1em;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    padding-left: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.category-icon {
+    font-size: 1.2em;
+}
+
+/* Cores das categorias */
+.skill-category.gold {
+    color: #ffcc00;
+    border-left: 2px solid #ffcc00;
+    text-shadow: 0 0 8px rgba(255, 204, 0, 0.5);
+}
+.skill-category.gold .category-icon {
+    color: #ffcc00;
+    text-shadow: 0 0 8px rgba(255, 204, 0, 0.7);
+}
+
+.skill-category.green {
+    color: #00ff00;
+    border-left: 2px solid #00ff00;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+}
+.skill-category.green .category-icon {
+    color: #00ff00;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.7);
+}
+
+.skill-category.purple {
+    color: #ff00ee;
+    border-left: 2px solid #ff00ee;
+    text-shadow: 0 0 8px rgba(255, 0, 238, 0.5);
+}
+.skill-category.purple .category-icon {
+    color: #ff00ee;
+    text-shadow: 0 0 8px rgba(255, 0, 238, 0.7);
+}
+
+.skill-category.blue {
+    color: #00ccff;
+    border-left: 2px solid #00ccff;
+    text-shadow: 0 0 8px rgba(0, 204, 255, 0.5);
+}
+.skill-category.blue .category-icon {
+    color: #00ccff;
+    text-shadow: 0 0 8px rgba(0, 204, 255, 0.7);
+}
+
+/* Cores das barras de progresso */
+.progress-bar-background.gold {
+    border-color: rgba(255, 204, 0, 0.5);
+    box-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
+}
+
+.progress-bar-background.green {
+    border-color: rgba(0, 255, 0, 0.5);
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+}
+
+.progress-bar-background.purple {
+    border-color: rgba(255, 0, 238, 0.5);
+    box-shadow: 0 0 5px rgba(255, 0, 238, 0.3);
+}
+
+.progress-bar-background.blue {
+    border-color: rgba(0, 204, 255, 0.5);
+    box-shadow: 0 0 5px rgba(0, 204, 255, 0.3);
+}
+
+/* Cores do preenchimento das barras */
+.gold .progress-bar-foreground {
+    background: linear-gradient(90deg, 
+        rgba(255, 204, 0, 0.7) 0%,
+        rgba(255, 204, 0, 1) 50%,
+        rgba(255, 204, 0, 0.7) 100%
+    );
+    box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+}
+
+.green .progress-bar-foreground {
+    background: linear-gradient(90deg, 
+        rgba(0, 255, 0, 0.7) 0%,
+        rgba(0, 255, 0, 1) 50%,
+        rgba(0, 255, 0, 0.7) 100%
+    );
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.purple .progress-bar-foreground {
+    background: linear-gradient(90deg, 
+        rgba(255, 0, 238, 0.7) 0%,
+        rgba(255, 0, 238, 1) 50%,
+        rgba(255, 0, 238, 0.7) 100%
+    );
+    box-shadow: 0 0 10px rgba(255, 0, 238, 0.5);
+}
+
+.blue .progress-bar-foreground {
+    background: linear-gradient(90deg, 
+        rgba(0, 204, 255, 0.7) 0%,
+        rgba(0, 204, 255, 1) 50%,
+        rgba(0, 204, 255, 0.7) 100%
+    );
+    box-shadow: 0 0 10px rgba(0, 204, 255, 0.5);
+}
+
+.level-text {
+    color: #000;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+    z-index: 1;
+    white-space: nowrap;
+}
+
+.skills-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.skills-modal.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#skills-modal-content-area {
+    width: 100%;
+    height: calc(100% - 40px); /* Altura total menos o header */
+    overflow-y: auto;
+    padding: 20px;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    scrollbar-width: thin;
+    scrollbar-color: #00ff00 #000;
+}
+
+#skills-modal-content-area::-webkit-scrollbar {
+    width: 8px;
+}
+
+#skills-modal-content-area::-webkit-scrollbar-track {
+    background: #000;
+    border: 1px solid #00ff00;
+}
+
+#skills-modal-content-area::-webkit-scrollbar-thumb {
+    background: #00ff00;
+    border-radius: 4px;
+}
+
+/* Ajustes para o conteúdo dentro da modal */
+#skills-modal-content-area .skill-entry {
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+#skills-modal-content-area .skill-category {
+    margin: 30px 0 15px 0;
+    font-size: 1.2em;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+}
+
+#skills-modal-content-area .progress-bar-background {
+    height: 25px;
+    margin-top: 10px;
 }
