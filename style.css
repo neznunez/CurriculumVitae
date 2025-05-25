@@ -1539,48 +1539,90 @@ body.persona-edit-theme-active .perform-message.typing-indicator .typing-dots sp
     bottom: 375px;
     left: calc(16.67%);
     transform: translateX(-50%);
-    height: 280px; /* Aumentado de 200px */
+    height: 280px;
     width: 32%;
-    background-color: rgba(10, 10, 10, 0.85); 
-    border: 1px solid lime; 
+    background-color: rgba(10, 10, 10, 0.85);
+    border: 1px solid #ffcc00;
     border-radius: 4px;
-    z-index: 10; 
-    font-family: 'Courier New', Courier, monospace; 
-    color: #eee; 
-    box-shadow: 0 0 25px rgba(0, 255, 0, 0.4),
-                inset 0 0 15px rgba(0, 255, 0, 0.1);
+    z-index: 10;
+    font-family: 'Courier New', monospace;
+    color: #eee;
+    box-shadow: 0 0 25px rgba(255, 204, 0, 0.4),
+                inset 0 0 15px rgba(255, 204, 0, 0.1);
     opacity: 0;
     clip-path: inset(100% 0 0 0);
     transition: opacity 0.6s ease-out, clip-path 0.6s ease-out;
     overflow: hidden;
-    animation: frameBorderPulse 4s ease-in-out infinite;
-}
-
-#id-frame.frame-visible {
-    opacity: 1;
-    clip-path: inset(0 0 0 0); 
-    animation: frameBorderPulse 4s ease-in-out infinite;
+    animation: frameBorderPulseGold 4s ease-in-out infinite;
 }
 
 #id-content {
     padding: 10px;
-    overflow-y: auto;
     height: 100%;
     box-sizing: border-box;
-    font-size: 0.8em;
-    line-height: 1.4;
-    scroll-behavior: smooth;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-}
-
-#id-content::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
 }
 
 .id-header {
-    margin-bottom: 10px; /* Menor que o #middle-header */
+    margin-bottom: 10px;
     padding-bottom: 5px;
+}
+
+#id-area {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 15px;
+    padding: 0 8px;
+}
+
+.id-photo {
+    width: 160px;
+    height: 213px;
+    border: 1px solid #ffcc00;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 20, 0, 0.3);
+}
+
+.profile-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.id-info {
+    padding-top: 0;
+}
+
+.id-name {
+    font-size: 1.2em;
+    color: #ffcc00;
+    margin-bottom: 8px;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+    white-space: nowrap;
+}
+
+.id-username {
+    font-size: 0.9em;
+    color: #00ffff;
+    margin-bottom: 8px;
+}
+
+.id-birth,
+.id-location,
+.id-email,
+.id-phone {
+    font-size: 0.85em;
+    margin-bottom: 6px;
+    color: #eee;
+    line-height: 1.2;
+}
+
+.id-email,
+.id-phone {
+    font-family: 'Courier New', monospace;
 }
 
 /* (Opcional) Estilos para botões de navegação se forem adicionados depois */
@@ -2480,3 +2522,212 @@ body.persona-edit-theme-active .perform-message.typing-indicator .typing-dots sp
         box-shadow: 0 0 20px rgba(255, 179, 102, 0.6);
     }
 } 
+
+#id-modal-content-area {
+    padding: 20px;
+    height: calc(100% - 60px);
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+#id-modal-content-area .id-grid-container {
+    display: grid;
+    grid-template-columns: 250px 1fr 1fr;
+    gap: 30px;
+    max-width: 1200px;
+    width: 100%;
+}
+
+#id-modal-content-area .id-photo {
+    width: 250px;
+    height: 330px;
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+    background-color: rgba(0, 20, 0, 0.3);
+    position: sticky;
+    top: 20px;
+}
+
+#id-modal-content-area .id-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: rgba(0, 20, 0, 0.3);
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+#id-modal-content-area .info-section {
+    padding: 15px;
+}
+
+#id-modal-content-area .name-container {
+    margin-bottom: 15px;
+}
+
+#id-modal-content-area .id-name {
+    font-size: 2em;
+    margin-bottom: 15px !important;
+    color: #00ff00;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    white-space: nowrap;
+}
+
+#id-modal-content-area .id-username {
+    font-size: 1.4em;
+    margin-bottom: 30px !important;
+    color: #00ffff;
+}
+
+#id-modal-content-area .id-birth,
+#id-modal-content-area .id-location,
+#id-modal-content-area .id-email,
+#id-modal-content-area .id-phone {
+    font-size: 1.1em;
+    margin-bottom: 15px !important;
+    padding: 8px;
+    color: #eee;
+}
+
+#id-modal-content-area .id-birth,
+#id-modal-content-area .id-location {
+    color: #eee;
+}
+
+#id-modal-content-area .id-email,
+#id-modal-content-area .id-phone {
+    font-family: 'Courier New', monospace;
+}
+
+#id-modal-content-area .education-section {
+    margin-top: 0;
+    background-color: rgba(0, 20, 0, 0.3);
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+#id-modal-content-area .education-title {
+    color: #00ff00;
+    font-size: 1.4em;
+    margin-bottom: 25px;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+#id-modal-content-area .education-item {
+    margin-bottom: 25px;
+}
+
+#id-modal-content-area .school-name {
+    color: #00ffff;
+    font-size: 1.2em;
+    margin-bottom: 8px;
+}
+
+#id-modal-content-area .course-name {
+    color: #eee;
+    font-size: 1.1em;
+    margin-bottom: 8px;
+}
+
+#id-modal-content-area .education-period {
+    color: #666;
+    font-size: 1em;
+}
+
+.fullscreen-only {
+    display: none;
+}
+
+#id-modal-content-area .fullscreen-only {
+    display: block;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#id-frame::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 204, 0, 0.15) 3px,
+        rgba(255, 204, 0, 0.15) 3px
+    );
+    animation: scanline 6s linear infinite;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.7;
+    mix-blend-mode: overlay;
+}
+
+#id-frame::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        circle at 50% 50%,
+        rgba(255, 204, 0, 0.2),
+        transparent 70%
+    );
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.7;
+    mix-blend-mode: overlay;
+    animation: framePulse 3s ease-in-out infinite;
+}
+
+#id-frame {
+    animation: frameBorderPulseGold 4s ease-in-out infinite;
+}
+
+@keyframes frameBorderPulseGold {
+    0%, 100% {
+        border-color: rgba(255, 204, 0, 0.8);
+        box-shadow: 0 0 25px rgba(255, 204, 0, 0.4),
+                    inset 0 0 15px rgba(255, 204, 0, 0.2);
+    }
+    50% {
+        border-color: #ffcc00;
+        box-shadow: 0 0 40px rgba(255, 204, 0, 0.7),
+                    inset 0 0 30px rgba(255, 204, 0, 0.4);
+    }
+}
+
+/* Efeito hover mais intenso */
+#id-frame:hover {
+    border-color: #ffcc00;
+    box-shadow: 0 0 50px rgba(255, 204, 0, 0.8),
+                inset 0 0 40px rgba(255, 204, 0, 0.4);
+    transition: all 0.3s ease;
+}
+
+/* Ajustando também o nome para combinar com o tema dourado */
+.id-name {
+    font-size: 1.2em;
+    color: #ffcc00;
+    margin-bottom: 8px;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+    white-space: nowrap;
+}

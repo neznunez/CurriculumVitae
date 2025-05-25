@@ -63,25 +63,39 @@
         <!-- Container para conteúdo -->
         <div id="id-content">
             <div class="id-header">
-                <span style="color:lime;">ID.</span>
+                <span style="color:#00ff00;">ID.</span>
                 <hr/>
             </div>
             <!-- Área de conteúdo -->
-            <div id="id-area">
-                <!-- Conteúdo de Informações Pessoais aqui -->
-                <p>Nome: João Victor Nunez</p>
-                <p>Profissão: Artista Digital & Desenvolvedor</p>
-                <p>Local: Rio de Janeiro, Brasil</p>
-                <!-- Adicionar mais informações conforme necessário -->
+            <div id="id-area" class="id-grid-container">
+                <div class="id-photo">
+                    <img src="assets/3x4.png" alt="Foto 3x4" class="profile-photo">
+                </div>
+                <div class="id-info">
+                    <div class="info-section">
+                        <p class="id-name">João Victor Nunes</p>
+                        <p class="id-username">@neznunez</p>
+                        <p class="id-birth">6 de Janeiro de 2000 (25 years)</p>
+                        <p class="id-location">Rio de Janeiro, Brazil</p>
+                        <p class="id-email">jvnunes066@gmail.com</p>
+                        <p class="id-phone">+5521971695864</p>
+                    </div>
+                </div>
+                <div class="education-section fullscreen-only">
+                    <h3 class="education-title">Formação</h3>
+                    <div class="education-item">
+                        <p class="school-name">Colégio Pedro II - Unidade Humaitá I, Humaitá</p>
+                        <p class="course-name">Ensino fundamental/médio</p>
+                        <p class="education-period">2006-2018</p>
+                    </div>
+                    <div class="education-item">
+                        <p class="school-name">PUC-RIO</p>
+                        <p class="course-name">Design em Comunicação Visual</p>
+                        <p class="education-period">2019-2025</p>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- Botões de navegação (se necessários, por enquanto vamos omitir para ID) -->
-        <!-- 
-        <div class="id-nav-buttons">
-            <div class="bio-nav-btn" id="id-scroll-up">▲</div>
-            <div class="bio-nav-btn" id="id-scroll-down">▼</div>
-        </div>
-        -->
     </div>
     <!-- === Fim do Novo Frame de ID === -->
 
@@ -1279,10 +1293,10 @@
             // --- Funcionalidade Fullscreen para Frame de ID ---
             $('#id-fullscreen').on('click', function() {
                 // Conteúdo para a modal de ID (pode ser o mesmo do frame ou customizado)
-                const idContentModal = $('#id-area').html(); 
+                const idContentModal = $('#id-area').clone(); // Clone o conteúdo ao invés de usar html()
 
                 // Limpar e preencher a área de conteúdo da modal
-                $('#id-modal-content-area').html(idContentModal);
+                $('#id-modal-content-area').empty().append(idContentModal);
                 
                 // Mostrar a modal
                 $('#id-modal').addClass('active');
@@ -1817,6 +1831,10 @@
             // ... existing code ...
         });
     </script>
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./t.min.js"></script>
+    <script src="./script.js"></script>
+    <script src="./chat.js"></script>
 </body>
-</html> 
 </html> 
