@@ -688,7 +688,15 @@
                         // Prevenir rolagem no body
                         $('body').css('overflow', 'hidden');
                         
-                        // Usar o conteúdo atualizado da bio
+                        // Usar o conteúdo atualizado da bio com o idioma atual
+                        const currentLanguage = detectLanguage();
+                        const bioText = bioTexts[currentLanguage] || bioTexts['pt-BR'];
+                        window.bioContent = 
+                            `<span style="color:lime;">${bioText.title}</span><hr/>` +
+                            `${bioText.subtitle}<br/>` +
+                            bioText.content;
+                        
+                        // Inicializar o texto na modal
                         setTimeout(function() {
                             $('#bio-modal-text').t(bioContent, {
                                 speed: 0.5,            // Velocidade extremamente rápida
