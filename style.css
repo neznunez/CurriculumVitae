@@ -3019,3 +3019,10 @@ body.persona-edit-theme-active .perform-message.typing-indicator .typing-dots sp
     height: 25px;
     margin-top: 10px;
 }
+
+/* Removendo estilos dos botões de idioma que não são mais necessários */
+.language-selector button,
+.language-selector button:hover,
+.language-selector {
+    display: none;
+}
