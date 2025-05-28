@@ -688,21 +688,10 @@
                         // Prevenir rolagem no body
                         $('body').css('overflow', 'hidden');
                         
-                        // Definir o texto para a animação
-                        const bioContentModal = 
-                            '<span style="color:lime;">BIO</span><hr/>' +
-                            '✍️ Sobre mim<br/>' +
-                            'De tudo um pouco. <span style="color:#ff9900">Artista urbano</span> e <span style="color:#ff9900">designer multimídia</span>, procuro sempre utilizar <span style="color:#ffcc00">novas tecnologias</span> para impulsionar meu <span style="color:#ff9900">processo criativo</span>. <span style="color:#ff9900">Do graffiti ao design</span>, em minha trajetória acadêmica busquei projetos que conectassem esses meus dois mundos: arte de rua e tecnologia — trazendo temas que abordam a preservação da história e da memória das cidades, além de estudos sobre as futuras relações entre os seres humanos, a tecnologia e o cenário urbano.<br/>' +
-                            'Em 2022, fui selecionado para a <span style="color:#ffcc00">Apple Developer Academy</span>, programa internacional de inovação tecnológica da Apple, focado na formação de profissionais criativos e desenvolvedores voltados para a criação de soluções digitais. O aprendizado era guiado pelo <span style="color:#ffcc00">Challenge Based Learning (CBL)</span> — metodologia criada pela Apple que propõe o desenvolvimento de projetos a partir de desafios reais, conectando tecnologia, colaboração multidisciplinar e impacto social.<br/>' +
-                            'Durante o programa, tive treinamento intensivo em <span style="color:#00ff00">desenvolvimento de software</span>, <span style="color:#00ff00">metodologias ágeis</span> e <span style="color:#ff9900">design centrado no usuário</span>.<br/>' +
-                            'Nesse período, me aprofundei no desenvolvimento de ferramentas com <span style="color:#ff69b4">realidade aumentada</span>, <span style="color:#ff69b4">realidade virtual</span> e <span style="color:#ff69b4">spatial computing</span>, além de estudos e experimentações sobre a <span style="color:#ffcc00">Web 3.0</span> e as transformações da nova era da internet, investigando soluções descentralizadas com tecnologias como <span style="color:#ffcc00">inteligência artificial</span>, <span style="color:#ffcc00">blockchain</span>, <span style="color:#ffcc00">IoT</span> e cidades inteligentes.<br/>' +
-                            'Em 2023, participei da <span style="color:#ff69b4">curadoria e desenvolvimento de exposições</span> em realidade aumentada, dando vida a obras de arte por meio da interação digital. Atuei em projetos realizados em <span style="color:#00ccff">Lisboa</span> e em diversas regiões do <span style="color:#00ccff">Brasil</span>, incluindo uma exposição na <span style="color:#00ccff">Embaixada do México</span>, em Brasília, em homenagem à Frida Kahlo, com quadros interativos que mostravam como as novas mídias podem ampliar o alcance da arte e criar novas formas de interação com o público.<br/>' +
-                            'Em 2024, atuei como <span style="color:#ff9900">Designer de Novas Mídias</span> voltado para entretenimento no estúdio criativo de inovação tecnológica <span style="color:#00ccff">DELED</span>. Desenvolvi e acompanhei <span style="color:#ff69b4">projetos interativos com foco em experiências imersivas</span>, envolvendo <span style="color:#ff69b4">painéis de LED</span>, <span style="color:#ff69b4">rastreamento corporal</span>, <span style="color:#ff69b4">projeção mapeada</span>, <span style="color:#ff69b4">instalações artísticas</span> e <span style="color:#ff69b4">cenários que uniam arte e tecnologia</span>. Ao longo desse período, participei de projetos realizados para o <span style="color:#00ccff">Museu do Amanhã</span>, <span style="color:#00ccff">Rock in Rio</span> e outras grandes marcas e instituições, atuando em diferentes etapas — da concepção à implementação técnica, incluindo produção e montagem. Esses projetos me permitiram integrar narrativas visuais, sensoriamento e tecnologia em escala real, criando obras vivas que dialogam com o espaço e com o público.';
-                        
-                        // Iniciar animação com velocidade extremamente rápida
+                        // Usar o conteúdo atualizado da bio
                         setTimeout(function() {
-                            $('#bio-modal-text').t(bioContentModal, {
-                                speed: 0.5,            // Velocidade extremamente rápida (era 1, agora 0.5)
+                            $('#bio-modal-text').t(bioContent, {
+                                speed: 0.5,            // Velocidade extremamente rápida
                                 mistype: false,        // Sem erros de digitação
                                 caret: false,          // Sem cursor para não distrair
                                 fin: function(elm) {
@@ -710,9 +699,35 @@
                                     App.triggerPulse();
                                 }
                             });
-                        }, 10); // Pequeno timeout para garantir que o DOM foi atualizado
+                        }, 10);
                     });
-                    
+
+                    // Funcionalidade do botão de expandir o frame central
+                    $('#middle-fullscreen').on('click', function() {
+                        // Remover completamente o elemento anterior e recriar
+                        $('#middle-modal-content').remove();
+                        $('.middle-modal-content').append('<div id="middle-modal-content"></div>');
+                        
+                        // Mostrar a modal
+                        $('#middle-modal').addClass('active');
+                        
+                        // Prevenir rolagem no body
+                        $('body').css('overflow', 'hidden');
+                        
+                        // Usar o conteúdo atualizado das experiências
+                        setTimeout(function() {
+                            $('#middle-modal-content').t(experienciasContent, {
+                                speed: 0.5,            // Velocidade extremamente rápida
+                                mistype: false,        // Sem erros de digitação
+                                caret: false,          // Sem cursor para não distrair
+                                fin: function(elm) {
+                                    // Pulso ao finalizar
+                                    App.triggerPulse();
+                                }
+                            });
+                        }, 10);
+                    });
+
                     // Funcionalidade do botão de fechar a modal
                     $('#bio-modal-close, #bio-modal').on('click', function(e) {
                         // Fechar apenas se clicou no X ou na área fora do conteúdo
@@ -1306,12 +1321,9 @@
                 // Prevenir rolagem no body
                 $('body').css('overflow', 'hidden');
                 
-                // Definir o texto para a animação
-                const experienciasContentModal = window.experienciasContent;
-                
-                // Iniciar animação com velocidade extremamente rápida
+                // Usar o conteúdo atualizado das experiências
                 setTimeout(function() {
-                    $('#middle-modal-content').t(experienciasContentModal, {
+                    $('#middle-modal-content').t(experienciasContent, {
                         speed: 0.5,            // Velocidade extremamente rápida
                         mistype: false,        // Sem erros de digitação
                         caret: false,          // Sem cursor para não distrair
@@ -1320,7 +1332,7 @@
                             App.triggerPulse();
                         }
                     });
-                }, 10); // Pequeno timeout para garantir que o DOM foi atualizado
+                }, 10);
             });
             
             // Fechar modal do frame central
@@ -1949,106 +1961,151 @@
                 }
             };
 
-            // Função para detectar o idioma do navegador e retornar o idioma mais apropriado
-            function getPreferredLanguage() {
-                const userLang = navigator.language || navigator.userLanguage;
-                if (userLang.startsWith('pt')) return 'pt-BR';
-                if (userLang.startsWith('es')) return 'es';
-                if (userLang.startsWith('en')) return 'en-US';
-                return 'pt-BR'; // Padrão para português se nenhum idioma for detectado
-            }
-
-            // Função para atualizar o conteúdo baseado no idioma
-            function updateExperienceContent() {
-                const lang = getPreferredLanguage();
-                const texts = experienceTexts[lang];
-                window.experienciasContent = texts.content;
-                
-                // Atualiza o conteúdo se o elemento já existir
-                if ($('#middle-area').length) {
-                    $('#middle-area').empty().t(texts.content, {
-                        speed: 5,
-                        mistype: false,
-                        caret: false
-                    });
-                }
-            }
-
-            // Inicializa os conteúdos com o idioma detectado
-            const userLanguage = getPreferredLanguage();
-            window.experienciasContent = experienceTexts[userLanguage].content;
-            window.bioContent = bioTexts[userLanguage].content;
-
-            // Adiciona os botões após o carregamento do documento
-            $(document).ready(function() {
-                // Atualiza o conteúdo automaticamente baseado no idioma do navegador
-                updateExperienceContent();
-                updateBioContent();
-            });
-
             // Definição dos textos da bio em diferentes idiomas
             const bioTexts = {
                 'pt-BR': {
-                    content: '<span style="color:lime;">BIO</span><hr/>' +
-                        '✍️ Sobre mim<br/>' +
-                        'De tudo um pouco. <span style="color:#ff9900">Artista urbano</span> e <span style="color:#ff9900">designer multimídia</span>, procuro sempre utilizar <span style="color:#ffcc00">novas tecnologias</span> para impulsionar meu <span style="color:#ff9900">processo criativo</span>. <span style="color:#ff9900">Do graffiti ao design</span>, em minha trajetória acadêmica busquei projetos que conectassem esses meus dois mundos: arte de rua e tecnologia — trazendo temas que abordam a preservação da história e da memória das cidades, além de estudos sobre as futuras relações entre os seres humanos, a tecnologia e o cenário urbano.<br/><br/>' +
-                        'Em 2022, fui selecionado para a <span style="color:#ffcc00">Apple Developer Academy</span>, programa internacional de inovação tecnológica da Apple, focado na formação de profissionais criativos e desenvolvedores voltados para a criação de soluções digitais. O aprendizado era guiado pelo <span style="color:#ffcc00">Challenge Based Learning (CBL)</span> — metodologia criada pela Apple que propõe o desenvolvimento de projetos a partir de desafios reais, conectando tecnologia, colaboração multidisciplinar e impacto social.<br/><br/>' +
-                        'Durante o programa, tive treinamento intensivo em <span style="color:#00ff00">desenvolvimento de software</span>, <span style="color:#00ff00">metodologias ágeis</span> e <span style="color:#ff9900">design centrado no usuário</span>. Nesse período, me aprofundei no desenvolvimento de ferramentas com <span style="color:#ff69b4">realidade aumentada</span>, <span style="color:#ff69b4">realidade virtual</span> e <span style="color:#ff69b4">spatial computing</span>, além de estudos e experimentações sobre a <span style="color:#ffcc00">Web 3.0</span> e as transformações da nova era da internet, investigando soluções descentralizadas com tecnologias como <span style="color:#ffcc00">inteligência artificial</span>, <span style="color:#ffcc00">blockchain</span>, <span style="color:#ffcc00">IoT</span> e cidades inteligentes.<br/><br/>' +
-                        'Em 2023, participei da <span style="color:#ff69b4">curadoria e desenvolvimento de exposições</span> em realidade aumentada, dando vida a obras de arte por meio da interação digital. Atuei em projetos realizados em <span style="color:#00ccff">Lisboa</span> e em diversas regiões do <span style="color:#00ccff">Brasil</span>, incluindo uma exposição na <span style="color:#00ccff">Embaixada do México</span>, em Brasília, em homenagem à Frida Kahlo, com quadros interativos que mostravam como as novas mídias podem ampliar o alcance da arte e criar novas formas de interação com o público.<br/><br/>' +
+                    title: 'BIO',
+                    subtitle: '✍️ Sobre mim',
+                    content: 'De tudo um pouco. <span style="color:#ff9900">Artista urbano</span> e <span style="color:#ff9900">designer multimídia</span>, procuro sempre utilizar <span style="color:#ffcc00">novas tecnologias</span> para impulsionar meu <span style="color:#ff9900">processo criativo</span>. <span style="color:#ff9900">Do graffiti ao design</span>, em minha trajetória acadêmica busquei projetos que conectassem esses meus dois mundos: arte de rua e tecnologia — trazendo temas que abordam a preservação da história e da memória das cidades, além de estudos sobre as futuras relações entre os seres humanos, a tecnologia e o cenário urbano.<br/>' +
+                        'Em 2022, fui selecionado para a <span style="color:#ffcc00">Apple Developer Academy</span>, programa internacional de inovação tecnológica da Apple, focado na formação de profissionais criativos e desenvolvedores voltados para a criação de soluções digitais. O aprendizado era guiado pelo <span style="color:#ffcc00">Challenge Based Learning (CBL)</span> — metodologia criada pela Apple que propõe o desenvolvimento de projetos a partir de desafios reais, conectando tecnologia, colaboração multidisciplinar e impacto social.<br/>' +
+                        'Durante o programa, tive treinamento intensivo em <span style="color:#00ff00">desenvolvimento de software</span>, <span style="color:#00ff00">metodologias ágeis</span> e <span style="color:#ff9900">design centrado no usuário</span>.<br/>' +
+                        'Nesse período, me aprofundei no desenvolvimento de ferramentas com <span style="color:#ff69b4">realidade aumentada</span>, <span style="color:#ff69b4">realidade virtual</span> e <span style="color:#ff69b4">spatial computing</span>, além de estudos e experimentações sobre a <span style="color:#ffcc00">Web 3.0</span> e as transformações da nova era da internet, investigando soluções descentralizadas com tecnologias como <span style="color:#ffcc00">inteligência artificial</span>, <span style="color:#ffcc00">blockchain</span>, <span style="color:#ffcc00">IoT</span> e cidades inteligentes.<br/>' +
+                        'Em 2023, participei da <span style="color:#ff69b4">curadoria e desenvolvimento de exposições</span> em realidade aumentada, dando vida a obras de arte por meio da interação digital. Atuei em projetos realizados em <span style="color:#00ccff">Lisboa</span> e em diversas regiões do <span style="color:#00ccff">Brasil</span>, incluindo uma exposição na <span style="color:#00ccff">Embaixada do México</span>, em Brasília, em homenagem à Frida Kahlo, com quadros interativos que mostravam como as novas mídias podem ampliar o alcance da arte e criar novas formas de interação com o público.<br/>' +
                         'Em 2024, atuei como <span style="color:#ff9900">Designer de Novas Mídias</span> voltado para entretenimento no estúdio criativo de inovação tecnológica <span style="color:#00ccff">DELED</span>. Desenvolvi e acompanhei <span style="color:#ff69b4">projetos interativos com foco em experiências imersivas</span>, envolvendo <span style="color:#ff69b4">painéis de LED</span>, <span style="color:#ff69b4">rastreamento corporal</span>, <span style="color:#ff69b4">projeção mapeada</span>, <span style="color:#ff69b4">instalações artísticas</span> e <span style="color:#ff69b4">cenários que uniam arte e tecnologia</span>. Ao longo desse período, participei de projetos realizados para o <span style="color:#00ccff">Museu do Amanhã</span>, <span style="color:#00ccff">Rock in Rio</span> e outras grandes marcas e instituições, atuando em diferentes etapas — da concepção à implementação técnica, incluindo produção e montagem. Esses projetos me permitiram integrar narrativas visuais, sensoriamento e tecnologia em escala real, criando obras vivas que dialogam com o espaço e com o público.'
                 },
                 'en-US': {
-                    content: '<span style="color:lime;">BIO</span><hr/>' +
-                        '✍️ About me<br/>' +
-                        'A bit of everything. I\'m a <span style="color:#ff9900">multimedia designer</span> and <span style="color:#ff9900">urban artist</span> who seeks to incorporate <span style="color:#ffcc00">emerging technologies</span> to drive my <span style="color:#ff9900">creative process</span>. <span style="color:#ff9900">From graffiti to design</span>, my academic journey has been guided by projects that connect these two worlds — street art and technology — exploring themes such as the preservation of urban memory, the history of cities, and the evolving relationship between humans, technology, and the urban environment.<br/><br/>' +
-                        'In 2022, I was selected for the <span style="color:#ffcc00">Apple Developer Academy</span>, Apple\'s international innovation program focused on training creative professionals and developers to build impactful digital solutions. The learning process was driven by <span style="color:#ffcc00">Challenge Based Learning (CBL)</span> — a methodology developed by Apple that promotes the development of real-world projects through multidisciplinary collaboration, technology, and social impact.<br/><br/>' +
-                        'During the program, I received intensive training in <span style="color:#00ff00">software development</span>, <span style="color:#00ff00">agile methodologies</span>, and <span style="color:#ff9900">user-centered design</span>. I deepened my knowledge in building tools using <span style="color:#ff69b4">augmented reality</span>, <span style="color:#ff69b4">virtual reality</span>, and <span style="color:#ff69b4">spatial computing</span>, as well as researching and experimenting with <span style="color:#ffcc00">Web 3.0</span> technologies. My work included exploring decentralized solutions through <span style="color:#ffcc00">AI</span>, <span style="color:#ffcc00">blockchain</span>, <span style="color:#ffcc00">IoT</span>, and smart city concepts.<br/><br/>' +
-                        'In 2023, I co-curated and developed <span style="color:#ff69b4">augmented reality exhibitions</span> that brought artworks to life through digital interaction. I contributed to projects presented in <span style="color:#00ccff">Lisbon</span> and various regions of <span style="color:#00ccff">Brazil</span>, including a special exhibition at the <span style="color:#00ccff">Embassy of Mexico</span> in Brasília honoring Frida Kahlo, featuring interactive paintings that demonstrated how new media can expand the reach of art and create new forms of audience engagement.<br/><br/>' +
-                        'In 2024, I joined the creative tech studio <span style="color:#00ccff">DELED</span> as a <span style="color:#ff9900">New Media Designer</span> focused on entertainment. I developed and supported <span style="color:#ff69b4">interactive projects centered on immersive experiences</span>, working with <span style="color:#ff69b4">LED panels</span>, <span style="color:#ff69b4">body tracking</span>, <span style="color:#ff69b4">projection mapping</span>, <span style="color:#ff69b4">artistic installations</span>, and <span style="color:#ff69b4">hybrid environments that blended art and technology</span>. During this time, I contributed to projects for the <span style="color:#00ccff">Museum of Tomorrow</span>, <span style="color:#00ccff">Rock in Rio</span>, and other major brands and institutions, participating in all stages — from concept to technical implementation, including production and on-site installation. These experiences allowed me to integrate visual storytelling, sensing technologies, and large-scale interactivity to create living installations that resonate with both space and audience.'
+                    title: 'BIO',
+                    subtitle: '✍️ About me',
+                    content: 'A bit of everything. I\'m a <span style="color:#ff9900">multimedia designer</span> and <span style="color:#ff9900">urban artist</span> who seeks to incorporate <span style="color:#ffcc00">emerging technologies</span> to drive my <span style="color:#ff9900">creative process</span>. From <span style="color:#ff9900">graffiti to design</span>, my academic journey has been guided by projects that connect these two worlds — street art and technology — exploring themes such as urban memory preservation, city history, and future relationships between humans, technology, and the urban environment.<br/>' +
+                        'In 2022, I was selected for the <span style="color:#ffcc00">Apple Developer Academy</span>, an international technological innovation program by Apple focused on training creative professionals and developers oriented towards creating digital solutions with impact. Learning was guided by <span style="color:#ffcc00">Challenge Based Learning (CBL)</span>, a methodology created by Apple that promotes project development based on real challenges, combining technology, multidisciplinary collaboration, and social impact.<br/>' +
+                        'During the program, I received intensive training in <span style="color:#00ff00">software development</span>, <span style="color:#00ff00">agile methodologies</span>, and <span style="color:#ff9900">user-centered design</span>.<br/>' +
+                        'During this period, I specialized in developing tools with <span style="color:#ff69b4">augmented reality</span>, <span style="color:#ff69b4">virtual reality</span>, and <span style="color:#ff69b4">spatial computing</span>, as well as researching and experimenting with <span style="color:#ffcc00">Web 3.0</span> technologies. I explored decentralized solutions using <span style="color:#ffcc00">artificial intelligence</span>, <span style="color:#ffcc00">blockchain</span>, <span style="color:#ffcc00">IoT</span>, and smart city concepts.<br/>' +
+                        'In 2023, I participated in the <span style="color:#ff69b4">curation and development of augmented reality exhibitions</span>, bringing artworks to life through digital interaction. I collaborated on projects presented in <span style="color:#00ccff">Lisbon</span> and various regions of <span style="color:#00ccff">Brazil</span>, including an exhibition at the <span style="color:#00ccff">Mexican Embassy</span> in Brasília paying tribute to Frida Kahlo, with interactive paintings that demonstrated how new media can extend art\'s reach and create new forms of audience engagement.<br/>' +
+                        'In 2024, I worked as a <span style="color:#ff9900">New Media Designer</span> focused on entertainment at the technological innovation creative studio <span style="color:#00ccff">DELED</span>. I developed and supervised <span style="color:#ff69b4">interactive projects centered on immersive experiences</span>, using <span style="color:#ff69b4">LED panels</span>, <span style="color:#ff69b4">body tracking</span>, <span style="color:#ff69b4">projection mapping</span>, <span style="color:#ff69b4">art installations</span>, and <span style="color:#ff69b4">scenography combining art and technology</span>. Throughout this period, I participated in projects for the <span style="color:#00ccff">Museum of Tomorrow</span>, <span style="color:#00ccff">Rock in Rio</span>, and other major brands and institutions, working across different stages — from conception to technical implementation, including production and assembly. These experiences allowed me to integrate visual narrative, sensory technologies, and large-scale interactivity, creating living works that dialogue with space and audience.'
                 },
                 'es': {
-                    content: '<span style="color:lime;">BIO</span><hr/>' +
-                        '✍️ Sobre mí<br/>' +
-                        'Un poco de todo. Soy <span style="color:#ff9900">diseñador multimedia</span> y <span style="color:#ff9900">artista urbano</span>, y busco constantemente incorporar <span style="color:#ffcc00">nuevas tecnologías</span> para potenciar mi <span style="color:#ff9900">proceso creativo</span>. <span style="color:#ff9900">Desde el graffiti hasta el diseño</span>, mi trayectoria académica ha estado guiada por proyectos que conectan estos dos mundos — el arte callejero y la tecnología — explorando temas como la preservación de la memoria urbana, la historia de las ciudades y las relaciones futuras entre los seres humanos, la tecnología y el entorno urbano.<br/><br/>' +
-                        'En 2022, fui seleccionado para formar parte de la <span style="color:#ffcc00">Apple Developer Academy</span>, un programa internacional de innovación tecnológica de Apple enfocado en la formación de profesionales creativos y desarrolladores orientados a la creación de soluciones digitales con impacto. El aprendizaje fue guiado por el método <span style="color:#ffcc00">Challenge Based Learning (CBL)</span>, una metodología creada por Apple que promueve el desarrollo de proyectos a partir de desafíos reales, combinando tecnología, colaboración multidisciplinaria e impacto social.<br/><br/>' +
-                        'Durante el programa, recibí una formación intensiva en <span style="color:#00ff00">desarrollo de software</span>, <span style="color:#00ff00">metodologías ágiles</span> y <span style="color:#ff9900">diseño centrado en el usuario</span>. Me especialicé en el desarrollo de herramientas con <span style="color:#ff69b4">realidad aumentada</span>, <span style="color:#ff69b4">realidad virtual</span> y <span style="color:#ff69b4">computación espacial</span>, además de investigar y experimentar con tecnologías de la <span style="color:#ffcc00">Web 3.0</span>. Exploré soluciones descentralizadas utilizando <span style="color:#ffcc00">inteligencia artificial</span>, <span style="color:#ffcc00">blockchain</span>, <span style="color:#ffcc00">Internet de las cosas (IoT)</span> y conceptos de ciudades inteligentes.<br/><br/>' +
-                        'En 2023, participé en la <span style="color:#ff69b4">curaduría y desarrollo de exposiciones</span> en realidad aumentada, dando vida a obras de arte mediante la interacción digital. Colaboré en proyectos presentados en <span style="color:#00ccff">Lisboa</span> y en diversas regiones de <span style="color:#00ccff">Brasil</span>, incluyendo una exposición en la <span style="color:#00ccff">Embajada de México</span> en Brasilia en homenaje a Frida Kahlo, con cuadros interactivos que mostraban cómo los nuevos medios pueden ampliar el alcance del arte y crear nuevas formas de relación con el público.<br/><br/>' +
+                    title: 'BIO',
+                    subtitle: '✍️ Sobre mí',
+                    content: 'Un poco de todo. Soy <span style="color:#ff9900">diseñador multimedia</span> y <span style="color:#ff9900">artista urbano</span>, y busco constantemente incorporar <span style="color:#ffcc00">nuevas tecnologías</span> para potenciar mi <span style="color:#ff9900">proceso creativo</span>. Desde el <span style="color:#ff9900">grafiti hasta el diseño</span>, mi trayectoria académica ha estado guiada por proyectos que conectan estos dos mundos — el arte callejero y la tecnología — explorando temas como la preservación de la memoria urbana, la historia de las ciudades y las relaciones futuras entre los seres humanos, la tecnología y el entorno urbano.<br/>' +
+                        'En 2022, fui seleccionado para formar parte de la <span style="color:#ffcc00">Apple Developer Academy</span>, un programa internacional de innovación tecnológica de Apple enfocado en la formación de profesionales creativos y desarrolladores orientados a la creación de soluciones digitales con impacto. El aprendizaje fue guiado por el método <span style="color:#ffcc00">Challenge Based Learning (CBL)</span>, una metodología creada por Apple que promueve el desarrollo de proyectos a partir de desafíos reales, combinando tecnología, colaboración multidisciplinaria e impacto social.<br/>' +
+                        'Durante el programa, recibí una formación intensiva en <span style="color:#00ff00">desarrollo de software</span>, <span style="color:#00ff00">metodologías ágiles</span> y <span style="color:#ff9900">diseño centrado en el usuario</span>.<br/>' +
+                        'Me especialicé en el desarrollo de herramientas con <span style="color:#ff69b4">realidad aumentada</span>, <span style="color:#ff69b4">realidad virtual</span> y <span style="color:#ff69b4">computación espacial</span>, además de investigar y experimentar con tecnologías de la <span style="color:#ffcc00">Web 3.0</span>. Exploré soluciones descentralizadas utilizando <span style="color:#ffcc00">inteligencia artificial</span>, <span style="color:#ffcc00">blockchain</span>, <span style="color:#ffcc00">Internet de las cosas (IoT)</span> y conceptos de ciudades inteligentes.<br/>' +
+                        'En 2023, participé en la <span style="color:#ff69b4">curaduría y desarrollo de exposiciones</span> en realidad aumentada, dando vida a obras de arte mediante la interacción digital. Colaboré en proyectos presentados en <span style="color:#00ccff">Lisboa</span> y en diversas regiones de <span style="color:#00ccff">Brasil</span>, incluyendo una exposición en la <span style="color:#00ccff">Embajada de México</span> en Brasilia en homenaje a Frida Kahlo, con cuadros interactivos que mostraban cómo los nuevos medios pueden ampliar el alcance del arte y crear nuevas formas de relación con el público.<br/>' +
                         'En 2024, trabajé como <span style="color:#ff9900">Diseñador de Nuevos Medios</span> enfocado en entretenimiento en el estudio creativo de innovación tecnológica <span style="color:#00ccff">DELED</span>. Desarrollé y acompañé <span style="color:#ff69b4">proyectos interactivos centrados en experiencias inmersivas</span>, utilizando <span style="color:#ff69b4">paneles LED</span>, <span style="color:#ff69b4">seguimiento corporal</span>, <span style="color:#ff69b4">proyección mapeada</span>, <span style="color:#ff69b4">instalaciones artísticas</span> y <span style="color:#ff69b4">escenografías que combinaban arte y tecnología</span>. A lo largo de este período, participé en proyectos para el <span style="color:#00ccff">Museo del Mañana</span>, <span style="color:#00ccff">Rock in Rio</span> y otras grandes marcas e instituciones, actuando en diferentes etapas — desde la concepción hasta la implementación técnica, incluyendo producción y montaje. Estas experiencias me permitieron integrar narrativa visual, tecnologías sensoriales e interactividad a gran escala, creando obras vivas que dialogan con el espacio y con el público.'
                 }
             };
 
-            // Função para atualizar o conteúdo da bio baseado no idioma
-            function updateBioContent() {
-                const lang = getPreferredLanguage();
-                const texts = bioTexts[lang];
+            // Função para detectar o idioma do navegador
+            function detectLanguage() {
+                const userLang = navigator.language || navigator.userLanguage;
+                const lang = userLang.toLowerCase();
                 
-                // Atualiza o conteúdo se o elemento já existir
+                // Verifica se o idioma começa com 'es' ou é 'es-ES', 'es-MX', etc.
+                if (lang.startsWith('es')) return 'es';
+                
+                // Verifica se o idioma começa com 'en' ou é 'en-US', 'en-GB', etc.
+                if (lang.startsWith('en')) return 'en-US';
+                
+                // Se não for espanhol nem inglês, usa português como padrão
+                return 'pt-BR';
+            }
+
+            // Função para atualizar o conteúdo baseado no idioma
+            function updateContent(lang) {
+                // Atualizar texto da bio
+                const bioText = bioTexts[lang] || bioTexts['pt-BR'];
+                window.bioContent = 
+                    `<span style="color:lime;">${bioText.title}</span><hr/>` +
+                    `${bioText.subtitle}<br/>` +
+                    bioText.content;
+
+                // Atualizar texto das experiências
+                const expText = experienceTexts[lang] || experienceTexts['pt-BR'];
+                window.experienciasContent = expText.content;
+
+                // Reinicializar os textos com t.js
                 if ($('#bio-text').length) {
-                    $('#bio-text').empty().t(texts.content, {
+                    $('#bio-text').empty().t(bioContent, {
                         speed: 5,
                         mistype: false,
-                        caret: false
+                        caret: false,
+                        fin: function(elm) {}
                     });
                 }
 
-                // Atualiza também o conteúdo da modal se estiver aberta
-                if ($('#bio-modal-text').length) {
-                    $('#bio-modal-text').empty().t(texts.content, {
+                // Atualizar modal da bio se estiver aberta
+                if ($('#bio-modal').hasClass('active') && $('#bio-modal-text').length) {
+                    $('#bio-modal-text').empty().t(bioContent, {
                         speed: 5,
                         mistype: false,
-                        caret: false
+                        caret: false,
+                        fin: function(elm) {}
+                    });
+                }
+
+                // Reinicializar texto das experiências
+                if ($('#middle-area').length) {
+                    $('#middle-area').empty().t(experienciasContent, {
+                        speed: 5,
+                        mistype: false,
+                        caret: false,
+                        fin: function(elm) {}
+                    });
+                }
+
+                // Atualizar modal de experiências se estiver aberta
+                if ($('#middle-modal').hasClass('active') && $('#middle-modal-content').length) {
+                    $('#middle-modal-content').empty().t(experienciasContent, {
+                        speed: 5,
+                        mistype: false,
+                        caret: false,
+                        fin: function(elm) {}
                     });
                 }
             }
 
-            // Inicializa o conteúdo da bio com o idioma detectado
-            const detectedLanguage = getPreferredLanguage();
-            window.bioContent = bioTexts[detectedLanguage].content;
+            // Detectar idioma e atualizar conteúdo
+            const userLanguage = detectLanguage();
+            
+            // Inicializar os conteúdos com o idioma detectado
+            const bioText = bioTexts[userLanguage] || bioTexts['pt-BR'];
+            window.bioContent = 
+                `<span style="color:lime;">${bioText.title}</span><hr/>` +
+                `${bioText.subtitle}<br/>` +
+                bioText.content;
+
+            const expText = experienceTexts[userLanguage] || experienceTexts['pt-BR'];
+            window.experienciasContent = expText.content;
+
+            // Inicializar os textos quando os frames estiverem visíveis
+            setTimeout(() => {
+                // Inicializar t.js para o texto da biografia
+                $('#bio-text').t(bioContent, {
+                    speed: 5,
+                    mistype: false,
+                    caret: false,
+                    fin: function(elm) {}
+                });
+
+                // Inicializar t.js para o texto de experiências
+                $('#middle-area').t(experienciasContent, {
+                    speed: 5,
+                    mistype: false,
+                    caret: false,
+                    fin: function(elm) {}
+                });
+            }, 13500); // Mesmo tempo usado para outras inicializações
+
+            // Adicionar evento para atualizar o conteúdo quando o idioma do navegador mudar
+            window.addEventListener('languagechange', function() {
+                const newLanguage = detectLanguage();
+                updateContent(newLanguage);
+            });
 
             // Adiciona os botões após o carregamento do documento
             $(document).ready(function() {
                 // Atualiza o conteúdo automaticamente baseado no idioma do navegador
-                updateBioContent();
+                updateContent(userLanguage);
             });
         });
     </script>
