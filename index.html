@@ -2009,7 +2009,8 @@
                 const lang = userLang.toLowerCase();
                 
                 // Verifica se o idioma começa com 'es' ou é 'es-ES', 'es-MX', etc.
-                if (lang.startsWith('es')) return 'es';
+                // Agora retorna inglês para navegadores espanhóis
+                if (lang.startsWith('es')) return 'en-US';
                 
                 // Verifica se o idioma começa com 'en' ou é 'en-US', 'en-GB', etc.
                 if (lang.startsWith('en')) return 'en-US';
