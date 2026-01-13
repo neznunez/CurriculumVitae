@@ -4,7 +4,10 @@
   "description": "",
   "main": "t.min.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node server.js",
+    "switch:terminal": "node switch.js terminal",
+    "switch:formal": "node switch.js formal"
   },
   "keywords": [],
   "author": "",
