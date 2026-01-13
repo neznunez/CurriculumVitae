@@ -1,0 +1,644 @@
+/* Reset e Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #fafafa;
+    background-image: 
+        url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E"),
+        repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.02) 0px,
+            transparent 1px,
+            transparent 2px,
+            rgba(0, 0, 0, 0.02) 3px
+        );
+    color: #333;
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Efeito CRT - Scanlines apenas (sobre a textura de papel) */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.98) 0px,
+        rgba(255, 255, 255, 0.98) 1px,
+        rgba(0, 0, 0, 0.02) 1px,
+        rgba(0, 0, 0, 0.02) 2px
+    );
+    background-size: 100% 4px;
+    animation: backgroundScanline 10s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.4;
+    mix-blend-mode: overlay;
+}
+
+@keyframes backgroundScanline {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(100px);
+    }
+}
+
+/* Container principal */
+.cv-container {
+    width: 100%;
+    padding: 80px 70px;
+    position: relative;
+    z-index: 2;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Linha superior com cards lado a lado */
+.top-cards-row {
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
+    margin-bottom: 0;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+/* Card de Informações Pessoais - Posicionado no canto superior esquerdo */
+.personal-info-card {
+    background-color: #ffffff;
+    background-image: 
+        url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E"),
+        repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.02) 0px,
+            transparent 1px,
+            transparent 2px,
+            rgba(0, 0, 0, 0.02) 3px
+        );
+    border-radius: 12px;
+    padding: 25px;
+    width: fit-content;
+    max-width: 700px;
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.15),
+        0 4px 12px rgba(0, 0, 0, 0.12),
+        0 2px 6px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: visible;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    transform: rotate(-0.8deg);
+    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.2));
+}
+
+
+.personal-info-content {
+    display: flex;
+    gap: 22px;
+    align-items: flex-start;
+}
+
+/* Coluna Esquerda: Foto e Links */
+.left-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+.photo-container {
+    flex-shrink: 0;
+}
+
+.profile-photo {
+    width: 140px;
+    height: 186px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+    width: 100%;
+}
+
+/* Coluna Direita: Informações */
+.right-column {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.name-section {
+    margin-bottom: 16px;
+}
+
+.cv-name {
+    font-size: 1.8em;
+    font-weight: 900;
+    color: #000;
+    margin: 0;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: 1px;
+    line-height: 1.2;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.cv-username {
+    font-size: 0.9em;
+    color: #d32f2f;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin: 0;
+    text-align: center;
+}
+
+.info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 14px;
+}
+
+.section-label {
+    font-size: 0.7em;
+    font-weight: 700;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-family: 'Courier New', Courier, monospace;
+    margin-bottom: 2px;
+}
+
+.section-value {
+    font-size: 0.8em;
+    color: #333;
+    line-height: 1.4;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.contact-info {
+    margin-top: 12px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.contact-item {
+    display: flex;
+    gap: 10px;
+    font-size: 0.8em;
+    line-height: 1.5;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.contact-label {
+    font-weight: 700;
+    color: #333;
+    min-width: 80px;
+}
+
+.contact-value {
+    color: #555;
+    font-weight: 600;
+}
+
+/* Card de Sobre Mim */
+.about-me-card {
+    background-color: #ffffff;
+    background-image: 
+        url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E"),
+        repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.02) 0px,
+            transparent 1px,
+            transparent 2px,
+            rgba(0, 0, 0, 0.02) 3px
+        );
+    border-radius: 0;
+    padding: 25px;
+    width: fit-content;
+    max-width: 650px;
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.15),
+        0 4px 12px rgba(0, 0, 0, 0.12),
+        0 2px 6px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: visible;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    margin-top: -380px;
+    transform: rotate(0.6deg);
+    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.2));
+}
+
+
+.about-me-content {
+    position: relative;
+    z-index: 2;
+}
+
+.about-me-title {
+    font-size: 1.5em;
+    font-weight: 900;
+    color: #000;
+    margin-bottom: 20px;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-align: left;
+    font-style: italic;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.about-me-text {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.about-me-text p {
+    font-size: 0.8em;
+    font-weight: 700;
+    color: #333;
+    line-height: 1.6;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: justify;
+    margin: 0;
+}
+
+.about-me-text p strong {
+    font-weight: 900;
+}
+
+/* Card de Background Acadêmico - Sticky Note Style */
+.background-card {
+    background-color: #ffffff;
+    background-image: 
+        url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E"),
+        repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.02) 0px,
+            transparent 1px,
+            transparent 2px,
+            rgba(0, 0, 0, 0.02) 3px
+        );
+    border-radius: 0;
+    padding: 25px;
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.15),
+        0 4px 12px rgba(0, 0, 0, 0.12),
+        0 2px 6px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    position: relative;
+    flex: 0 0 auto;
+    width: 450px;
+    max-width: 450px;
+    overflow: visible;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    transform: rotate(-1.2deg);
+    margin-left: 90px;
+    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.2));
+}
+
+
+.background-content {
+    position: relative;
+    z-index: 2;
+}
+
+.background-title {
+    font-size: 1.5em;
+    font-weight: 900;
+    color: #000;
+    margin-bottom: 18px;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-align: center;
+    font-style: italic;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.background-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.background-entry {
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.background-entry:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.entry-title {
+    font-size: 0.85em;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 3px;
+    font-family: 'Courier New', Courier, monospace;
+    line-height: 1.3;
+}
+
+.entry-institution {
+    font-size: 0.75em;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 3px;
+    font-family: 'Courier New', Courier, monospace;
+    line-height: 1.3;
+}
+
+.entry-period {
+    font-size: 0.7em;
+    font-weight: 600;
+    color: #666;
+    text-align: right;
+    font-family: 'Courier New', Courier, monospace;
+    margin-top: 2px;
+}
+
+/* Card de Software Skills - Fundo Branco */
+.skills-card {
+    background-color: #ffffff;
+    background-image: 
+        url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E"),
+        repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.02) 0px,
+            transparent 1px,
+            transparent 2px,
+            rgba(0, 0, 0, 0.02) 3px
+        );
+    border-radius: 0;
+    padding: 25px;
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.15),
+        0 4px 12px rgba(0, 0, 0, 0.12),
+        0 2px 6px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    position: relative;
+    width: 500px;
+    max-width: 600px;
+    overflow: visible;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    margin-top: 90px; /* Desce o card de skills */
+    margin-left: 65px; /* Move o frame para a direita */
+    margin-bottom: 0;
+    transform: rotate(-0.8deg);
+    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.2));
+}
+
+
+.skills-content {
+    position: relative;
+    z-index: 2;
+}
+
+.skills-title {
+    font-size: 1.5em;
+    font-weight: 900;
+    color: #000000;
+    margin-bottom: 12px;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-align: left;
+    font-style: italic;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+.skills-area {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px 30px;
+}
+
+.skill-category {
+    margin-top: 10px;
+    margin-bottom: 6px;
+    grid-column: 1 / -1; /* Ocupa todas as colunas */
+}
+
+.skill-category:first-child {
+    margin-top: 0;
+}
+
+.category-name {
+    font-size: 0.9em;
+    font-weight: 700;
+    color: #000000;
+    font-family: 'Courier New', Courier, monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.skill-entry {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 3px 0;
+}
+
+.skill-name {
+    font-size: 0.85em;
+    font-weight: 600;
+    color: #000000;
+    font-family: 'Courier New', Courier, monospace;
+    margin-bottom: 2px;
+}
+
+.skill-squares {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.skill-squares .square {
+    width: 12px;
+    height: 12px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
+}
+
+.skill-squares .square.filled {
+    background-color: #000000;
+    border-color: #000000;
+    opacity: 1;
+}
+
+/* Card de Experiência Profissional - Papel Craft/Pardo */
+.experience-card {
+    background-color: #ffffff; /* Cor branca */
+    background-image: 
+        url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E"),
+        repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.02) 0px,
+            transparent 1px,
+            transparent 2px,
+            rgba(0, 0, 0, 0.02) 3px
+        );
+    border-radius: 0;
+    padding: 25px;
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.15),
+        0 4px 12px rgba(0, 0, 0, 0.12),
+        0 2px 6px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    position: relative;
+    width: 450px; /* Mesma largura do background */
+    max-width: 450px;
+    overflow: visible;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    transform: rotate(1.1deg); /* Leve rotação oposta ao background */
+    margin-left: calc(650px + 90px + 30px); /* Alinha abaixo do background (largura do personal-info-card + margin-left do background + offset adicional) */
+    margin-top: -1150px; /* Negativo para subir muito mais e ficar logo abaixo do background */
+    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.2));
+}
+
+
+.experience-content {
+    position: relative;
+    z-index: 2;
+}
+
+.experience-title {
+    font-size: 1.5em;
+    font-weight: 900;
+    color: #000;
+    margin-bottom: 18px;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-align: center;
+    font-style: italic;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.experience-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.experience-entry {
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.experience-entry:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.exp-company {
+    font-size: 0.85em;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 3px;
+    font-family: 'Courier New', Courier, monospace;
+    line-height: 1.3;
+}
+
+.exp-role {
+    font-size: 0.75em;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 3px;
+    font-family: 'Courier New', Courier, monospace;
+    line-height: 1.3;
+}
+
+.exp-period {
+    font-size: 0.7em;
+    font-weight: 600;
+    color: #666;
+    text-align: right;
+    font-family: 'Courier New', Courier, monospace;
+    margin-top: 2px;
+}
+
+.exp-location {
+    font-size: 0.65em;
+    font-weight: 500;
+    color: #666;
+    text-align: right;
+    font-family: 'Courier New', Courier, monospace;
+    margin-top: 2px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .personal-info-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .cv-name {
+        font-size: 2em;
+    }
+    
+    .info-item {
+        flex-direction: column;
+        text-align: left;
+    }
+    
+    .personal-info-card {
+        max-width: 100%;
+    }
+    
+    .top-cards-row {
+        flex-direction: column;
+    }
+    
+    .personal-info-card,
+    .background-card,
+    .experience-card {
+        max-width: 100%;
+        min-width: 100%;
+    }
+}
