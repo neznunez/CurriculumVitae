@@ -5,6 +5,44 @@
     box-sizing: border-box;
 }
 
+/* Botão de Exportar PDF */
+.export-pdf-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    padding: 12px 20px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.export-pdf-btn:hover {
+    background-color: #333333;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.export-pdf-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.export-pdf-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
 body {
     font-family: 'Courier New', Courier, monospace;
     background-color: #fafafa;
@@ -641,4 +679,26 @@ body::before {
         max-width: 100%;
         min-width: 100%;
     }
+}
+
+/* Estilos específicos para PDF - Classe aplicada durante exportação */
+.pdf-export-mode {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    padding: 0 !important;
+    overflow: visible !important;
+}
+
+.pdf-export-mode body::before {
+    display: none !important;
+}
+
+.pdf-export-mode body {
+    background-color: #ffffff !important;
+    background-image: none !important;
+}
+
+/* Modo PDF - Apenas esconde o botão, mantém tudo igual */
+.pdf-export-mode .export-pdf-btn {
+    display: none !important;
 }
