@@ -43,14 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Função para enviar mensagem ao servidor
     async function sendMessage(message) {
         try {
-            // Validação no cliente
-            const validation = validateClientMessage(message);
-            if (!validation.valid) {
-                return validation.error;
-            }
-            
-            const sanitizedMessage = validation.message;
-            
+            // A mensagem já foi validada em handleSendMessage()
             // Detecta se está em produção (Vercel) ou desenvolvimento
             const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
                 ? 'http://localhost:3000/chat'
@@ -65,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ message: sanitizedMessage }),
+                body: JSON.stringify({ message: message }),
                 signal: controller.signal
             });
 
