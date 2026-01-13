@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node server.js",
     "switch:terminal": "node switch.js terminal",
-    "switch:formal": "node switch.js formal"
+    "switch:formal": "node switch.js formal",
+    "build": "echo 'Static site - no build needed'"
   },
   "keywords": [],
   "author": "",
