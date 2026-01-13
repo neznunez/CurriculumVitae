@@ -12,8 +12,8 @@
 </head>
 <body>
     <!-- Botão de Exportar PDF -->
-    <button id="export-pdf-btn" class="export-pdf-btn" title="Exportar para PDF">
-        📄 PDF
+    <button id="export-pdf-btn" class="export-pdf-btn" title="Exportar para PDF" aria-label="Exportar currículo para PDF">
+        PDF
     </button>
     
     <!-- Container principal -->
@@ -575,8 +575,9 @@
         });
     </script>
     
-    <!-- Biblioteca para exportar PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Bibliotecas para exportar PDF (mais simples e direto) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <!-- Script para exportar PDF com diagramação otimizada -->
     <script>
@@ -586,7 +587,7 @@
             exportBtn.addEventListener('click', async function() {
                 // Desabilita o botão durante o processamento
                 exportBtn.disabled = true;
-                exportBtn.textContent = '⏳ Gerando...';
+                exportBtn.textContent = '...';
                 
                 try {
                     // Adiciona classe especial para PDF (apenas esconde o botão)
@@ -595,43 +596,47 @@
                     const cvContainer = document.querySelector('.cv-container');
                     
                     // Aguarda um momento para garantir que o CSS foi aplicado
-                    await new Promise(resolve => setTimeout(resolve, 100));
+                    await new Promise(resolve => setTimeout(resolve, 300));
                     
-                    const opt = {
-                        margin: [10, 10, 10, 10], // Margens mínimas
-                        filename: 'Joao_Victor_Nunes_CV.pdf',
-                        image: { 
-                            type: 'jpeg', 
-                            quality: 0.98 
-                        },
-                        html2canvas: { 
-                            scale: 2,
-                            useCORS: true,
-                            logging: false,
-                            backgroundColor: '#fafafa', // Cor de fallback caso a imagem não carregue
-                            letterRendering: true,
-                            allowTaint: true, // Permite renderizar imagens locais
-                            foreignObjectRendering: true
-                        },
-                        jsPDF: { 
-                            unit: 'mm', 
-                            format: 'a4', 
-                            orientation: 'portrait',
-                            compress: true
-                        },
-                        pagebreak: { 
-                            mode: ['avoid-all', 'css', 'legacy'],
-                            avoid: ['.personal-info-card', '.background-card', '.about-me-card', '.skills-card', '.experience-card']
-                        }
-                    };
+                    // Captura como imagem usando html2canvas
+                    const canvas = await html2canvas(cvContainer, {
+                        scale: 2,
+                        useCORS: true,
+                        logging: false,
+                        backgroundColor: '#fafafa',
+                        allowTaint: true,
+                        width: cvContainer.scrollWidth,
+                        height: cvContainer.scrollHeight
+                    });
                     
-                    await html2pdf().set(opt).from(cvContainer).save();
+                    // Converte canvas para JPEG
+                    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                    
+                    // Calcula dimensões em mm
+                    const imgWidth = canvas.width;
+                    const imgHeight = canvas.height;
+                    const mmWidth = (imgWidth * 0.264583);
+                    const mmHeight = (imgHeight * 0.264583);
+                    
+                    // Cria PDF com dimensões exatas (uma página só)
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({
+                        unit: 'mm',
+                        format: [mmWidth, mmHeight],
+                        compress: true
+                    });
+                    
+                    // Adiciona a imagem JPEG ao PDF
+                    pdf.addImage(imgData, 'JPEG', 0, 0, mmWidth, mmHeight, undefined, 'FAST');
+                    
+                    // Salva o PDF
+                    pdf.save('Joao_Victor_Nunes_CV.pdf');
                     
                     // Remove classe especial
                     document.body.classList.remove('pdf-export-mode');
                     
                     // Restaura o botão
-                    exportBtn.textContent = '📄 PDF';
+                    exportBtn.textContent = 'PDF';
                     exportBtn.disabled = false;
                 } catch (error) {
                     console.error('Erro ao gerar PDF:', error);
@@ -640,7 +645,7 @@
                     // Remove classe especial em caso de erro
                     document.body.classList.remove('pdf-export-mode');
                     
-                    exportBtn.textContent = '📄 PDF';
+                    exportBtn.textContent = 'PDF';
                     exportBtn.disabled = false;
                 }
             });

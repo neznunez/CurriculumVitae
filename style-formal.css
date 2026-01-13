@@ -5,42 +5,73 @@
     box-sizing: border-box;
 }
 
-/* Botão de Exportar PDF */
+/* Botão de Exportar PDF - Circular com Glassmorphism */
 .export-pdf-btn {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 30px;
+    right: 30px;
     z-index: 1000;
-    background-color: #000000;
-    color: #ffffff;
-    border: 2px solid #ffffff;
-    padding: 12px 20px;
+    
+    /* Formato circular */
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    
+    /* Glassmorphism */
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    
+    /* Tipografia e centralização */
+    color: #000000;
     font-family: 'Courier New', Courier, monospace;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+    font-size: 11px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
+    
+    /* Centralização do conteúdo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    
+    /* Interatividade */
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Sombra sutil */
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .export-pdf-btn:hover {
-    background-color: #333333;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    /* Efeito hover - mais opaco e elevado */
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 .export-pdf-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    /* Efeito de clique */
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .export-pdf-btn:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
     transform: none;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 body {
