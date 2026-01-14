@@ -679,36 +679,95 @@ body::before {
     margin-top: 2px;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
+/* Responsividade - versão mobile preservando layout desktop */
+@media (max-width: 900px) {
+    body {
+        padding: 0;
+    }
+
+    .cv-container {
+        padding: 80px 16px 40px 16px;
+    }
+
+    /* Botão de PDF: encosta mais na borda e reduz tamanho em telas bem pequenas */
+    .export-pdf-btn {
+        top: 16px;
+        right: 16px;
+        width: 52px;
+        height: 52px;
+        font-size: 10px;
+    }
+
+    .top-cards-row {
+        flex-direction: column;
+        gap: 24px;
+        align-items: stretch;
+    }
+
+    .personal-info-card,
+    .background-card,
+    .about-me-card,
+    .skills-card,
+    .experience-card {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        transform: none; /* Remove rotações no mobile para leitura mais limpa */
+    }
+
+    .personal-info-card {
+        padding: 20px;
+    }
+
     .personal-info-content {
         flex-direction: column;
         align-items: center;
         text-align: center;
     }
-    
-    .cv-name {
-        font-size: 2em;
+
+    .right-column {
+        align-items: center;
     }
-    
-    .info-item {
-        flex-direction: column;
-        text-align: left;
+
+    .contact-item {
+        justify-content: center;
     }
-    
-    .personal-info-card {
-        max-width: 100%;
+
+    .about-me-card {
+        margin-top: 24px;
     }
-    
-    .top-cards-row {
-        flex-direction: column;
+
+    .skills-card {
+        margin-top: 24px;
     }
-    
-    .personal-info-card,
-    .background-card,
+
+    .skills-area {
+        grid-template-columns: 1fr; /* Uma coluna no mobile */
+        gap: 10px 16px;
+    }
+
+    /* Experiência entra no fluxo normal logo abaixo dos outros cards */
     .experience-card {
-        max-width: 100%;
-        min-width: 100%;
+        margin-top: 24px;
+    }
+
+    /* Ajuste leve de tipografia para caber melhor */
+    .cv-name {
+        font-size: 1.6em;
+        text-align: center;
+    }
+
+    .background-title,
+    .about-me-title,
+    .skills-title,
+    .experience-title {
+        font-size: 1.3em;
+        letter-spacing: 2px;
+    }
+
+    .about-me-text p {
+        font-size: 0.85em;
     }
 }
 
