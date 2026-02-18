@@ -35,9 +35,8 @@ Portfólio e currículo interativo com visualização formal e terminal.
 
 ### Estrutura do Projeto
 
-- `index.html` - Versão formal (ativa)
-- `index-terminal.html` - Versão terminal (backup)
-- `index-formal.html` - Versão formal (backup)
+- `index.html` - Versão original (extendida, estilo terminal/cyber)
+- `index-cards.html` - Versão em cards (layout formal com PDF)
 - `api/chat.js` - Endpoint serverless para chat
 - `api/get-persona.js` - Endpoint serverless para obter persona
 - `vercel.json` - Configuração do Vercel
