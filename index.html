@@ -33,20 +33,25 @@
     <div id="demo"></div>
 
     <!-- Botão Perform na parte superior centralizada -->
-    <div class="top-perform-btn" id="top-perform">⚡</div>
+    <div class="top-perform-btn" id="top-perform" style="display:none;" aria-hidden="true">⚡</div>
 
     <!-- === Estrutura da Janela de Chat === -->
     <div id="chat-window">
         <div class="minimize-btn" id="minimize-chat">_</div>
         <div class="fullscreen-btn" id="chat-fullscreen">⛶</div>
-        <div class="perform-btn" id="chat-perform">⚡</div>
-        <div id="chat-history">
-            <!-- Histórico de mensagens será adicionado aqui (estático por enquanto) -->
-            <p class="chat-message bot"><span class="sender">System:</span> Interface ready. Awaiting input.</p>
-            <p class="chat-message user"><span class="sender">You:</span> Initiate diagnostics.</p>
-            <p class="chat-message bot"><span class="sender">System:</span> Running diagnostics... All systems nominal.</p>
+        <div class="perform-btn" id="chat-perform" style="display:none;" aria-hidden="true">⚡</div>
+        <div class="work-header">
+            <span style="color:lime;">EXP</span>
+            <hr/>
         </div>
-        <div id="chat-input-area">
+        <div id="chat-history">
+            <p class="chat-message bot"><span class="sender">System:</span> Carregando experiências de trabalho...</p>
+        </div>
+        <div class="work-nav-buttons">
+            <div class="bio-nav-btn" id="work-scroll-up">▲</div>
+            <div class="bio-nav-btn" id="work-scroll-down">▼</div>
+        </div>
+        <div id="chat-input-area" style="display:none;">
             <span class="chat-prompt">></span>
             <!-- Input real e botão de envio -->
             <input type="text" id="chat-input" placeholder="Digite aqui...">
@@ -130,7 +135,7 @@
         <!-- Container para conteúdo -->
         <div id="middle-content">
             <div class="middle-header">
-                <span style="color:lime;">EXP</span>
+                <span style="color:lime;">FORM</span>
                 <hr/>
             </div>
             <!-- Área de conteúdo -->
@@ -280,9 +285,9 @@
     <div class="floating-icons-container">
         <div class="floating-icon" id="id-icon">ID</div>
         <div class="floating-icon" id="bio-icon">BIO</div>
-        <div class="floating-icon" id="middle-icon">EXP</div>
+        <div class="floating-icon" id="middle-icon">FORM</div>
         <div class="floating-icon" id="skills-icon">SKL</div> <!-- Novo ícone SKL -->
-        <div class="floating-icon" id="ai-icon">AI</div>
+        <div class="floating-icon" id="ai-icon">EXP</div>
     </div>
     
     <!-- Modal para visualização em tela cheia -->
@@ -300,12 +305,12 @@
     <div class="chat-modal" id="chat-modal">
         <div class="chat-modal-content">
             <div class="chat-modal-header">
-                <div class="chat-modal-title">CHAT INTERFACE</div>
+                <div class="chat-modal-title">EXPERIÊNCIA DE TRABALHO</div>
                 <div class="chat-modal-close" id="chat-modal-close">✕</div>
             </div>
             <div id="chat-modal-content">
                 <div id="chat-modal-history"></div>
-                <div id="chat-modal-input-area">
+                <div id="chat-modal-input-area" style="display:none;">
                     <span class="chat-prompt">></span>
                     <input type="text" id="chat-modal-input" placeholder="Digite aqui...">
                     <button id="chat-modal-send-btn">Enviar</button>
@@ -318,7 +323,7 @@
     <div class="middle-modal" id="middle-modal">
         <div class="middle-modal-content">
             <div class="middle-modal-header">
-                <div class="middle-modal-title">EXP</div>
+                <div class="middle-modal-title">FORMAÇÃO</div>
                 <div class="middle-modal-close" id="middle-modal-close">✕</div>
             </div>
             <div id="middle-modal-content"></div>
@@ -394,7 +399,7 @@
             // Variável para contar os anos
             let yearCounter = 2000;
             const startYear = 2000;
-            const endYear = 2025;
+            const endYear = 2026;
             const totalYears = endYear - startYear;
 
             const content = '<del>~</del>' + // Limpeza mínima inicial
@@ -402,27 +407,24 @@
                             '<ins>0.2</ins>Initializing core systems...<ins>0.4</ins> <span style="color:lime;">OK.</span><br/>' + // Delays reduzidos
                             '<ins>Connecting neural interface</ins><ins>0.1</ins>.<ins>0.1</ins>.<ins>0.1</ins>.<ins>0.2</ins> <span style="color:lime;">Established.</span><br/>' + // Delays reduzidos
                             '<ins>0.1</ins>Loading lifetime memories: <span id="year-display" style="color:cyan;">2000</span> [<span id="progress-bar" style="color:cyan;"></span>]' + // Spans estáticos
-                            // 25 caracteres zero-width space como gatilhos invisíveis
-                            '<s>50</s>' + '\u200B'.repeat(25) + '<s>15</s>' + // Velocidade 50 controla a atualização.
+                            // 26 caracteres zero-width space como gatilhos invisíveis (2000 -> 2026)
+                            '<s>50</s>' + '\u200B'.repeat(26) + '<s>15</s>' + // Velocidade 50 controla a atualização.
                             ' <span style="color:lime;"> Memories loaded.</span><br/><ins>0.2</ins>' + // Mensagem final
                             // Adiciona um delay mínimo antes do span gatilho
                             '<ins>0.01</ins><span id="trigger-chat-reveal"></span>' + 
-                            '<ins>0.5</ins>Updating chat interface...<ins>0.5</ins> <span style="color:lime;">OK.</span><br/>' + 
-                            'Syncing chronometers...<ins>0.2</ins> <span style="color:lime;">Synced.</span><br/>' + // Delay reduzido
-                            '<ins>0.15</ins>Mounting Knowledge Vault <kbd>/dev/memex0</kbd>...<ins>0.2</ins> <span style="color:lime;">OK.</span><br/>' + 
                             '<ins>0.15</ins>Optimizing cognitive functions...<ins>0.4</ins> <span style="color:lime;">Complete.</span><br/><ins>0.2</ins>' + // Delays reduzidos
                             'System status: <span style="color:lime;">ONLINE</span> | Core Process <kbd>dt_interface</kbd> [PID: <kbd>4278</kbd>] <span style="color:lime;">STABLE</span><br/><ins>0.4</ins>' + // Delay reduzido
                             'neznunez:/# <span id="__final_caret"></span>'; // Prompt final
 
             // Variáveis para controle dinâmico de velocidade (não mais usadas para hashing)
-            let initialSpeed = 15;
+            let initialSpeed = 4;
             let currentSpeed = initialSpeed;
             let accelerate = false;
             const maxBarLength = 26; // Mantém o tamanho da barra
 
             $('#demo').t(content, {
                 speed: initialSpeed, // Usar a variável inicial
-                mistype: 50,
+                mistype: false,
                 pause_on_click: true,
                 caret: '<span class="t-caret-blink">_</span>',
                 init: function(elm) {
@@ -463,11 +465,8 @@
                         elm.s(currentSpeed);
                     }
 
-                    // Detectar quando o gatilho de revelação do chat é processado
-                    if (typeof chr_or_elm === 'object' && $(chr_or_elm).attr('id') === 'trigger-chat-reveal') {
-                        // Adiciona a classe .chat-visible ao chat-window
-                        $('#chat-window').addClass('chat-visible');
-                    }
+                    // Gatilho de revelação por span removido para evitar abertura duplicada.
+                    // A revelação dos containers agora é centralizada na sequência inicial.
                 },
                 fin: function(elm) {
                     // Garante que o cursor final esteja visível e piscando
@@ -494,13 +493,13 @@
                             // Simulação de "desligamento" do terminal
                             $('#demo').append('<span class="terminal-shutdown-message" style="color:lime; position:absolute; bottom:5px; right:10px; opacity:0; animation:fadeIn 0.3s forwards;">[ TERMINAL SHUTDOWN SEQUENCE INITIATED ]</span>');
                         }, 1000);
-                    }, 6000); // Espera 6 segundos após a animação terminar
+                    }, 1200); // Transicao quase imediata apos concluir a digitacao
                 }
             });
 
             // --- Iniciar Animação do Chat com Atraso --- 
             // Estimativa de tempo (em ms) para iniciar a animação do chat
-            const chatRevealDelay = 6000; // Ajuste este valor se necessário (aprox. 3.6 segundos)
+            const chatRevealDelay = 0; // Exibir imediatamente junto com o terminal
             setTimeout(() => {
                 $('#chat-window').addClass('chat-visible');
             }, chatRevealDelay);
@@ -508,7 +507,7 @@
 
             // --- Iniciar Animação do Novo Frame com Atraso --- 
             // Mostrar o frame vazio logo após o chat
-            const frameRevealDelay = chatRevealDelay + 800; // 800ms após o chat aparecer
+            const frameRevealDelay = chatRevealDelay + 120; // Sequencia curta apos o chat
             setTimeout(() => {
                 $('#info-frame').addClass('frame-visible');
                 
@@ -546,7 +545,7 @@
                                 });
                             }, 100);
                         }, 1300); // Aguarda a animação de revelação terminar
-                    }, 1000); // 1 segundo após a janela central aparecer
+                    }, 1000); // Mantém delay apenas para animação do botão perform
 
                     // Mostrar id-frame e skills-frame após o terminal desaparecer
                     setTimeout(() => {
@@ -605,9 +604,9 @@
                                 App.triggerPulse();
                             });
 
-                    }, 13500); // Diminuído de 15000 para 13500 ms
+                    }, 220); // Sequencia curta para ID e Skills
 
-                }, 400);
+                }, 180); // Sequencia curta para o frame central
                 
                 // Iniciar a animação do texto da biografia após o frame se tornar visível
                 setTimeout(() => {
@@ -633,7 +632,7 @@
                     });
 
                     // Inicializar t.js para o texto de experiências - usando abordagem similar
-                    $('#middle-area').t(experienciasContent, {
+                    $('#middle-area').t(formacaoContent, {
                         speed: 5,                // Velocidade rápida igual ao bio
                         mistype: false,          // Sem erros de digitação
                         caret: false,            // Sem cursor durante a digitação
@@ -672,6 +671,23 @@
                         const middleContent = document.getElementById('middle-content');
                         middleContent.scrollBy({
                             top: 100, // Rola 100px para baixo
+                            behavior: 'smooth'
+                        });
+                    });
+
+                    // Funcionalidade dos botões de navegação para Experiências
+                    $('#work-scroll-up').on('click', function() {
+                        const workHistory = document.getElementById('chat-history');
+                        workHistory.scrollBy({
+                            top: -100,
+                            behavior: 'smooth'
+                        });
+                    });
+
+                    $('#work-scroll-down').on('click', function() {
+                        const workHistory = document.getElementById('chat-history');
+                        workHistory.scrollBy({
+                            top: 100,
                             behavior: 'smooth'
                         });
                     });
@@ -724,7 +740,7 @@
                         
                         // Usar o conteúdo atualizado das experiências
                         setTimeout(function() {
-                            $('#middle-modal-content').t(experienciasContent, {
+                            $('#middle-modal-content').t(formacaoContent, {
                                 speed: 0.5,            // Velocidade extremamente rápida
                                 mistype: false,        // Sem erros de digitação
                                 caret: false,          // Sem cursor para não distrair
@@ -1331,7 +1347,7 @@
                 
                 // Usar o conteúdo atualizado das experiências
                 setTimeout(function() {
-                    $('#middle-modal-content').t(experienciasContent, {
+                    $('#middle-modal-content').t(formacaoContent, {
                         speed: 0.5,            // Velocidade extremamente rápida
                         mistype: false,        // Sem erros de digitação
                         caret: false,          // Sem cursor para não distrair
@@ -1775,7 +1791,7 @@
             // Limpar mensagens iniciais após algum tempo
             setTimeout(function() {
                 // Verificar se há mensagens no chat
-                if ($('#chat-history .chat-message').length > 0) {
+                if ($('#chat-input-area').is(':visible') && $('#chat-history .chat-message').length > 0) {
                     // Adicionar mensagem de limpeza
                     const cleanupMessage = $('<div class="system-cleanup-message">Sistema inicializado. Limpando mensagens de diagnóstico...</div>');
                     $('#chat-history').append(cleanupMessage);
@@ -1799,7 +1815,7 @@
                                 cleanupMessage.remove();
                                 
                                 // Adicionar nova mensagem de boas-vindas
-                                $('#chat-history').append('<p class="chat-message bot"><span class="sender">System:</span> Sessão iniciada. O que quer saber sobre mim?</p>');
+                                $('#chat-history').append('<p class="chat-message bot"><span class="sender">Experiência</span>: Sessão resetada. Role para explorar o histórico profissional.</p>');
                                 
                                 // Efeito visual para destacar a mudança
                                 App.triggerPulse();
@@ -1810,27 +1826,17 @@
             }, 15000); // 15 segundos após inicialização
             // --- Fim da Limpeza do Chat Inicial ---
 
-            // --- Conteúdo das Experiências ---
-            window.experienciasContent = 
-                '(2019–2025):<br/><br/>' +
-                '<span style="color:#ff69b4;">Apple Developer Academy</span> – Programa de <span style="color:#00ff00;">Inovação Tecnológica</span> (2022–2023)<br/><br/>' +
-                '<span style="color:#ff69b4;">Shell Iniciativa Jovem</span> – Programa de <span style="color:#00ff00;">Empreendedorismo e Inovação</span> (2024)<br/><br/>' +
-                '<span style="color:#ff69b4;">Extensão de Graduação PUC-Rio</span> – Desenvolvimento de <span style="color:#00ff00;">Chatbots e NLP</span> para <span style="color:#ffcc00;">Inteligência Artificial</span> (2025)<br/><br/>' +
-                '<span style="color:#ff69b4;">ECOA-PUC-Rio</span> – <span style="color:#ffcc00;">Inteligência Artificial Generativa</span> e <span style="color:#00ff00;">Prompt Engineering</span> (2023)<br/><br/>' +
-                '<span style="color:#ff69b4;">Museu do Amanhã</span> – Monitoria e coordenação de tecnologias do <span style="color:#00ff00;">Laboratório de Atividades do Amanhã</span> (2024)<br/><br/>' +
-                '<span style="color:#ff69b4;">Intensivo EBAC</span> (Escola Britânica de Artes Criativas) – <span style="color:#00ff00;">Desenvolvimento de Games</span> (2022)<br/><br/>' +
-                '<span style="color:#ff69b4;">Workshop de Design Gráfico</span> – IED Rio (Instituto Europeu de Design) (2019)<br/><br/>' +
-                '<span style="color:#ff69b4;">Studio Kwo</span> – Desenvolvedor Júnior para experiência em <span style="color:#ffcc00;">Realidade Virtual</span> (2024)<br/><br/>' +
-                '<span style="color:#ff69b4;">cc.espaço</span> – Curso de <span style="color:#00ff00;">Programação Visual</span> (2021)<br/><br/>' +
-                '<span style="color:#ff69b4;">Brazilian Immersive Fashion Week (BRIFW)</span> – <span style="color:#00ff00;">Vencedor do concurso Horizon Latin.x</span> (2022 e 2023)<br/><br/>' +
-                '<span style="color:#ff69b4;">Workshop FIRJAN SESI-RJ</span> – Inovação para <span style="color:#ffcc00;">Cidades Inteligentes e Sustentáveis</span> (2023)<br/><br/>' +
-                '<span style="color:#ff69b4;">Exposições em Realidade Aumentada</span> (2022):<br/>' +
-                'Lisboa – Galeria 284<br/>' +
-                'Homenagem à Frida Kahlo – Embaixada do México, Brasília<br/><br/>' +
-                '<span style="color:#ff69b4;">Rock The Mountain</span> – Instalação imersiva no projeto artístico <span style="color:#00ff00;">MOV.DOME</span>, experiência audiovisual com <span style="color:#ffcc00;">projeção em domo</span> (2024)<br/><br/>' +
-                '<span style="color:#ff69b4;">Rock in Rio 2024</span> – <span style="color:#00ff00;">Ativação de marca</span> para a <span style="color:#ffcc00;">TIM</span> (2024)<br/><br/>' +
-                '<span style="color:#ff69b4;">Semana de Design PUC-Rio</span> – Desenvolvimento do primeiro <span style="color:#ffcc00;">espaço digital no metaverso</span> da universidade (2022)<br/><br/>' +
-                '<span style="color:#ff69b4;">ECOA-PUC-Rio</span> – Organização de workshops sobre <span style="color:#ffcc00;">Web 3.0</span> e <span style="color:#00ff00;">tecnologias emergentes</span> (2023)<br/><br/>';
+            // --- Conteúdo de Formacao (container central) ---
+            window.formacaoContent = 
+                '<span style="color:#ff69b4;">PUC-Rio</span> – Bacharelado em Design, Comunicação Visual (2019-2025)<br/><br/>' +
+                '<span style="color:#ff69b4;">Apple Developer Academy</span> – Programa de Inovação Tecnológica (2022-2023)<br/><br/>' +
+                '<span style="color:#ff69b4;">Shell Iniciativa Jovem</span> – Empreendedorismo e Inovação (2024)<br/><br/>' +
+                '<span style="color:#ff69b4;">Extensão PUC-Rio</span> – Chatbots e NLP para IA (2025)<br/><br/>' +
+                '<span style="color:#ff69b4;">ECOA-PUC-Rio</span> – IA Generativa e Prompt Engineering (2023)<br/><br/>' +
+                '<span style="color:#ff69b4;">EBAC</span> – Desenvolvimento de Games (2022)<br/><br/>' +
+                '<span style="color:#ff69b4;">cc.espaço</span> – Programação Visual (2021)<br/><br/>' +
+                '<span style="color:#ff69b4;">IED Rio</span> – Workshop de Design Gráfico (2019)<br/><br/>' +
+                '<span style="color:#ff69b4;">FIRJAN SESI-RJ</span> – Cidades Inteligentes e Sustentáveis (2023)<br/><br/>';
 
             // --- Fim da Funcionalidade do Modo Perform ---
 
@@ -1897,75 +1903,92 @@
             // ... existing code ...
 
             // Definição dos textos em diferentes idiomas
-            const experienceTexts = {
+            const formationTexts = {
                 'pt-BR': {
-                    period: '(2019–2025):',
-                    content: 
-                        '(2019–2025):<br/><br/>' +
-                        '<span style="color:#ff69b4;">Apple Developer Academy</span> – Programa de <span style="color:#00ff00;">Inovação Tecnológica</span> (2022–2023)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Shell Iniciativa Jovem</span> – Programa de <span style="color:#00ff00;">Empreendedorismo e Inovação</span> (2024)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Extensão de Graduação PUC-Rio</span> – Desenvolvimento de <span style="color:#00ff00;">Chatbots e NLP</span> para <span style="color:#ffcc00;">Inteligência Artificial</span> (2025)<br/><br/>' +
-                        '<span style="color:#ff69b4;">ECOA-PUC-Rio</span> – <span style="color:#ffcc00;">Inteligência Artificial Generativa</span> e <span style="color:#00ff00;">Prompt Engineering</span> (2023)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Museu do Amanhã</span> – Monitoria e coordenação de tecnologias do <span style="color:#00ff00;">Laboratório de Atividades do Amanhã</span> (2024)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Intensivo EBAC</span> (Escola Britânica de Artes Criativas) – <span style="color:#00ff00;">Desenvolvimento de Games</span> (2022)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Workshop de Design Gráfico</span> – IED Rio (Instituto Europeu de Design) (2019)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Studio Kwo</span> – Desenvolvedor Júnior para experiência em <span style="color:#ffcc00;">Realidade Virtual</span> (2024)<br/><br/>' +
-                        '<span style="color:#ff69b4;">cc.espaço</span> – Curso de <span style="color:#00ff00;">Programação Visual</span> (2021)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Brazilian Immersive Fashion Week (BRIFW)</span> – <span style="color:#00ff00;">Vencedor do concurso Horizon Latin.x</span> (2022 e 2023)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Workshop FIRJAN SESI-RJ</span> – Inovação para <span style="color:#ffcc00;">Cidades Inteligentes e Sustentáveis</span> (2023)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Exposições em Realidade Aumentada</span> (2022):<br/>' +
-                        'Lisboa – Galeria 284<br/>' +
-                        'Homenagem à Frida Kahlo – Embaixada do México, Brasília<br/><br/>' +
-                        '<span style="color:#ff69b4;">Rock The Mountain</span> – Instalação imersiva no projeto artístico <span style="color:#00ff00;">MOV.DOME</span>, experiência audiovisual com <span style="color:#ffcc00;">projeção em domo</span> (2024)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Rock in Rio 2024</span> – <span style="color:#00ff00;">Ativação de marca</span> para a <span style="color:#ffcc00;">TIM</span> (2024)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Semana de Design PUC-Rio</span> – Desenvolvimento do primeiro <span style="color:#ffcc00;">espaço digital no metaverso</span> da universidade (2022)<br/><br/>' +
-                        '<span style="color:#ff69b4;">ECOA-PUC-Rio</span> – Organização de workshops sobre <span style="color:#ffcc00;">Web 3.0</span> e <span style="color:#00ff00;">tecnologias emergentes</span> (2023)<br/><br/>'
+                    content:
+                        '<span style="color:#ff69b4;">PUC-Rio</span> – Bacharelado em Design, Comunicação Visual (2019-2025)<br/><br/>' +
+                        '<span style="color:#ff69b4;">Apple Developer Academy</span> – Programa de Inovação Tecnológica (2022-2023)<br/><br/>' +
+                        '<span style="color:#ff69b4;">Shell Iniciativa Jovem</span> – Empreendedorismo e Inovação (2024)<br/><br/>' +
+                        '<span style="color:#ff69b4;">Extensão PUC-Rio</span> – Chatbots e NLP para IA (2025)<br/><br/>' +
+                        '<span style="color:#ff69b4;">ECOA-PUC-Rio</span> – IA Generativa e Prompt Engineering (2023)<br/><br/>' +
+                        '<span style="color:#ff69b4;">EBAC</span> – Desenvolvimento de Games (2022)<br/><br/>' +
+                        '<span style="color:#ff69b4;">cc.espaço</span> – Programação Visual (2021)<br/><br/>' +
+                        '<span style="color:#ff69b4;">IED Rio</span> – Workshop de Design Gráfico (2019)<br/><br/>' +
+                        '<span style="color:#ff69b4;">FIRJAN SESI-RJ</span> – Cidades Inteligentes e Sustentáveis (2023)<br/><br/>'
                 },
                 'en-US': {
-                    period: '(2019–2025):',
                     content:
-                        '(2019–2025):<br/><br/>' +
-                        '<span style="color:#ff69b4;">Apple Developer Academy</span> – <span style="color:#00ff00;">Technological Innovation Program</span> (2022–2023)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Shell Youth Initiative</span> – <span style="color:#00ff00;">Entrepreneurship and Innovation Program</span> (2024)<br/><br/>' +
-                        '<span style="color:#ff69b4;">PUC-Rio Extension Course</span> – Development of <span style="color:#00ff00;">Chatbots and NLP</span> for <span style="color:#ffcc00;">Artificial Intelligence</span> (2025)<br/><br/>' +
-                        '<span style="color:#ff69b4;">ECOA-PUC-Rio</span> – <span style="color:#ffcc00;">Generative Artificial Intelligence</span> and <span style="color:#00ff00;">Prompt Engineering</span> (2023)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Museum of Tomorrow</span> – Monitoring and coordination of technologies at the <span style="color:#00ff00;">Laboratory of Tomorrow\'s Activities</span> (2024)<br/><br/>' +
-                        '<span style="color:#ff69b4;">EBAC Intensive Course</span> (British School of Creative Arts) – <span style="color:#00ff00;">Game Development</span> (2022)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Graphic Design Workshop</span> – IED Rio (European Institute of Design) (2019)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Studio Kwo</span> – Junior Developer for <span style="color:#ffcc00;">Virtual Reality</span> experience (2024)<br/><br/>' +
-                        '<span style="color:#ff69b4;">cc.espaço</span> – <span style="color:#00ff00;">Visual Programming Course</span> (2021)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Brazilian Immersive Fashion Week (BRIFW)</span> – <span style="color:#00ff00;">Winner of Horizon Latin.x Contest</span> (2022 and 2023)<br/><br/>' +
-                        '<span style="color:#ff69b4;">FIRJAN SESI-RJ Workshop</span> – Innovation for <span style="color:#ffcc00;">Smart and Sustainable Cities</span> (2023)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Augmented Reality Exhibitions</span> (2022):<br/>' +
-                        'Lisbon – Gallery 284<br/>' +
-                        'Tribute to Frida Kahlo – Embassy of Mexico, Brasília<br/><br/>' +
-                        '<span style="color:#ff69b4;">Rock The Mountain</span> – Immersive installation in the artistic project <span style="color:#00ff00;">MOV.DOME</span>, audiovisual experience with <span style="color:#ffcc00;">dome projection</span> (2024)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Rock in Rio 2024</span> – <span style="color:#00ff00;">Brand activation</span> for <span style="color:#ffcc00;">TIM</span> (2024)<br/><br/>' +
-                        '<span style="color:#ff69b4;">PUC-Rio Design Week</span> – Development of the first <span style="color:#ffcc00;">digital space in the metaverse</span> of the university (2022)<br/><br/>' +
-                        '<span style="color:#ff69b4;">ECOA-PUC-Rio</span> – Organization of workshops on <span style="color:#ffcc00;">Web 3.0</span> and <span style="color:#00ff00;">emerging technologies</span> (2023)<br/><br/>'
+                        '(Education and Programs)<br/><br/>' +
+                        '<span style="color:#ff69b4;">PUC-Rio</span> – Bachelor in Design, Visual Communication (2019-2025)<br/><br/>' +
+                        '<span style="color:#ff69b4;">Apple Developer Academy</span> – Technological Innovation Program (2022-2023)<br/><br/>' +
+                        '<span style="color:#ff69b4;">Shell Youth Initiative</span> – Entrepreneurship and Innovation (2024)<br/><br/>' +
+                        '<span style="color:#ff69b4;">PUC-Rio Extension</span> – Chatbots and NLP for AI (2025)<br/><br/>' +
+                        '<span style="color:#ff69b4;">ECOA-PUC-Rio</span> – Generative AI and Prompt Engineering (2023)<br/><br/>' +
+                        '<span style="color:#ff69b4;">EBAC</span> – Game Development (2022)<br/><br/>' +
+                        '<span style="color:#ff69b4;">cc.espaço</span> – Visual Programming (2021)<br/><br/>' +
+                        '<span style="color:#ff69b4;">IED Rio</span> – Graphic Design Workshop (2019)<br/><br/>' +
+                        '<span style="color:#ff69b4;">FIRJAN SESI-RJ</span> – Smart and Sustainable Cities (2023)<br/><br/>'
                 },
                 'es': {
-                    period: '(2019–2025):',
                     content:
-                        '(2019–2025):<br/><br/>' +
-                        '<span style="color:#ff69b4;">Apple Developer Academy</span> – <span style="color:#00ff00;">Programa de Innovación Tecnológica</span> (2022–2023)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Shell Iniciativa Joven</span> – <span style="color:#00ff00;">Programa de Emprendimiento e Innovación</span> (2024)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Curso de Extensión PUC-Rio</span> – Desarrollo de <span style="color:#00ff00;">Chatbots y PLN</span> para <span style="color:#ffcc00;">Inteligencia Artificial</span> (2025)<br/><br/>' +
-                        '<span style="color:#ff69b4;">ECOA-PUC-Rio</span> – <span style="color:#ffcc00;">Inteligencia Artificial Generativa</span> y <span style="color:#00ff00;">Prompt Engineering</span> (2023)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Museo del Mañana</span> – Monitoreo y coordinación de tecnologías del <span style="color:#00ff00;">Laboratorio de Actividades del Mañana</span> (2024)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Curso Intensivo EBAC</span> (Escuela Británica de Artes Creativas) – <span style="color:#00ff00;">Desarrollo de Videojuegos</span> (2022)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Taller de Diseño Gráfico</span> – IED Rio (Instituto Europeo de Diseño) (2019)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Studio Kwo</span> – Desarrollador Junior en experiencias de <span style="color:#ffcc00;">Realidad Virtual</span> (2024)<br/><br/>' +
-                        '<span style="color:#ff69b4;">cc.espaço</span> – <span style="color:#00ff00;">Curso de Programación Visual</span> (2021)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Brazilian Immersive Fashion Week (BRIFW)</span> – <span style="color:#00ff00;">Ganador del concurso Horizon Latin.x</span> (2022 y 2023)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Taller FIRJAN SESI-RJ</span> – Innovación para <span style="color:#ffcc00;">Ciudades Inteligentes y Sostenibles</span> (2023)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Exposiciones en Realidad Aumentada</span> (2022):<br/>' +
-                        'Lisboa – Galería 284<br/>' +
-                        'Homenaje a Frida Kahlo – Embajada de México, Brasilia<br/><br/>' +
-                        '<span style="color:#ff69b4;">Rock The Mountain</span> – Instalación inmersiva en el proyecto artístico <span style="color:#00ff00;">MOV.DOME</span>, experiencia audiovisual con <span style="color:#ffcc00;">proyección en domo</span> (2024)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Rock in Rio 2024</span> – <span style="color:#00ff00;">Activación de marca</span> para <span style="color:#ffcc00;">TIM</span> (2024)<br/><br/>' +
-                        '<span style="color:#ff69b4;">Semana de Diseño PUC-Rio</span> – Desarrollo del primer <span style="color:#ffcc00;">espacio digital en el metaverso</span> de la universidad (2022)<br/><br/>' +
-                        '<span style="color:#ff69b4;">ECOA-PUC-Rio</span> – Organización de talleres sobre <span style="color:#ffcc00;">Web 3.0</span> y <span style="color:#00ff00;">tecnologías emergentes</span> (2023)<br/><br/>'
+                        '(Formación y Programas)<br/><br/>' +
+                        '<span style="color:#ff69b4;">PUC-Rio</span> – Licenciatura en Diseño, Comunicación Visual (2019-2025)<br/><br/>' +
+                        '<span style="color:#ff69b4;">Apple Developer Academy</span> – Programa de Innovación Tecnológica (2022-2023)<br/><br/>' +
+                        '<span style="color:#ff69b4;">Shell Iniciativa Joven</span> – Emprendimiento e Innovación (2024)<br/><br/>' +
+                        '<span style="color:#ff69b4;">Extensión PUC-Rio</span> – Chatbots y PLN para IA (2025)<br/><br/>' +
+                        '<span style="color:#ff69b4;">ECOA-PUC-Rio</span> – IA Generativa y Prompt Engineering (2023)<br/><br/>' +
+                        '<span style="color:#ff69b4;">EBAC</span> – Desarrollo de Videojuegos (2022)<br/><br/>' +
+                        '<span style="color:#ff69b4;">cc.espaço</span> – Programación Visual (2021)<br/><br/>' +
+                        '<span style="color:#ff69b4;">IED Rio</span> – Taller de Diseño Gráfico (2019)<br/><br/>' +
+                        '<span style="color:#ff69b4;">FIRJAN SESI-RJ</span> – Ciudades Inteligentes y Sostenibles (2023)<br/><br/>'
+                }
+            };
+
+            const workExperienceTexts = {
+                'pt-BR': {
+                    content:
+                        '<p class="chat-message bot"><span class="sender">Apple Developer Academy</span>: Programa de Inovação Tecnológica (2022-2023)</p>' +
+                        '<p class="chat-message bot"><span class="sender">DELED</span>: Estúdio criativo, Designer de Novas Mídias (2024)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Studio Kwo</span>: Desenvolvedor Júnior para experiência em Realidade Virtual (2024)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Museu do Amanhã</span>: Monitoria e coordenação de tecnologias do Laboratório de Atividades do Amanhã (2024)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Exposições em Realidade Aumentada</span>: Lisboa (Galeria 284) (2022)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Exposição em Realidade Aumentada</span>: Homenagem a Frida Kahlo, Embaixada do México (Brasília, 2022)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Rock The Mountain</span>: Instalação imersiva MOV.DOME (2024)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Rock in Rio 2024</span>: Ativação de marca para TIM (2024)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Semana de Design PUC-Rio</span>: Espaço digital no metaverso (2022)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Semana de Design PUC-Rio</span>: Workshop de TouchDesigner e rastreamento corporal (2025)</p>' +
+                        '<p class="chat-message bot"><span class="sender">ECOA-PUC-Rio</span>: Workshops sobre Web 3.0 e tecnologias emergentes (2023)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Brazilian Immersive Fashion Week (BRIFW)</span>: Vencedor Horizon Latin.x (2022 e 2023)</p>'
+                },
+                'en-US': {
+                    content:
+                        '<p class="chat-message bot"><span class="sender">Apple Developer Academy</span>: Technological Innovation Program (2022-2023)</p>' +
+                        '<p class="chat-message bot"><span class="sender">DELED</span>: Creative studio, New Media Designer (2024)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Studio Kwo</span>: Junior Developer for Virtual Reality experience (2024)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Museum of Tomorrow</span>: Technology monitoring and coordination (2024)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Augmented Reality Exhibitions</span>: Lisbon (Gallery 284) (2022)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Augmented Reality Exhibition</span>: Frida Kahlo tribute, Embassy of Mexico (Brasilia, 2022)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Rock The Mountain</span>: Immersive MOV.DOME installation (2024)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Rock in Rio 2024</span>: Brand activation for TIM (2024)</p>' +
+                        '<p class="chat-message bot"><span class="sender">PUC-Rio Design Week</span>: Digital metaverse space (2022)</p>' +
+                        '<p class="chat-message bot"><span class="sender">PUC-Rio Design Week</span>: TouchDesigner and body tracking workshop (2025)</p>' +
+                        '<p class="chat-message bot"><span class="sender">ECOA-PUC-Rio</span>: Workshops on Web 3.0 and emerging technologies (2023)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Brazilian Immersive Fashion Week (BRIFW)</span>: Horizon Latin.x winner (2022 and 2023)</p>'
+                },
+                'es': {
+                    content:
+                        '<p class="chat-message bot"><span class="sender">Apple Developer Academy</span>: Programa de Innovación Tecnológica (2022-2023)</p>' +
+                        '<p class="chat-message bot"><span class="sender">DELED</span>: Estudio creativo, Diseñador de Nuevos Medios (2024)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Studio Kwo</span>: Desarrollador Junior para experiencia en Realidad Virtual (2024)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Museo del Mañana</span>: Monitoreo y coordinación tecnológica (2024)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Exposiciones en Realidad Aumentada</span>: Lisboa (Galería 284) (2022)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Exposición en Realidad Aumentada</span>: Homenaje a Frida Kahlo, Embajada de México (Brasilia, 2022)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Rock The Mountain</span>: Instalación inmersiva MOV.DOME (2024)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Rock in Rio 2024</span>: Activación de marca para TIM (2024)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Semana de Diseño PUC-Rio</span>: Espacio digital en el metaverso (2022)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Semana de Diseño PUC-Rio</span>: Workshop de TouchDesigner y rastreo corporal (2025)</p>' +
+                        '<p class="chat-message bot"><span class="sender">ECOA-PUC-Rio</span>: Workshops sobre Web 3.0 y tecnologías emergentes (2023)</p>' +
+                        '<p class="chat-message bot"><span class="sender">Brazilian Immersive Fashion Week (BRIFW)</span>: Ganador Horizon Latin.x (2022 y 2023)</p>'
                 }
             };
 
@@ -2028,9 +2051,13 @@
                     `${bioText.subtitle}<br/>` +
                     bioText.content;
 
-                // Atualizar texto das experiências
-                const expText = experienceTexts[lang] || experienceTexts['pt-BR'];
-                window.experienciasContent = expText.content;
+                // Atualizar texto da formação (container central)
+                const formacaoText = formationTexts[lang] || formationTexts['pt-BR'];
+                window.formacaoContent = formacaoText.content;
+
+                // Atualizar texto de experiência (container no lugar da IA)
+                const workText = workExperienceTexts[lang] || workExperienceTexts['pt-BR'];
+                window.workExperienceContent = workText.content;
 
                 // Reinicializar os textos com t.js
                 if ($('#bio-text').length) {
@@ -2052,9 +2079,9 @@
                     });
                 }
 
-                // Reinicializar texto das experiências
+                // Reinicializar texto da formacao
                 if ($('#middle-area').length) {
-                    $('#middle-area').empty().t(experienciasContent, {
+                    $('#middle-area').empty().t(formacaoContent, {
                         speed: 5,
                         mistype: false,
                         caret: false,
@@ -2062,14 +2089,23 @@
                     });
                 }
 
-                // Atualizar modal de experiências se estiver aberta
+                // Atualizar modal de formacao se estiver aberta
                 if ($('#middle-modal').hasClass('active') && $('#middle-modal-content').length) {
-                    $('#middle-modal-content').empty().t(experienciasContent, {
+                    $('#middle-modal-content').empty().t(formacaoContent, {
                         speed: 5,
                         mistype: false,
                         caret: false,
                         fin: function(elm) {}
                     });
+                }
+
+                // Atualizar area de experiencia de trabalho
+                if ($('#chat-history').length) {
+                    $('#chat-history').html(workExperienceContent);
+                }
+
+                if ($('#chat-modal').hasClass('active') && $('#chat-modal-history').length) {
+                    $('#chat-modal-history').html(workExperienceContent);
                 }
             }
 
@@ -2083,8 +2119,11 @@
                 `${bioText.subtitle}<br/>` +
                 bioText.content;
 
-            const expText = experienceTexts[userLanguage] || experienceTexts['pt-BR'];
-            window.experienciasContent = expText.content;
+            const formacaoText = formationTexts[userLanguage] || formationTexts['pt-BR'];
+            window.formacaoContent = formacaoText.content;
+
+            const workText = workExperienceTexts[userLanguage] || workExperienceTexts['pt-BR'];
+            window.workExperienceContent = workText.content;
 
             // Inicializar os textos quando os frames estiverem visíveis
             setTimeout(() => {
@@ -2096,13 +2135,16 @@
                     fin: function(elm) {}
                 });
 
-                // Inicializar t.js para o texto de experiências
-                $('#middle-area').t(experienciasContent, {
+                // Inicializar t.js para o texto de formacao
+                $('#middle-area').t(formacaoContent, {
                     speed: 5,
                     mistype: false,
                     caret: false,
                     fin: function(elm) {}
                 });
+
+                // Inicializar container de experiencia no lugar da IA
+                $('#chat-history').html(workExperienceContent);
             }, 13500); // Mesmo tempo usado para outras inicializações
 
             // Adicionar evento para atualizar o conteúdo quando o idioma do navegador mudar
@@ -2122,7 +2164,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="./t.min.js"></script>
     <script src="./script.js"></script>
-    <script src="./chat.js"></script>
+    <!-- IA desativada temporariamente para dar lugar ao frame de experiencia -->
 </body>
 </html> 
 </html> 
